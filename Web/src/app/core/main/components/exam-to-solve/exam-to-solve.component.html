@@ -1,0 +1,28 @@
+<form class="flex flex-col px-32 py-12 h-screen" [formGroup]="examResultFormGroup" (ngSubmit)="onSubmit(examResultFormGroup)">
+  <div class="flex mb-8">
+    <img src="../../../../assets/images/full_logo.png" alt="">
+    <button type="submit" *ngIf="currentQuestion == questions.length - 1" class="ml-auto mt-auto rounded-xl bg-yellow#FDC57B py-2 px-4">Finish exam</button>
+  </div>
+  <div class="flex flex-col px-2 py-6 bg-white rounded-xl h-2/3">
+    <div class="flex flex-col" formArrayName="questions">
+      <div class="flex flex-col" *ngFor="let question of questions.controls; let i=index">
+        <div class="flex flex-col" [formGroupName]="i" *ngIf="i == currentQuestion">
+          <span class="ml-auto mb-2 mr-4">{{currentQuestion+1}}/{{questions.length}}</span>
+          <span class="mb-2 h-2/10 text-center" >{{question.controls.content.value}}</span>
+          <div class="flex flex-col" formArrayName="answers">
+            <div class="flex flex-col" *ngFor="let answer of answers.controls; let idx=index">
+              <div class="flex border-2 border-navy#07617D bg-blue#E9F7FA mb-2 px-2 rounded-xl h-5/100" [formGroupName]="idx">
+                <input type="checkbox" formControlName="isSelected">
+                <span class="ml-2 my-auto"> {{answer.controls.content.value}} </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex mt-auto">
+      <button type="button" *ngIf="currentQuestion > 0" (click)="currentQuestion = currentQuestion - 1" class="rounded-xl bg-blue#E9F7FA py-2 px-4">Prevoius Question</button>
+      <button type="button" *ngIf="currentQuestion < questions.length - 1" (click)="currentQuestion = currentQuestion + 1" class="ml-auto rounded-xl bg-blue#E9F7FA py-2 px-4">Next Question</button>
+    </div>
+  </div>
+</form>

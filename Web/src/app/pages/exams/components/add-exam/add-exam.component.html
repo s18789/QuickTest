@@ -1,0 +1,117 @@
+<form #mainForm [formGroup]="examFormGroup" (ngSubmit)="onSubmit(examFormGroup)" class="pt-6 px-24">
+  <div class="flex flex-col">
+    <span class="text-2xl font-medium">Create exam</span>
+    <div class="h-10 my-auto">
+      <span class="text-red-400 font-semibold" *ngIf="errorMessage != ''">
+        {{errorMessage}}
+      </span>
+    </div>
+    <div class="flex flex-col w-2/5 mb-8" id="ExamInfoContainer">
+      <label class="pl-1 text-xs">Title <span class="text-red-400">*</span></label>
+      <div class="mb-2 text-xs items-center border-b border-gray-500" [ngClass]="{'border-b-red-400': (examFormGroup.controls.title.dirty || examFormGroup.controls.title.touched || submitted) && examFormGroup.controls.title.invalid}">
+        <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-1 leading-tight focus:outline-none" type="text" required name="title" formControlName="title" placeholder="Exam title">
+      </div>
+      <div class="flex">
+        <div class="flex-1 flex flex-col text-xs border-b border-gray-500 mr-4" [ngClass]="{'border-b-red-400': (examFormGroup.controls.availableFrom.dirty || examFormGroup.controls.availableFrom.touched || submitted) && examFormGroup.controls.availableFrom.invalid}">
+          <label class="ml-1 text-gray-500">Available from<span class="ml-0.5 text-red-400">*</span> </label>
+          <input class="appearance-none bg-transparent border-none w-full text-gray-700 mt-auto mb-0.5 px-1 leading-tight focus:outline-none" required type="datetime-local" name="availableFrom" formControlName="availableFrom">
+        </div>
+        <div class="flex-1 flex flex-col text-xs border-b border-gray-500 mr-4" [ngClass]="{'border-b-red-400': (examFormGroup.controls.availableTo.dirty || examFormGroup.controls.availableTo.touched || submitted) && examFormGroup.controls.availableTo.invalid}">
+          <label class="ml-1 text-gray-500">Available to<span class="ml-0.5 text-red-400">*</span> </label>
+          <input class="appearance-none bg-transparent border-none w-full text-gray-700 mt-auto mb-0.5 px-1 leading-tight focus:outline-none" required type="datetime-local" name="availableTo" formControlName="availableTo">
+        </div>
+        <div class="flex flex-col text-xs border-b border-gray-500" [ngClass]="{'border-b-red-400': (examFormGroup.controls.time.dirty || examFormGroup.controls.time.touched || submitted) && examFormGroup.controls.time.invalid}">
+          <label class="ml-1 text-gray-500">Duration<span class="ml-0.5 text-red-400">*</span> </label>
+          <div class="flex">
+            <input class="appearance-none bg-transparent border-none w-full text-gray-700 mt-auto mb-0.5 px-1 leading-tight focus:outline-none" type="number" required name="time" formControlName="time" placeholder="30">
+            <fa-icon class="my-auto mr-1 text-base text-gray-500" [icon]="['far','clock']"></fa-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex" style="height: 50vh;">
+      <div class="flex flex-col rounded-lg w-1/3 bg-gray#F8F8F8" id="QuestionListContainer">
+        <div class="flex p-3" id="QuestionListHeader">
+          <span class="ml-4 text-lg text-black#2E383F">
+            Questions
+          </span>
+          <button type="button" (click)="addQuestion()" class="h-9 w-9 ml-auto mr-4 rounded-full bg-yellow#FDC57B p-2 text-white hover:bg-gray-600">
+            <fa-icon class="text-xs" icon="plus"></fa-icon>
+          </button>
+        </div>
+        <div class="h-80 overflow-y-auto" id="QuestionsContainer">
+          <div class="flex flex-col" id="Questions" *ngFor="let question of questions.controls; let idx = index">
+            <div class="flex px-2" (click)="setSelectedQuestion(idx)" [ngClass]="{'bg-blue#E9F7FA': idx == selectedQuestion}">
+              <fa-icon *ngIf="isQuestionInvalid(idx)" class="text-lg text-red-500" icon="circle-exclamation"></fa-icon>
+              <span class="truncate ml-2">{{idx+1}}</span>
+              <span class="truncate ml-2">{{ question.controls["questionContent"]?.value }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col w-2/3 ml-2" formArrayName="questions">
+        <div *ngFor="let question of questions.controls; let i=index">
+          <div [formGroupName]="i" *ngIf="i === selectedQuestion">
+            <div class="flex flex-col border rounded-lg p-4 h-1/4" id="SingleQuestionContainer">
+              <div class="flex mb-4 ml-1">
+                <div class="flex flex-col w-1/6 text-sm pr-4">
+                  <span>Points
+                    <span class="text-red-400 ml-0.5">*</span>
+                  </span>
+                  <input class="border-b-2 h-full" type="number" name="points" placeholder="0" formControlName="points" [ngClass]="{'border-b-red-400': (questions.at(i).controls.points.dirty || questions.at(i).controls.points.touched || submitted) && questions.at(i).controls.points.invalid}">
+                </div>
+                <div class="flex flex-col w-1/3 text-sm pr-4">
+                  <span>Time Limit
+                    <span class="text-red-400 ml-0.5">*</span>
+                  </span>
+                  <select disabled name="location" class="border bg-gray-200 location rounded-md border-gray-300 p-0.5 text-xs -ml-1 text-gray-600">
+                    <option>No type</option>
+                  </select>
+                </div>
+                <div class="flex flex-col w-1/2 text-sm">
+                  <span>Question type
+                    <span class="text-red-400 ml-0.5">*</span>
+                  </span>
+                  <select disabled name="location" class="border bg-gray-200 location rounded-md border-gray-300 py-0.5 px-1.5 text-xs text-gray-600">
+                    <option>No limit</option>
+                  </select>
+                </div>
+              </div>
+              <span class="text-sm ml-1">Question description
+                <span class="ml-2 text-red-400">*</span>
+              </span>
+              <textarea class="border-2 rounded-l text-left bg-transparent w-full h-full text-gray-500" name="questionContent" formControlName="questionContent" [ngClass]="{'border-red-400': (questions.at(i).controls.questionContent.dirty || questions.at(i).controls.questionContent.touched || submitted) && questions.at(i).controls.questionContent.invalid}"></textarea>
+            </div>
+            <div class="h-1/4 pt-2">
+              <div class="flex flex-col p-2 h-full max-h-full border rounded-lg">
+                <div class="flex">
+                  <span class="ml-2 mt-2 text-xl font-medium">Answers</span>
+                  <button type="button" class="ml-auto mr-2 mt-auto my-0.5 border-b-2 text-xs" [disabled]="answers.length == 4" (click)="addAnswer()" id="AddAnswer">+ Add next answer</button>
+                </div>
+                <div class="mt-2 mx-2 h-full grid-col-1 gap-4 overflow-auto scrollbar-thin scrollbar-w-1 scrollbar-thumb-gray-400 scrollbar-track-gray-200 scrollbar-thumb-rounded-full scrollbar-track-rounded-full" formArrayName="answers">
+                  <div *ngFor="let answer of answers.controls; let idx = index">
+                    <div class="flex w-full py-0.5" [formGroupName]="idx">
+                      <input type="checkbox" class="" name="correct" formControlName="correct">
+                      <input type="text" class="ml-2 mr-4 h w-full border rounded text-left bg-transparent text-gray-600" name="answerContent" formControlName="answerContent" [ngClass]="{'border-red-400': (answers.at(idx).controls.answerContent.dirty || answers.at(idx).controls.answerContent.touched || submitted) && answers.at(idx).controls.answerContent.invalid}"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-1 mb-2">
+    <span class="text-red-400">*</span>
+    fields required
+  </div>
+  <div class="flex">
+    <button type="button" class="rounded-xl py-2 px-8 bg-blue#E9F7FA" (click)="openStudentDialog()">
+      <fa-icon class="mr-2" icon="plus"></fa-icon>
+      <span>Add group/students</span>
+    </button>
+    <button type="submit" class="ml-auto bg-yellow#FDC57B rounded-xl py-2 px-8">Save & Continue</button>
+  </div>
+</form>

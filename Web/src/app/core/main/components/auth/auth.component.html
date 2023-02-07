@@ -1,0 +1,32 @@
+<div class="flex flex-col h-screen w-screen" id="background">
+  <div class="flex m-auto pt-12">
+    <img class="h-48 my-auto mr-40" src="../../../../assets/images/full_logo.png" alt="">
+    <form #mainForm [formGroup]="authFormGroup" (ngSubmit)="onSubmit(authFormGroup)" class="flex flex-col h-min my-auto px-4 pt-10 pb-6 rounded-3xl shadow-xl bg-white">
+      <span class="text-center text-4xl font-semibold mb-2">Welcome back!</span>
+      <span class="text-center text-xl font-medium px-8 text-gray-500 mb-16">Nice to see you again! Please enter your details.</span>
+      <input type="email" name="email" formControlName="email" ngModel="john.doe@quicktest.com" class="border-b-2 text-base text-gray-500 font-medium focus:outline-none px-1 placeholder:font-medium placeholder:text-gray-400 border-gray-400 mb-6" placeholder="E-mail">
+      <input type="password" name="password" formControlName="password" ngModel="quickTest123!" class="border-b-2 text-base text-gray-500 font-medium focus:outline-none px-1 placeholder:font-medium placeholder:text-gray-400 border-gray-400 mb-2" placeholder="Password">
+      <button disabled class="ml-auto text-sm font-medium mr-1 text-gray-400">Forgot Password ?</button>
+      <div class="h-16 py-2 w-full">
+        <div *ngIf="authFormGroup.controls['email'].invalid && (authFormGroup.controls['email'].dirty || authFormGroup.controls['email'].touched)">
+          <span class="validationMessage" *ngIf="authFormGroup.controls['email'].errors?.['required']">Email is required</span>
+          <span class="validationMessage" *ngIf="authFormGroup.controls['email'].errors?.['maxlength']">Email must to be up to 69 characters</span>
+          <span class="validationMessage" *ngIf="authFormGroup.controls['email'].errors?.['email']">Invalid email pattern</span>
+        </div>
+        <div *ngIf="authFormGroup.controls['password'].invalid && (authFormGroup.controls['password'].dirty || authFormGroup.controls['password'].touched)">
+          <span class="validationMessage" *ngIf="authFormGroup.controls['password'].errors?.['required']">Password is required</span>
+          <span class="validationMessage" *ngIf="authFormGroup.controls['password'].errors?.['maxlength']">Password must to be up to 69 characters</span>
+          <span class="validationMessage" *ngIf="authFormGroup.controls['password'].errors?.['minlength']">Password must to be at least 6 characters</span>
+          <span class="validationMessage" *ngIf="authFormGroup.controls['password'].errors?.['pattern']">Password must contain uppercase letter, lowercase letter and number</span>
+        </div>
+        <div class="validationMessage" *ngIf="!!errorMessage">{{errorMessage}}</div>
+      </div>
+      <button type="submit" class="mx-20 py-2 text-lg rounded-2xl bg-navy#07617D text-white font-semibold mb-3">Log in</button>
+      <button disabled class="flex mx-20 py-2 px-4 text-lg rounded-2xl border-2 font-semibold mb-6" style="color: #616161;">
+        <svg-icon class="my-auto" src="../../../../assets/Icons/google.svg"></svg-icon>
+        <span class="w-full text-center">Sign in with Google</span>
+      </button>
+      <button disabled class="text-sm text-gray-500">Don’t have an account? <span class="text-navy#07617D font-medium">Sign up</span></button>
+    </form>
+  </div>
+</div>

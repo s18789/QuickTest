@@ -1,0 +1,9 @@
+.active {
+  background-color: #07617D;
+  color: white;
+  border: none;
+}
+
+input:focus {
+  outline: none;
+}

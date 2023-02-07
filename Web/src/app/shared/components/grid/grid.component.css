@@ -1,0 +1,34 @@
+#examName {
+  padding-left: 25px;
+  font-weight: 500;
+}
+
+#status {
+  font-size: 13px;
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 3px 20px;
+}
+
+#completedExams {
+  padding-left: 60px;
+}
+
+#endingDate {
+  padding-left: 40px;
+}
+
+.Active#status {
+  border-color: #5992D6;
+  color: #5992D6;
+}
+
+.Pending#status {
+  border-color: #929292;
+  color: #929292;
+}
+
+.Completed#status {
+  border-color: #83BF35;
+  color: #83BF35;
+}

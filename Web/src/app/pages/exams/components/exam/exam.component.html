@@ -1,0 +1,50 @@
+<div class="flex flex-col p-4 text-gray-500">
+  <a routerLink="/exams" class="flex px-4 text-sm">
+    <fa-icon class="mr-4 mb-4" icon="arrow-left-long"></fa-icon>
+    <span>Back to exams</span>
+  </a>
+  <span class="mx-4 text-2xl text-black font-medium mb-4">Exam Monitoring</span>
+  <div class="flex flex-col p-2 pr-4 pb-4 border-4 rounded-xl shadow-inner mb-4">
+    <div class="flex mb-2">
+      <div x-data="scrollProgress" class="inline-flex items-center justify-center rounded-full">
+        <svg class="w-36 h-36">
+          <circle class="text-gray-300" [innerText]="'elo'" stroke-width="8" stroke="currentColor" fill="transparent" r="50" cx="70" cy="70" />
+          <text x="50%" y="50%" text-anchor="middle" stroke="#07617D" stroke-width="1px" dy=".3em" font-size="x-large">{{completedExams}}/{{exam.examResults.length}}</text>
+          <circle class="text-yellow#FDC57B" stroke-width="8" :stroke-dasharray="280" :stroke-dashoffset="45" stroke-linecap="round" stroke="currentColor" fill="transparent" r="50" cx="70" cy="70" />
+        </svg>
+      </div>
+      <div class="flex flex-col ml-2 pt-4">
+        <div class="flex mb-1">
+          <span class="text-xl text-black mr-4">{{exam.name}}</span>
+          <span class="m-auto px-8 border rounded-full text-blue-500 border-blue-500">{{exam.status}}</span>
+        </div>
+        <span>{{exam.category}}</span>
+        <span>{{exam.questionNumber}} questions</span>
+      </div>
+      <div class="flex flex-col ml-auto mr-2 mt-8">
+        <div class="flex mb-1">
+          <span class="mr-4">{{exam.availableFrom | date: 'dd MMM yyyy'}}</span>
+          <span class="mr-2">{{exam.availableFrom | date: 'hh:mm a'}}</span>
+          <fa-icon class="mr-2" icon="arrow-right-long"></fa-icon>
+          <span class="mr-4">{{exam.availableTo | date: 'hh:mm a'}}</span>
+          <span>{{exam.availableTo | date: 'dd MMM yyyy'}}</span>
+        </div>
+        <div class="flex ml-auto mb-1">
+          <fa-icon class="mr-2" [icon]="['far','clock']"></fa-icon>
+          <span>{{exam.time}} min</span>
+        </div>
+      </div>
+    </div>
+    <a class="ml-auto pt-1.5 pb-2 px-8 mr-2 text-white bg-navy#07617D rounded-lg">
+      Exam preview
+    </a>
+  </div>
+  <div class="flex flex-col p-4">
+    <span class="text-xl text-black mb-4">Students</span>
+    <div class="flex w-2/5 px-4 py-1 rounded-lg border border-gray-300 mb-4">
+      <fa-icon class="my-auto mr-3 text-gray-500" icon="magnifying-glass"></fa-icon>
+      <input class="w-full" type="text" placeholder="Enter student name or e-mail">
+    </div>
+    <app-grid [configurations]="configurations" [data]="exam.examResults"></app-grid>
+  </div>
+</div>

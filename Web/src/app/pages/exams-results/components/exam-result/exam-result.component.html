@@ -1,0 +1,42 @@
+<div class="h-full" style="background-color: #F0F4F7;">
+  <app-prepare-to-start-exam *ngIf="examResult.status == 'Active'"></app-prepare-to-start-exam>
+  <div *ngIf="examResult.status != 'Active'" class="h-full p-16">
+    <div class="flex p-8 rounded-xl bg-white shadow-lg">
+      <div class="flex flex-col">
+        <span class="text-3xl mb-4 font-semibold">Well done!</span>
+        <span class="mb-24 font-medium" >Let's see how your test went</span>
+        <span class="text-lg font-medium mb-4">Test information:</span>
+        <div class="flex mb-2">
+          <div class="flex flex-col mr-4">
+            <span class="mb-2">Points:</span>
+            <span class="mb-2">Correct answer:</span>
+            <span class="mb-2">Wrong answer:</span>
+            <span class="mb-2">Start time:</span>
+            <span class="mb-2">End time:</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="mb-2">{{examResult.score || 0}}/{{examResult.maxPoints}}</span>
+            <span class="mb-2">{{examResult.correctAnswers || 0}}/{{examResult.questionCount}}</span>
+            <span class="mb-2">{{examResult.wrongAnswers || 0}}/{{examResult.questionCount}}</span>
+            <span class="mb-2">{{examResult.startTime | date: 'd MMM yyyy hh:mm' }}</span>
+            <span class="mb-2">{{examResult.endTime | date: 'd MMM yyyy hh:mm' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col ml-auto">
+        <button class="flex text-sm ml-auto" disabled>
+          <span class="mr-3">See my answers</span>
+          <fa-icon icon="arrow-right"></fa-icon>
+        </button>
+        <div x-data="scrollProgress" class="my-8 ml-auto inline-flex items-center justify-center rounded-full">
+          <svg class="w-36 h-36">
+            <circle class="text-gray-100" [innerText]="'elo'" stroke-width="10" stroke="currentColor" fill="transparent" r="60" cx="70" cy="70" />
+            <text x="50%" y="50%" text-anchor="middle" stroke="#07617D" stroke-width="1px" dy=".3em" font-size="x-large">{{percentageResult || 0 | number: '1.0-0'}} %</text>
+            <circle class="text-navy#07617D" stroke-width="10" :stroke-dasharray="282" :stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="60" cx="70" cy="70" />
+          </svg>
+        </div>
+        <img style="width: 22vw; height:35vh;" src="../../../../../assets/images/examResultFlag.png" alt="">
+      </div>
+    </div>
+  </div>
+</div>

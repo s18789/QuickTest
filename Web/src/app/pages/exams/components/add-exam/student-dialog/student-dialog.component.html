@@ -1,0 +1,48 @@
+<div class="flex flex-col pt-4 px-2">
+  <button class="ml-auto mr-2" (click)="dialogRef.close()">
+    <fa-icon icon="xmark"></fa-icon>
+  </button>
+  <span class="text-2xl font-medium mb-12">Add group/students</span>
+  <div class="flex mb-4">
+    <button disabled class="py-2 px-4 rounded-lg border text-sm text-white font-medium bg-navy#07617D mr-2">All students</button>
+    <button disabled class="py-2 px-4 rounded-lg border-2 text-sm text-gray-400 font-medium">Groups</button>
+    <div class="flex w-2/5 px-4 py-1 rounded-lg border border-gray-300 ml-auto">
+      <fa-icon class="my-auto mr-3 text-gray-500" icon="magnifying-glass"></fa-icon>
+      <input class="w-full text-sm focus: outline-none" type="text" placeholder="Enter student name or e-mail">
+    </div>
+  </div>
+  <div class="mb-8">
+    <table class="w-full">
+      <thead>
+        <tr class="border-b-2 text-left text-sm text-gray-400 font-thin">
+          <th class="pl-1 w-12">
+            <input type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+          </th>
+          <th class="pl-10">
+            Name
+          </th>
+          <th class="pl-10">
+            E-mail
+          </th>
+          <th class="pl-3">
+            Group
+          </th>
+        </tr>
+      </thead>
+      <tbody class="overflow-y-auto scrollbar-thin scrollbar-w-1 scrollbar-thumb-gray-400 scrollbar-track-gray-200 scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
+        <tr *ngFor="let student of data; let i=index">
+            <td class="w-12">
+              <input type="checkbox" [checked]="student.isSelected" (change)="student.isSelected = !student.isSelected" class="ml-1 mx-auto h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+            </td>
+            <td class="flex pl-3">
+              <svg-icon class="my-auto mr-2" src="../../../../assets/Icons/student_single.svg"></svg-icon>
+              <span>{{student.firstName}} {{student.lastName}}</span>
+            </td>
+            <td>{{student.email}}</td>
+            <td>{{student.groupName}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <button type="button" class="bg-navy#07617D rounded-xl pb-2 pt-1.5 px-8 ml-auto text-white" (click)="closeDialog()">save & continue</button>
+</div>

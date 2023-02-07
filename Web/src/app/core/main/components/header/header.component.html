@@ -1,0 +1,11 @@
+<div class="w-full h-full bg-gray#F8F8F8">
+  <div class="flex flex-row-reverse h-full mx-8">
+    <button class="ml-2" (click)="isOptionsOpen = !isOptionsOpen">
+      <fa-icon icon="chevron-down"></fa-icon>
+    </button>
+    <img class="my-auto inline-block h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256" alt="">
+  </div>
+  <div *ngIf="isOptionsOpen" class="absolute right-6 w-44 origin-top-right rounded bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+    <button (click)="logout()" class="block px-4 py-2 w-full text-sm text-left text-gray-700 active:bg-gray-100 active:text-gray-900 hover:bg-gray-100">Log out</button>
+  </div>
+</div>
