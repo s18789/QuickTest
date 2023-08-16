@@ -23,4 +23,12 @@ public class StudentRepository : BaseRepository<Student>, IStudentRepository
             .Include(x => x.Group)
             .FirstOrDefaultAsync();
     }
+    public async Task<IEnumerable<Student>> GetStudentsByGroupId(int groupId)
+    {
+        return await this.context.Students
+            .Where(x => x.GroupId == groupId)
+            .Include(x => x.Group)
+            .ToListAsync();
+    }
+
 }

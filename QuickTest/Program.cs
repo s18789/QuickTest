@@ -69,10 +69,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer("Server=inzynierka2023.database.windows.net;Database=QuickTest;User Id=adminqt;Password=AdminQuickTest69;");
+    options.UseSqlServer("Server=inzynierka2023.database.windows.net;Database=QuickTest;User Id=adminqt;Password=AdminQuickTest69;"
+        , b => b.MigrationsAssembly("QuickTest"));
 });
 
 var app = builder.Build();
+var serviceScopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+
+using (var scope = serviceScopeFactory.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+
+    DbInitializer.FillDatabaseRandomData(context, userManager).GetAwaiter().GetResult();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

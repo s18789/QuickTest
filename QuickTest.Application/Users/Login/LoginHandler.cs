@@ -34,4 +34,5 @@ public class LoginHandler : IRequestHandler<LoginRequest, AuthResponseDto>
 
         return new AuthResponseDto { IsAuthSuccessful = true, Token = token, UserId = user.Id };
     }
+    
 }

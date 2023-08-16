@@ -8,6 +8,8 @@ public class Question : IEntity
     public double Points { get; set; }
 
     public int ExamId { get; set; }
+    public string Description { get; set; }
+    public string Title { get; set; }
 
     public Exam Exam { get; set; }
 
