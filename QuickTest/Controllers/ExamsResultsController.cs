@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QuickTest.Application.Exams.GetExamPreview;
 using QuickTest.Application.ExamsResults.FinishExam;
 using QuickTest.Application.ExamsResults.GetExamResult;
+using QuickTest.Application.ExamsResults.GetExamResultPreview;
 using QuickTest.Application.ExamsResults.GetExamResultStatus;
 using QuickTest.Application.ExamsResults.GetExamsResults;
 using QuickTest.Application.ExamsResults.StartExam;
@@ -10,7 +12,6 @@ using QuickTest.Application.ExamsResults.StartExam;
 namespace QuickTest.Controllers;
 
 [Route("api/[controller]")]
-[Authorize(Roles = "Student")]
 [ApiController]
 public class ExamsResultsController : ControllerBase
 {
@@ -61,5 +62,13 @@ public class ExamsResultsController : ControllerBase
         await this.mediator.Send(new FinishExamRequest() { Exam = exam });
 
         return Ok();
+    }
+
+    [HttpGet("Preview/{id}")]
+    public async Task<IActionResult> GetExamResultPreview(int id)
+    {
+        var exam = await this.mediator.Send(new GetExamResultPreviewRequest() { ExamResultId = id });
+
+        return this.Ok(exam);
     }
 }

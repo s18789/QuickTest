@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from 'src/app/core/main/services/auth.service';
 import { ExamsService } from 'src/app/pages/exams/services/exams.service';
-import { Student } from 'src/app/shared/utils/models/studentModel';
-import { ExamFormGroup } from '../../models/examFormGroup';
-import { QuestionFormGroup } from '../../models/questionFormGroup';
-import { AnswerFormGroup } from '../../models/answerFormGroup';
+import { AnswerFormGroup, ExamFormGroup, QuestionFormGroup, StudentFormGroup } from '../../models/examFormGroup.model';
 import { StudentDialogComponent } from './student-dialog/student-dialog.component';
-import { StudentFormGroup } from '../../models/studentFormGroup';
-import { StudentsService } from 'src/app/pages/students/services/students.services';
 import { Router } from '@angular/router';
+import { StudentService } from 'src/app/pages/members/services/students/student.services';
+import { KeyValue } from '@angular/common';
+import { map, tap } from 'rxjs';
+import { StudentMapperService } from 'src/app/pages/members/services/students/studentMapper.service';
+import { StudentResponse } from 'src/app/pages/members/models/students/studentResponse.model';
+import { StudentDialog } from 'src/app/pages/members/models/students/studentDialog.model';
+import { QuestionType } from 'src/app/shared/enums/questionType.enum';
 
 @Component({
   selector: 'app-add-exam',
@@ -18,8 +20,11 @@ import { Router } from '@angular/router';
   styleUrls: ['./add-exam.component.css']
 })
 
-export class AddExamComponent implements OnInit {
-
+export class AddExamComponent{
+  QuestionType: typeof QuestionType = QuestionType;
+  originalOrder = (a: KeyValue<string, QuestionType>, b: KeyValue<string, QuestionType>): number => {
+    return 0;
+  }
   examFormGroup: FormGroup<ExamFormGroup>;
   selectedQuestion: number = 0;
   errorMessage: string = "";
@@ -29,7 +34,8 @@ export class AddExamComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private examsService: ExamsService,
-    private studentService: StudentsService,
+    private studentService: StudentService,
+    private studentMapperService: StudentMapperService,
     public dialog: MatDialog,
     private router: Router
     ) {
@@ -43,6 +49,7 @@ export class AddExamComponent implements OnInit {
         [
           new FormGroup<QuestionFormGroup>({
             points: new FormControl('', [Validators.required, Validators.min(1), Validators.max(100)]),
+            type: new FormControl(QuestionType.SingleChoice),
             questionContent: new FormControl('', [Validators.required, Validators.maxLength(300)]),
             answers: this.formBuilder.array<FormGroup<AnswerFormGroup>>(
             [
@@ -60,12 +67,10 @@ export class AddExamComponent implements OnInit {
     this.examFormGroup.statusChanges.subscribe(result => this.setErrorMessage());
    }
 
-  ngOnInit(): void {
-  }
-
   addQuestion() {
     const questionForm = this.formBuilder.group({
       points: new FormControl('', [Validators.required, Validators.min(1), Validators.max(100)]),
+      type: new FormControl(QuestionType.SingleChoice),
       questionContent: new FormControl('', [Validators.required, Validators.maxLength(300)]),
       answers: this.formBuilder.array(
         [
@@ -80,9 +85,9 @@ export class AddExamComponent implements OnInit {
     this.setSelectedQuestion(this.questions.length - 1);
   }
 
-  addAnswer() {
+  addAnswer(content: string, disabledValue: boolean = false) {
     const answerForm = this.formBuilder.group({
-      answerContent: new FormControl('', [Validators.required, Validators.maxLength(300)]),
+      answerContent: new FormControl({value: content, disabled: disabledValue}, [Validators.required, Validators.maxLength(300)]),
       correct: new FormControl(false, [Validators.required]),
     });
 
@@ -93,6 +98,14 @@ export class AddExamComponent implements OnInit {
     this.selectedQuestion = index;
   }
 
+  removeQuestion(index: number) {
+    this.questions.removeAt(index);
+  }
+
+  removeAnswer(index: number) {
+    this.answers.removeAt(index);
+  }
+
   isQuestionInvalid(index: number):boolean {
     var currentQuestionFormGroup = this.questions.at(index) as FormGroup;
 
@@ -101,6 +114,38 @@ export class AddExamComponent implements OnInit {
         (currentQuestionFormGroup.controls[key]?.dirty || currentQuestionFormGroup.controls[key]?.touched || this.submitted) &&
         currentQuestionFormGroup.controls[key]?.invalid
       );
+  }
+
+  onQuestionTypeSelected(event: any) {
+    var type: QuestionType = event.target.value;
+    this.answers.clear();
+
+    switch(type) {
+      case QuestionType.Open:
+        break;
+      case QuestionType.YesNoChoice:
+        this.addAnswer("Yes", true);
+        this.addAnswer('No', true);
+        break;
+      default:
+        this.addAnswer('');
+        this.addAnswer('');
+    }
+  }
+
+  clearRestCheckboxIfNeeded(event: any, selectedAnswerIndex: number) {
+    var currentQuestionType: QuestionType = this.questions.at(this.selectedQuestion).controls['type'].value;
+
+    if (!event.target.checked) {
+      return;
+    }
+
+    if (currentQuestionType != QuestionType.SingleChoice && currentQuestionType != QuestionType.YesNoChoice) {
+      return;
+    }
+
+    this.answers.controls.forEach(x => x.controls['correct']?.setValue(false));
+    this.answers.controls.at(selectedAnswerIndex).controls['correct'].setValue(true);
   }
 
   setErrorMessage() {
@@ -161,44 +206,33 @@ export class AddExamComponent implements OnInit {
   }
 
   openStudentDialog() {
-    this.studentService.fetch().subscribe((students: any[]) => {
-      var returnStudents: Student[] = students.map(x => {
-        var student: Student = {
-          id: x.id,
-          firstName: x.firstName,
-          lastName: x.lastName,
-          email: x.email,
-          groupName: x.groupDto.name,
-          isSelected: this.students.controls.map(y => y.controls["id"]?.value).includes(x.id),
-        };
-        return student;
-      });
-
-      this.openDialog(returnStudents);
-    })
+    this.studentService.getStudents().pipe(
+      map((response: StudentResponse[]) => response.map(studentResponse => this.studentMapperService.mapStudentResponseToStudentDialog(studentResponse))),
+      tap((students) => students.forEach(s => s.isSelected = this.students.controls.map(y => y.controls["id"]?.value).includes(s.id))),
+      tap((students) => this.openDialog(students))
+    ).subscribe();
   }
 
-  openDialog(students: Student[]) {
-
+  openDialog(students: StudentDialog[]) {
     const dialogRef = this.dialog.open(StudentDialogComponent, {
-      width: '900px',
-      height: '656px',
       data: students
     });
 
-    dialogRef.afterClosed().subscribe((selectedStudentsIndexes: string[] | null) => {
-      if (!selectedStudentsIndexes) {
-        return;
-      }
-
-      this.students.clear();
-
-      selectedStudentsIndexes.forEach(selectedIndex => {
-        this.students.push(new FormGroup<StudentFormGroup>({
-          id: new FormControl(selectedIndex),
-        }));
+    dialogRef.afterClosed().pipe(
+      tap((selectedStudentsIndexes: string[] | null) => {
+        if (!selectedStudentsIndexes) {
+          return;
+        }
+  
+        this.students.clear();
+  
+        selectedStudentsIndexes.forEach(selectedIndex => {
+          this.students.push(new FormGroup<StudentFormGroup>({
+            id: new FormControl(selectedIndex),
+          }));
+        })
       })
-    });
+    ).subscribe();
   }
 
   onSubmit(form: any) {
@@ -209,16 +243,33 @@ export class AddExamComponent implements OnInit {
       return;
     }
 
+    var result =  {
+        title: form.value.title,
+        time: form.value.time,
+        availableFrom: form.value.availableFrom,
+        availableTo: form.value.availableTo,
+        students: form.value.students,
+        questions: form.value.questions.map((y: { points: any; type: string | number; questionContent: any; answers: any; }) => {
+          var question = {
+            points: y.points,
+            type: +y.type,
+            questionContent: y.questionContent,
+            answers: y.answers
+          };
+          return question;
+        })
+      };
+      
+    debugger;
     if (this.authService.access) {
-      this.examsService.add(form.value).subscribe((response) => {
-      });
-
-      this.router.navigate(['/exams']);
+      this.examsService.add(result).pipe(
+        tap(() => this.router.navigate(['/exams']))
+      ).subscribe();
     }
   }
 
   get questions() {
-    return this.examFormGroup.controls.questions;
+    return this.examFormGroup?.controls?.questions;
   }
 
   get answers() {

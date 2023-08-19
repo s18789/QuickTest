@@ -1,4 +1,4 @@
-<div class="flex flex-col p-4 text-gray-500">
+<div *ngIf="exam$ | async as exam" class="flex flex-col p-4 text-gray-500">
   <a routerLink="/exams" class="flex px-4 text-sm">
     <fa-icon class="mr-4 mb-4" icon="arrow-left-long"></fa-icon>
     <span>Back to exams</span>
@@ -9,7 +9,7 @@
       <div x-data="scrollProgress" class="inline-flex items-center justify-center rounded-full">
         <svg class="w-36 h-36">
           <circle class="text-gray-300" [innerText]="'elo'" stroke-width="8" stroke="currentColor" fill="transparent" r="50" cx="70" cy="70" />
-          <text x="50%" y="50%" text-anchor="middle" stroke="#07617D" stroke-width="1px" dy=".3em" font-size="x-large">{{completedExams}}/{{exam.examResults.length}}</text>
+          <text x="50%" y="50%" text-anchor="middle" stroke="#07617D" stroke-width="1px" dy=".3em" font-size="x-large">{{exam.completedExams}}/{{exam.examResults.length}}</text>
           <circle class="text-yellow#FDC57B" stroke-width="8" :stroke-dasharray="280" :stroke-dashoffset="45" stroke-linecap="round" stroke="currentColor" fill="transparent" r="50" cx="70" cy="70" />
         </svg>
       </div>
@@ -35,16 +35,23 @@
         </div>
       </div>
     </div>
-    <a class="ml-auto pt-1.5 pb-2 px-8 mr-2 text-white bg-navy#07617D rounded-lg">
-      Exam preview
-    </a>
+    <div class="flex space-x-2 text-white">
+      <button (click)="openExamPreview()" class="ml-auto pt-1.5 pb-2 px-8 mr-2 text-white bg-navy#07617D rounded-lg">
+        Exam preview
+      </button>
+      <button class="bg-red-500" (click)="finishExam()">finish exam</button>
+      <button class="bg-blue-500" (click)="addNewExamMember()">add member</button>
+    </div>
   </div>
   <div class="flex flex-col p-4">
     <span class="text-xl text-black mb-4">Students</span>
-    <div class="flex w-2/5 px-4 py-1 rounded-lg border border-gray-300 mb-4">
-      <fa-icon class="my-auto mr-3 text-gray-500" icon="magnifying-glass"></fa-icon>
-      <input class="w-full" type="text" placeholder="Enter student name or e-mail">
-    </div>
-    <app-grid [configurations]="configurations" [data]="exam.examResults"></app-grid>
+    <app-grid
+      [searchPlaceholder]="'Enter student name'"
+      [searchConfiguration]="searchConfiguration"
+      [filterConfiguration]="filterConfiguration"
+      [configurations]="configurations"
+      [allItems]="exam.examResults"
+      [routerName]="'../../examsResults/examResult'"
+    ></app-grid>
   </div>
 </div>

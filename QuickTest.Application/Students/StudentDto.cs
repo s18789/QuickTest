@@ -1,17 +1,15 @@
 ﻿using QuickTest.Application.Groups;
 
 namespace QuickTest.Application.Students;
-public class StudentDto
+public sealed record StudentDto
 {
-    public int? Id { get; set; }
+    public int? Id { get; init; }
 
-    public string FirstName { get; set; }
+    public string FirstName { get; init; }
 
-    public string LastName { get; set; }
+    public string LastName { get; init; }
 
-    public string Email { get; set; }
+    public string Email { get; init; }
 
-    public int GroupId { get; set; }
-
-    public GroupDto? GroupDto { get; set; }
+    public GroupDto? Group { get; init; }
 }

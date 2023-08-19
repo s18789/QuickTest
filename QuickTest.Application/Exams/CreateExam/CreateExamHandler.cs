@@ -15,7 +15,7 @@ public class CreateExamHandler : IRequestHandler<CreateExamRequest, CreateExamDt
     public async Task<CreateExamDto> Handle(CreateExamRequest request, CancellationToken cancellationToken)
     {
         var exam = await this.examRepository
-            .AddAsync(new QuickTest.Core.Entities.Exam()
+            .AddAsync(new Exam()
             {
                 Title = request.Exam.Title,
                 Time = request.Exam.Time,
@@ -27,11 +27,12 @@ public class CreateExamHandler : IRequestHandler<CreateExamRequest, CreateExamDt
                     .Select(x => new Question()
                     {
                         QuestionContent = x.QuestionContent,
+                        Type = x.Type,
                         Points = x.Points,
                         PredefinedAnswers = x.Answers.Select(a => new PredefinedAnswer()
                         {
                             Content = a.AnswerContent,
-                            IsCorrect = a.Correct == true ? true : false
+                            IsCorrect = a.Correct == true
                         }).ToList()
                     }).ToList(),
                 ExamResults = request.Exam.Students.Select(x => new ExamResult()

@@ -1,19 +1,73 @@
 <div class="flex flex-col">
+  <div class="flex h-10 gap-3">
+    <div class="flex w-2/5 px-4 py-1 rounded-lg border border-gray-300" [ngClass]="{'border-indigo-400': itemFilters.search}">
+      <fa-icon class="my-auto mr-3 text-gray-500" icon="magnifying-glass"></fa-icon>
+      <input
+        class="w-full"
+        type="text"
+        [placeholder]="searchPlaceholder"
+        [(ngModel)]="itemFilters.search"
+        (ngModelChange)="searchValueChange()"
+      />
+      <button *ngIf="this.itemFilters.search" class="flex" (click)="clearSearch()">
+        <fa-icon class="my-auto text-gray-500" icon="circle-xmark"></fa-icon>
+      </button>
+    </div>
+    <button
+      class="flex ml-auto w-24 pl-4 rounded-lg border border-gray-300 gap-1"
+      [ngClass]="{'border-indigo-400': itemFilters.sort != sort.default}"
+      (click)="handleSortChange()"
+      >
+        <svg-icon class="my-auto stroke-gray-500" *ngIf="itemFilters.sort == sort.default" src="../../../../assets/Icons/caretUpAndDown.svg"></svg-icon>
+        <svg-icon class="my-auto stroke-indigo-500" *ngIf="itemFilters.sort == sort.asc" src="../../../../assets/Icons/caretUp.svg"></svg-icon>
+        <svg-icon class="my-auto stroke-indigo-500" *ngIf="itemFilters.sort == sort.desc" src="../../../../assets/Icons/caretDown.svg"></svg-icon>
+        <span class="my-auto text-gray-400">Sort</span>
+    </button>
+    <button
+      *ngIf="filterConfiguration.display != false"
+      class="flex w-24 pl-4 rounded-lg border border-gray-300 gap-1" 
+      [ngClass]="{'border-indigo-400': !!itemFilters.filter?.length}" 
+      (click)="handleFilterClick()"
+      >
+        <svg-icon class="my-auto" src="../../../../assets/Icons/filter.svg" [ngClass]="!!itemFilters.filter?.length ? 'stroke-indigo-500' : 'stroke-gray-500'"></svg-icon>
+        <span class="my-auto text-gray-400">Filters</span>
+    </button>
+  </div>
+  <div class="h-4">
+    <div
+      *ngIf="showFilterModal"
+      appClickOutside
+      (outsideClick)="showFilterModal = false"
+      class="relative ml-auto flex flex-col gap-2 bg-white shadow-md rounded p-4 pt-2 mt-2 z-50 w-max"
+      >
+      <ng-container *ngFor="let filterItem of getAllFilters()">
+        <label class="flex gap-1">
+          <input
+            type="checkbox"
+            class="w-4 checked:accent-indigo-500"
+            [checked]="!itemFilters.filter.includes(filterItem)"
+            (change)="handleFilterChange(filterItem)"
+          />
+          <small>{{ filterItem }}</small>
+        </label>
+      </ng-container>
+    </div>
+  </div>
   <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
     <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
       <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
         <table class=" min-w-full divide-y divide-gray-300">
           <thead class="bg-gray-50">
             <tr>
-              <th *ngFor="let config of configurations" scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6" [ngClass]="config.width">{{ config.displayName }}</th>
+              <th *ngFor="let config of configurations" scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6" [ngClass]="config.styles">{{ config.displayName }}</th>
               <th scope="col" class="w-5/100"></th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 bg-white">
-            <tr *ngFor="let item of data">
+            <tr *ngFor="let item of (itemView$ | async) ?? allItems" style="height: 54px;">
               <td *ngFor="let config of configurations;let i=index">
                 <div [ngSwitch]="config.type">
-                  <div *ngSwitchCase="'input'">
+                  <!-- <div *ngSwitchCase="'input'">
                     <input type="text" [value]="item[config.key]">
                   </div>
                   <div *ngSwitchCase="'image'">
@@ -21,6 +75,11 @@
                   </div>
                   <div *ngSwitchCase="'button'">
                     <button>{{ config.text }}</button>
+                  </div> -->
+                  <div *ngSwitchCase="configurationItemType.object">
+                    <span [id]="config.key" class="text-sm text-gray-500" [ngClass]="(item[config.key][config.nestedKey] || '').toString()">
+                      {{ item[config.key][config.nestedKey] || "" }}
+                    </span>
                   </div>
                   <div *ngSwitchDefault>
                     <span [id]="config.key" class="text-sm text-gray-500" [ngClass]="(item[config.key] || '').toString()">
@@ -29,10 +88,13 @@
                   </div>
                 </div>
               </td>
-              <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                <a [routerLink]="[routerName]" [queryParams]="{id:item.id}">
+              <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                <!-- <a *ngIf="!!item.id && item.status.toLowerCase() != 'active'" [routerLink]="routerName + '/' + item.id">
                   <fa-icon icon="chevron-right"></fa-icon>
-                </a>
+                </a> -->
+                <button *ngIf="!!item.id" (click)="handleAction(item)">
+                  <fa-icon icon="chevron-right"></fa-icon>
+                </button>
               </td>
             </tr>
           </tbody>

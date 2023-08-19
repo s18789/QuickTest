@@ -1,0 +1,36 @@
+<form class="flex space-x-8 pt-4 px-24 pb-12 bg-blue#E9F7FA h-full" [formGroup]="examPreviewForm" (ngSubmit)="onSubmit(examPreviewForm)">
+    <div class="flex flex-col w-1/3">
+        <div class="h-20"></div>
+        <!-- timer!!!! -->
+        <div class="flex flex-col rounded-lg shadow-md h-full" style="background-color: #F8F8F8;">
+            <div class="flex px-8 py-3 text-lg font-semibold">
+                <span>Questions</span>
+                <span class="ml-auto">{{questions.length}}</span>
+            </div>
+            <div class="flex flex-col px-2 space-y-1">
+                <div *ngFor="let question of questions.controls; let i=index" class="flex" (click)="currentQuestion = i" [ngClass]="i == currentQuestion ? 'bgYellow' : 'bg-white'">
+                    <span class="w-5 ml-2">{{i+1}}.</span>
+                    <span class="truncate">{{question.controls['content']?.value}}</span>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-col w-full">
+        <div class="flex h-20">
+            <span class="my-auto text-navy#07617D font-semibold text-3xl">{{examPreviewForm.controls['title']?.value}}</span>
+            <button *ngIf="currentQuestion == questions.length - 1 && previewType == ExamPreviewType.ToSolve" type="submit" (submit)="onSubmit(examPreviewForm)" class="my-auto ml-auto bg-yellow#FDC57B px-8 py-2 rounded-lg text-sm font-semibold">
+                <span>Finish exam</span>
+            </button>
+            <button *ngIf="currentQuestion != questions.length - 1" type="button" (click)="nextQuestion()" class="my-auto ml-auto bg-yellow#FDC57B px-8 py-2 rounded-lg text-sm font-semibold">
+                <span>Next question</span>
+            </button>
+        </div>
+        <div class="h-full" formArrayName="questions">
+            <div class="flex flex-col" *ngFor="let question of questions.controls; let i=index" [ngClass]="i == currentQuestion ? 'h-full' : 'h-0'">
+                <div class="flex flex-col h-full" [formGroupName]="i" *ngIf="i == currentQuestion">
+                    <app-question class="h-full" *ngIf="i == currentQuestion" [question]="questions.at(currentQuestion)" [previewType]="previewType"></app-question>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -53,4 +53,31 @@ public class ExamResultRepository : BaseRepository<ExamResult>, IExamResultRepos
 
         return examResult;
     }
+
+    public async Task AddMembersToExam(int examId, IEnumerable<int> membersIds)
+    {
+        this.context.ExamResults.AddRange(
+            membersIds.Select(x => new ExamResult()
+            {
+                ExamId = examId,
+                StudentId = x
+            })
+        );
+
+        await this.context.SaveChangesAsync();
+    }
+
+    public async Task<ExamResult> GetExamResultPreview(int examResultId)
+    {
+        return await this.context.ExamResults
+            .Include(x => x.Exam)
+                .ThenInclude(x => x.Questions)
+                    .ThenInclude(x => x.PredefinedAnswers)
+                        .ThenInclude(x => x.SelectedStudentAnswers)
+                            .ThenInclude(x => x.StudentAnswer)
+                        .       ThenInclude(x => x.Question)
+             .FirstOrDefaultAsync(x => x.Id == examResultId);
+
+
+    }
 }

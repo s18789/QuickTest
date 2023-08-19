@@ -1,0 +1,11 @@
+.best {
+  background: rgba(159, 233, 167, 0.19);
+}
+
+.average {
+  background: rgba(253, 197, 123, 0.2);
+}
+
+.worste {
+  background: rgba(245, 41, 41, 0.2);
+}

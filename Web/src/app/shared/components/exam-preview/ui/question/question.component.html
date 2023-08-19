@@ -1,0 +1,23 @@
+<div class="flex flex-col h-full space-y-4" [formGroup]="question">
+    <div style="min-height: 200px;" class="px-8 pt-8 bg-white rounded-lg shadow-md">
+        <span>{{question.controls['content']?.value}}</span>
+    </div>
+    <div class="flex flex-col h-full">
+        <div *ngIf="question.controls['type']?.value != questionType.Open" class="flex flex-col space-y-4" formArrayName="answers">
+            <div *ngFor="let answer of answers.controls; let idx=index" 
+                class="flex rounded-lg shadow-md px-4 py-2 space-x-4"
+                [ngClass]="previewType == ExamPreviewType.Resolved && answer.controls['isCorrect']?.value == true ? 'bg-green-100' : 'bg-white'"
+                [formGroupName]="idx">
+                <div class="my-auto">
+                    <input *ngIf="previewType == ExamPreviewType.ToSolve" type="checkbox" formControlName="isSelected">
+                    <input *ngIf="previewType == ExamPreviewType.Created" type="checkbox" formControlName="isCorrect" [value]="answer.controls['isCorrect']?.value">
+                    <input *ngIf="previewType == ExamPreviewType.Resolved" type="checkbox" formControlName="isSelected" [value]="answer.controls['isSelected']?.value">
+                </div>
+                <span>{{answer.controls['content']?.value}}</span>
+            </div> 
+        </div>
+        <div *ngIf="question.controls['type']?.value == questionType.Open" class="bg-white rounded-lg shadow-md p-4 h-full">
+            <textarea class="text-left bg-transparent w-full h-full text-gray-500" formControlName="answerContent"></textarea>
+        </div>
+    </div>
+</div>

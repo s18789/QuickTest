@@ -1,20 +1,20 @@
 ﻿namespace QuickTest.Application.ExamsResults.GetExamResult;
 
-public class GetExamResultDto
+public sealed record GetExamResultDto
 {
-    public string? Status { get; set; }
+    public string? Status { get; init; }
 
-    public int? MaxPoints { get; set; }
+    public int? MaxPoints { get; init; }
 
-    public double? Score { get; set; }
+    public double? Score { get; init; }
 
-    public int? QuestionCount { get; set; }
+    public int? QuestionCount { get; init; }
 
-    public int? CorrectAnswers { get; set; }
+    public int? CorrectAnswers { get; init; }
 
-    public int? WrongAnswers { get; set; }
+    public int? WrongAnswers { get; init; }
 
-    public DateTime? StartTime { get; set; }
+    public DateTime? StartTime { get; init; }
 
-    public DateTime? EndTime { get; set; }
+    public DateTime? EndTime { get; init; }
 }

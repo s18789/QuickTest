@@ -163,6 +163,9 @@ namespace QuickTest.Infrastructure.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExamId");
@@ -204,15 +207,23 @@ namespace QuickTest.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ExamResultId")
                         .HasColumnType("int");
 
                     b.Property<double>("Points")
                         .HasColumnType("float");
 
+                    b.Property<int?>("QuestionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExamResultId");
+
+                    b.HasIndex("QuestionId");
 
                     b.ToTable("StudentAnswers");
                 });
@@ -415,7 +426,13 @@ namespace QuickTest.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("QuickTest.Core.Entities.Question", "Question")
+                        .WithMany("StudentAnswers")
+                        .HasForeignKey("QuestionId");
+
                     b.Navigation("ExamResult");
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("QuickTest.Core.Entities.User", b =>
@@ -480,6 +497,8 @@ namespace QuickTest.Infrastructure.Migrations
             modelBuilder.Entity("QuickTest.Core.Entities.Question", b =>
                 {
                     b.Navigation("PredefinedAnswers");
+
+                    b.Navigation("StudentAnswers");
                 });
 
             modelBuilder.Entity("QuickTest.Core.Entities.StudentAnswer", b =>

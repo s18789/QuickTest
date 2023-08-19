@@ -1,9 +1,9 @@
 ﻿namespace QuickTest.Application.Users.Login.Props;
 
-public class AuthResponseDto
+public sealed record AuthResponseDto
 {
-    public int UserId { get; set; }
-    public bool IsAuthSuccessful { get; set; }
-    public string? ErrorMessage { get; set; }
-    public string? Token { get; set; }
+    public int UserId { get; init; }
+    public bool IsAuthSuccessful { get; init; }
+    public string? ErrorMessage { get; init; }
+    public string? Token { get; init; }
 }

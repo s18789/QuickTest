@@ -2,14 +2,15 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Api } from 'src/app/shared/utils/api';
-import { HttpServiceModel } from 'src/app/shared/utils/models/httpServiceModel';
 import { ExamResultDto } from '../../../core/main/components/exam-to-solve/models/examResultDto.model';
 import { ExamResult } from '../models/examResult.model';
+import { ExamResultGridModelResponse } from '../models/examResultResponse';
+import { ExamPreviewResponse } from 'src/app/shared/components/exam-preview/models/examPreviewResponse.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ExamsResultsService implements HttpServiceModel {
+export class ExamsResultsService {
   private readonly apiUrl = `${Api.LOCAL_URL}examsResults`;
 
   constructor(
@@ -20,6 +21,15 @@ export class ExamsResultsService implements HttpServiceModel {
     var userId = <string>localStorage.getItem('userId');
     var params = new HttpParams().set("studentId", userId);
     return this.http.get(this.apiUrl, { params: params })
+  }
+
+  getExamsResults(studentId?: string): Observable<ExamResultGridModelResponse[]> {
+    var userId = studentId
+      ? studentId
+      : <string>localStorage.getItem('userId');
+
+    var params = new HttpParams().set("studentId", userId);
+    return this.http.get<ExamResultGridModelResponse[]>(this.apiUrl, { params: params })
   }
 
   get(id: string): Observable<ExamResult> {
@@ -47,5 +57,9 @@ export class ExamsResultsService implements HttpServiceModel {
 
   remove(id: string): Observable<any> {
     return this.http.delete(`${Api.DATA_EXAMS}/${id}`)
+  }
+
+  GetExamResultPreview(id: string): Observable<ExamPreviewResponse> {
+    return this.http.get<ExamPreviewResponse>(`${this.apiUrl}/Preview/${id}`)
   }
 }

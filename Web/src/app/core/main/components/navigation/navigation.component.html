@@ -1,32 +1,25 @@
 <nav class="h-full">
-  <div class="flex flex-col h-full">
-    <a routerLink="">
-      <div *ngIf="shownFullNavigation" style="height: 105px; width: 280px;">
-        <img class="m-auto" src="../../../../assets/images/full_logo.png" alt="">
-      </div>
-      <div *ngIf="!shownFullNavigation" style="height: 105px; width: 95px;">
-        <img class="m-auto" src="../../../../assets/images/logo_mini.png" alt="">
+  <div class="flex flex-col h-full trans" [style]="showFullNavigation ? 'width: 280px;' : 'width: 95px;'">
+    <a routerLink="dashboard">
+      <div [style]="showFullNavigation ? 'width: 280px;' : 'width: 95px;'">
+        <img class="m-auto" [src]="showFullNavigation ? '../../../../assets/images/full_logo.png' : '../../../../assets/images/logo_mini.png'" alt="">
       </div>
     </a>
-    <div *ngIf="shownFullNavigation" class="flex py-2 px-6 text-base font-medium">
-      <span>Menu</span>
-      <button class="ml-auto mr-2" (click)="shownFullNavigation = !shownFullNavigation">
-        <fa-icon icon="chevron-left" size="lg"></fa-icon>
+    <div [ngClass]="showFullNavigation ? 'flex px-6 text-base font-medium' : 'mx-auto'" class="py-2">
+      <button class="ml-auto" (click)="showFullNavigation = !showFullNavigation">
+        <fa-icon class="mx-auto" [icon]="showFullNavigation ? 'chevron-left' : 'bars'" size="lg"></fa-icon>
       </button>
     </div>
-    <button *ngIf="!shownFullNavigation" class="mx-auto py-2" (click)="shownFullNavigation = !shownFullNavigation">
-      <fa-icon icon="bars" size="lg"></fa-icon>
-    </button>
     <div *ngFor="let element of navigationElements">
       <a *ngIf="element.shouldBeShown" routerLink="{{element.routingPageName}}" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" class="flex pr-6">
         <div class="min-h-full mr-8 rounded-r-2xl -ml-1" id="ddd" style="width: 9px;"></div>
         <svg-icon class="m-auto py-3 pr-3" [svgStyle]="{ 'height.px':22, 'width.px':22 }" src="../../../../assets/Icons/{{element.svgFileName}}"></svg-icon>
-        <span *ngIf="shownFullNavigation" class="flex-1 my-auto">{{element.displayName}}</span>
+        <span class="flex-1 my-auto" [ngClass]="{'hidden': !showFullNavigation}">{{element.displayName}}</span>
       </a>
     </div>
     <button class="flex mt-auto mb-8 pl-8" disabled>
       <svg-icon class="my-auto pr-3 py-1" [svgStyle]="{ 'height.px':26, 'width.px':26 }" src="../../../../assets/Icons/settings.svg"></svg-icon>
-      <span class="my-auto" *ngIf="shownFullNavigation">Settings</span>
+      <span class="my-auto" [ngClass]="{'hidden': !showFullNavigation}">Settings</span>
     </button>
   </div>
 </nav>

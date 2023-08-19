@@ -2,7 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Api } from 'src/app/shared/utils/api';
-import { ExamResultDto } from '../components/exam-to-solve/models/examResultDto.model';
+import { ResolvedExamDTO } from '../components/exam-to-solve/models/examToSolve.model';
+import { ExamToSolveResponse } from '../components/exam-to-solve/models/examToSolveResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -10,20 +11,33 @@ import { ExamResultDto } from '../components/exam-to-solve/models/examResultDto.
 export class ExamSolveService {
   private readonly apiUrl = `${Api.LOCAL_URL}examsResults`;
 
-  public isExamResolving: boolean = false;
+  public isExamResolving: boolean = localStorage.getItem("isExamResolving") == "true" ? true : false;
+  public examResultId: string = localStorage.getItem("examResultId");
 
   constructor(
     private http:HttpClient
   ) { }
 
-  startExam(examResultId: number): Observable<any> {
+  prepareExam(examResultId: string) {
+    localStorage.setItem("isExamResolving", "true");
+    localStorage.setItem("examResultId", examResultId);
     this.isExamResolving = true;
-    var params = new HttpParams().set("examResultId", examResultId);
-    return this.http.get<ExamResultDto>(`${this.apiUrl}/StartExam`, { params: params });
   }
 
-  finishExam(examResult: ExamResultDto): Observable<any> {
-    this.isExamResolving = false;
+  startExam(): Observable<ExamToSolveResponse> {
+    var params = new HttpParams().set("examResultId", this.examResultId);
+    return this.http.get<ExamToSolveResponse>(`${this.apiUrl}/StartExam`, { params: params });
+  }
+
+  finishExam(examResult: ResolvedExamDTO): Observable<any> {
+    debugger;
+    //localStorage.setItem("isExamResolving", "false");
     return this.http.post(`${this.apiUrl}/FinishExam`, examResult);
+  }
+
+  removeStorage() {
+    localStorage.removeItem("isExamResolving");
+    localStorage.removeItem("examResultId");
+    this.isExamResolving = false;
   }
 }

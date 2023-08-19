@@ -7,4 +7,6 @@ public interface IStudentRepository : IAsyncRepository<Student>
     Task<IEnumerable<Student>> GetStudentsWithGroup();
 
     Task<Student> GetStudentIncludeGroup(int id);
+
+    Task<IEnumerable<Student>> GetStudentsWithGroupForExam(int examId);
 }

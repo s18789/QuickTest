@@ -10,4 +10,8 @@ public interface IExamResultRepository : IAsyncRepository<ExamResult>
     Task StartExamTime(int examResultId);
 
     Task<ExamResult> GetExamResultById(int examResultId);
+
+    Task AddMembersToExam(int examId, IEnumerable<int> membersIds);
+
+    Task<ExamResult> GetExamResultPreview(int examResultId);
 }

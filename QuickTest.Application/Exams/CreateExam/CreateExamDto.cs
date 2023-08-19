@@ -2,22 +2,22 @@
 
 namespace QuickTest.Application.Exams.CreateExam;
 
-public class CreateExamDto
+public sealed record CreateExamDto
 {
-    public string Title { get; set; }
+    public string Title { get; init; }
 
-    public int Time { get; set; }
+    public int Time { get; init; }
 
-    public DateTime AvailableFrom { get; set; }
+    public DateTime AvailableFrom { get; init; }
 
-    public DateTime AvailableTo { get; set; }
+    public DateTime AvailableTo { get; init; }
 
-    public IEnumerable<QuestionDTO> Questions { get; set; }
+    public IEnumerable<QuestionDTO> Questions { get; init; }
 
-    public IEnumerable<Student> Students { get; set; }
+    public IEnumerable<Student> Students { get; init; }
 }
 
-public class Student
+public sealed record Student
 {
-    public int Id { get; set; }
+    public int Id { get; init; }
 }

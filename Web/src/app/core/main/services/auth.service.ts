@@ -6,6 +6,7 @@ import { Api } from 'src/app/shared/utils/api';
 import { AuthDataModel } from '../models/authDataModel';
 import { AuthResponseDto } from '../models/authResponseDto';
 import { AuthServiceInterface } from '../models/authServiceInterface';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class AuthService implements AuthServiceInterface {
 
   constructor(
     private http: HttpClient,
-    private jwtHelper: JwtHelperService
+    private jwtHelper: JwtHelperService,
+    private router: Router,
   ) {
    this.isUserAuthenticated();
   }
@@ -63,6 +65,6 @@ export class AuthService implements AuthServiceInterface {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     this._access = false;
-    window.location.reload();
+    this.router.navigate(['']);
   }
 }

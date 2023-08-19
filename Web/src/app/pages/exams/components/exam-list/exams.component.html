@@ -1,0 +1,17 @@
+<div class="flex flex-col mx-20 py-12 gap-8">
+  <div class="flex">
+    <span class="text-4xl font-semibold text-gray-900">Exams</span>
+    <a routerLink="../add-exam" class="ml-auto my-0.5 py-2 px-4 rounded-2xl text-sm font-medium bg-yellow#FDC57B">
+      <span class="mr-4">Add new exam</span>
+      <fa-icon icon="plus"></fa-icon>
+    </a>
+  </div>
+  <app-grid
+    [searchPlaceholder]="'Enter exam title'"
+    [searchConfiguration]="searchConfiguration"
+    [filterConfiguration]="filterConfiguration"
+    [configurations]="configurations"
+    [allItems]="exams$ | async"
+    [routerName]="'../exams'"
+  ></app-grid>
+</div>

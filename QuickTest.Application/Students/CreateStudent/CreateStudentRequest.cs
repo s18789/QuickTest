@@ -2,7 +2,7 @@
 
 namespace QuickTest.Application.Students.CreateStudent;
 
-public class CreateStudentRequest : IRequest<StudentDto>
+public sealed class CreateStudentRequest : IRequest<CreateStudentDTO>
 {
-    public StudentDto Student { get; set; }
+    public CreateStudentDTO Student { get; set; }
 }

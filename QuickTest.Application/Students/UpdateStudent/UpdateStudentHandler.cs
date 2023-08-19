@@ -19,7 +19,7 @@ public class UpdateStudentHandler : IRequestHandler<UpdateStudentRequest, Studen
         student.FirstName = request.Student.FirstName;
         student.LastName = request.Student.LastName;
         student.Email = request.Student.Email;
-        student.GroupId = request.Student.GroupId;
+        student.GroupId = request.Student.Group.Id;
 
         await this.studentRepository.UpdateAsync(student);
 

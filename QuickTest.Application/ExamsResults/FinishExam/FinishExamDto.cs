@@ -1,28 +1,34 @@
-﻿namespace QuickTest.Application.ExamsResults.FinishExam;
+﻿using QuickTest.Core.Entities.Enums;
 
-public class FinishExamDto
+namespace QuickTest.Application.ExamsResults.FinishExam;
+
+public sealed record class FinishExamDto
 {
-    public int ExamId { get; set; }
+    public int ExamId { get; init; }
 
-    public int ExamResultId { get; set; }
+    public int ExamResultId { get; init; }
 
-    public IEnumerable<FinishExamQuestionDto> Questions { get; set; }
+    public IEnumerable<FinishExamQuestionDto> Questions { get; init; }
 }
 
-public class FinishExamQuestionDto
+public sealed record FinishExamQuestionDto
 {
-    public int QuestionId { get; set; }
+    public int QuestionId { get; init; }
 
-    public string Content { get; set; }
+    public string Content { get; init; }
 
-    public IEnumerable<FinishExamAnswerDto> Answers { get; set; }
+    public QuestionType Type { get; init; }
+
+    public string? AnswerContent { get; init; }
+
+    public IEnumerable<FinishExamAnswerDto>? Answers { get; init; }
 }
 
-public class FinishExamAnswerDto
+public sealed record FinishExamAnswerDto
 {
-    public int AnswerId { get; set; }
+    public int AnswerId { get; init; }
 
-    public string Content { get; set; }
+    public string Content { get; init; }
 
-    public bool IsSelected { get; set; }
+    public bool IsSelected { get; init; }
 }
