@@ -1,0 +1,38 @@
+<div class="flex flex-col gap-2 py-6 px-8 rounded-2xl mainContainer">
+  <div class="flex gap-1 mx-3">
+    <span class="text-lg font-medium">{{currentDate | date: 'MMMM'}}</span>
+    <span class="text-lg font-medium">{{currentDate | date: 'yyyy'}}</span>
+    <div class="flex gap-4 ml-auto text-sm my-auto text-gray-400">
+      <button (click)="previousMonth()">
+        <fa-icon icon="chevron-left"></fa-icon>
+      </button>
+      <button (click)="nextMonth()">
+        <fa-icon icon="chevron-right"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <table>
+    <thead>
+      <tr class="text-gray-400">
+        <th>Mo</th>
+        <th>Tu</th>
+        <th>We</th>
+        <th>Th</th>
+        <th>Fr</th>
+        <th>Sa</th>
+        <th>Su</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let i of [0,1,2,3,4,5];">
+        <td
+        class="text-center"
+        [ngClass]="{
+          'text-gray-400': (i == 0 && daysInWeek[i][j] > 10) || ((i == 5 || i == 4) && daysInWeek[i][j] < 16),
+          'bg-yellow#FDC57B': todayDate.getFullYear() == currentDate.getFullYear() && todayDate.getMonth() == currentDate.getMonth() && todayDate.getDate() == daysInWeek[i][j]}"
+        *ngFor="let j of [0,1,2,3,4,5,6]"
+        >{{daysInWeek[i][j]}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

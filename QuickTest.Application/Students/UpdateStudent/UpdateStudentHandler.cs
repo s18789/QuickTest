@@ -21,10 +21,12 @@ public class UpdateStudentHandler : IRequestHandler<UpdateStudentRequest, Studen
     {
         var existingStudent = await this.studentRepository.GetByIdAsync(request.Student.Id.Value);
 
+
         if (existingStudent == null)
         {
             return null;
         }
+
 
         mapper.Map(request.Student, existingStudent);
 

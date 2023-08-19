@@ -1,29 +1,75 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './core/main/services/authGuard.service';
-import { AuthTeacherGuard } from './core/main/services/authTeacherGuard.service';
-import { ExamResultComponent } from './pages/exams-results/components/exam-result/exam-result.component';
-import { ExamsResultsComponent } from './pages/exams-results/components/exams-results.component';
-import { AddExamComponent } from './pages/exams/components/add-exam/add-exam.component';
-import { ExamComponent } from './pages/exams/components/exam/exam.component';
-import { ExamsComponent } from './pages/exams/components/exams.component';
-import { AddStudentComponent } from './pages/students/components/add-student/add-student.component';
-import { MembersComponent } from './pages/students/components/members.component';
+import { RouteUrls } from './shared/enums/route-urls.enum';
 
 const routes: Routes = [
-  { path: "", redirectTo: "/exams", pathMatch: "full" },
-  { path: "exams", component: ExamsComponent, canActivate: [AuthTeacherGuard] },
-  { path: "exam", component: ExamComponent, canActivate: [AuthTeacherGuard]},
-  { path: "add-exam", component: AddExamComponent, canActivate: [AuthTeacherGuard] },
-  { path: "exams-results", component: ExamsResultsComponent },
-  { path: "exam-result", component: ExamResultComponent },
-  { path: "members", component: MembersComponent, canActivate: [AuthGuard] },
-  { path: "add-student", component: AddStudentComponent },
- // { path: "**", component: PageNotFoundComponent },
+  {
+    
+    path: "",
+    children: [
+      { path: '', 
+        redirectTo: RouteUrls.Dashboard, 
+        pathMatch: 'full' 
+      },
+      {
+        //canActivate: [MsalGuard],
+        path: RouteUrls.Dashboard,
+        loadChildren: () =>
+          import("./pages/dashboard/dashboard.module").then(
+            (m) => m.DashboardModule,
+          ),
+      },
+      {
+        //canActivate: [MsalGuard],
+        path: "",
+        loadChildren: () =>
+          import("./pages/exams/exams.module").then(
+            (m) => m.ExamsModule,
+          ),
+      },
+      {
+        //canActivate: [MsalGuard],
+        path: RouteUrls.ExamsResults,
+        loadChildren: () =>
+          import("./pages/exams-results/exams-results.module").then(
+            (m) => m.ExamsResultsModule,
+          ),
+      },
+      {
+        //canActivate: [MsalGuard],
+        path: RouteUrls.Members,
+        loadChildren: () =>
+          import("./pages/members/members.module").then(
+            (m) => m.MembersModule,
+          ),
+      },
+      {
+        //canActivate: [MsalGuard],
+        path: RouteUrls.Pricing,
+        loadChildren: () =>
+          import("./pages/pricing/pricing.module").then(
+            (m) => m.PricingModule,
+          ),
+      },
+    ],
+  },
+  // { path: "", redirectTo: "/dashboard", pathMatch: "full" },
+  // { path: "dashboard", component: DashboardComponent, canActivate: [AuthTeacherGuard]},
+  // { path: "exams", component: ExamsComponent, canActivate: [AuthTeacherGuard] },
+  // { path: "exam/:id", component: ExamComponent, canActivate: [AuthTeacherGuard]},
+  // { path: "add-exam", component: AddExamComponent, canActivate: [AuthTeacherGuard] },
+  // { path: "exams-results/:id", component: ExamsResultsComponent },
+  // { path: "exams-results", component: ExamsResultsComponent },
+  // { path: "exam-result/:id", component: ExamResultComponent },
+  // { path: "members", component: MembersComponent, canActivate: [AuthGuard] },
+  // { path: "add-student", component: AddStudentComponent },
+  // { path: "**", component: PageNotFoundComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes)
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

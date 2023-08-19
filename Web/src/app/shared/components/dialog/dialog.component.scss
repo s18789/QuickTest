@@ -1,0 +1,11 @@
+.dialogbackground {
+  background: rgba(0, 0, 0, 0.3) !important;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column-reverse;
+  top: 0px;
+}

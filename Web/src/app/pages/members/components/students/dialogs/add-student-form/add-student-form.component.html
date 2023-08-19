@@ -1,0 +1,22 @@
+<form class="flex flex-col h-full" [formGroup]="studentForm">
+  <label class="pl-1 text-gray-700">First Name<span class="text-red-400 ml-1">*</span></label>
+  <input class="pb-0.5 pl-2 border-b-2 border-gray-400 focus:outline-none" type="text" formControlName="firstName">
+  <div class="h-4">
+
+  </div>
+  <label class="pl-1 text-gray-700">Last Name<span class="text-red-400 ml-1">*</span></label>
+  <input class="pb-0.5 pl-2 border-b-2 border-gray-400 focus:outline-none" type="text" formControlName="lastName">
+  <div class="h-4">
+
+  </div>
+  <label class="pl-1 text-gray-700">E-mail<span class="text-red-400 ml-1">*</span></label>
+  <input class="pb-0.5 pl-2 border-b-2 border-gray-400 focus:outline-none" type="text" formControlName="email">
+  <div class="h-4">
+
+  </div>
+  <label class="pl-1 mb-1">Group</label>
+  <select class="w-3/10 border-2 border-gray-400 rounded-lg bg-gray-100 py-0.5 text-sm text-gray-400 focus:outline-none" formControlName="groupId">
+    <option value="" disabled selected hidden>Choose group</option>
+    <option *ngFor="let group of groups" class="text-gray-500" [value]="group.id">{{group.name}}</option>
+  </select>
+</form>

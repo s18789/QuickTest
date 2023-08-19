@@ -2,9 +2,10 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace QuickTest.Application.Students;
-public class StudentDto
+public sealed record StudentDto
 {
-    public int? Id { get; set; }
+    public int? Id { get; init; }
+
 
     [Required]
     [MaxLength(100)]
@@ -18,7 +19,6 @@ public class StudentDto
     [EmailAddress]
     public string Email { get; set; }
 
-    public int GroupId { get; set; }
 
-    public GroupDto? GroupDto { get; set; }
+    public GroupDto? Group { get; init; }
 }

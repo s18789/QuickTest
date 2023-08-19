@@ -1,0 +1,32 @@
+<div class="flex flex-col p-12 gap-8">
+  <div class="flex space-x-2 text-4xl font-semibold">
+    <h1>{{ 'Hi' | translate }}</h1>
+    <h1>John!</h1>
+  </div>
+  <div class="flex flex-row gap-4">
+    <div class="flex flex-col basis-2/3 gap-6">
+      <app-advertisement
+
+      ></app-advertisement>
+      <app-recent-exam></app-recent-exam>
+      <div class="flex gap-4">
+        <app-latest-exams
+        class="flex-1"
+        ></app-latest-exams>
+
+        <app-create-exam
+        class="flex-1"
+        ></app-create-exam>
+      </div>
+    </div>
+    <div class="flex flex-col basis-1/4 gap-6">
+      <app-calendar
+
+      ></app-calendar>
+
+      <app-scheduled-exams
+
+      ></app-scheduled-exams>
+    </div>
+  </div>
+</div>

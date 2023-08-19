@@ -1,7 +1,7 @@
 ﻿namespace QuickTest.Application.Answers;
-public class AnswerDTO
+public sealed record class AnswerDTO
 {
-    public string AnswerContent { get; set; }
+    public string AnswerContent { get; init; }
 
-    public bool? Correct { get; set; }
+    public bool? Correct { get; init; }
 }

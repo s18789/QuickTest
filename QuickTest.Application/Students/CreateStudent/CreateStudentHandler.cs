@@ -6,7 +6,7 @@ using QuickTest.Infrastructure.Interfaces;
 
 namespace QuickTest.Application.Students.CreateStudent;
 
-public class CreateStudentHandler : IRequestHandler<CreateStudentRequest, StudentDto>
+public class CreateStudentHandler : IRequestHandler<CreateStudentRequest, CreateStudentDTO>
 {
     public const int passwordLength = 9;
 
@@ -19,7 +19,7 @@ public class CreateStudentHandler : IRequestHandler<CreateStudentRequest, Studen
         this.userManager = userManager;
     }
 
-    public async Task<StudentDto> Handle(CreateStudentRequest request, CancellationToken cancellationToken)
+    public async Task<CreateStudentDTO> Handle(CreateStudentRequest request, CancellationToken cancellationToken)
     {
         var student = new Student
         {

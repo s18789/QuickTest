@@ -3,31 +3,31 @@ using QuickTest.Application.Questions;
 using QuickTest.Application.Students;
 
 namespace QuickTest.Application.Exams;
-public class ExamDTO : IRequest
+public sealed record ExamDTO : IRequest
 {
-    public int Id { get; set; }
+    public int Id { get; init; }
 
-    public string Title { get; set; }
+    public string Title { get; init; }
 
-    public int Time { get; set; }
+    public int Time { get; init; }
 
-    public DateTime AvailableFrom { get; set; }
+    public DateTime AvailableFrom { get; init; }
 
-    public DateTime AvailableTo { get; set; }
+    public DateTime AvailableTo { get; init; }
 
-    public DateTime CreationDate { get; set; }
+    public DateTime CreationDate { get; init; }
 
-    public int MaxPoints { get; set; }
+    public int MaxPoints { get; init; }
 
-    public IEnumerable<QuestionDTO> Questions { get; set; }
+    public IEnumerable<QuestionDTO> Questions { get; init; }
 
-    public IEnumerable<StudentDto> Students { get; set; }
+    public IEnumerable<StudentDto> Students { get; init; }
 
-    public string Status { get; set; }
+    public string Status { get; init; }
 
-    public string Class { get; set; }
+    public string Class { get; init; }
 
-    public int CompletedExams { get; set; }
+    public int CompletedExams { get; init; }
 
-    public int AllExams { get; set; }
+    public int AllExams { get; init; }
 }

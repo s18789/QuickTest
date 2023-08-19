@@ -1,14 +1,14 @@
 ﻿namespace QuickTest.Application.ExamsResults.GetExamsResults;
 
-public class GetExamResultDto
+public sealed record GetExamResultDto
 {
-    public int Id { get; set; }
+    public int Id { get; init; }
 
-    public string ExamName { get; set; }
+    public string ExamName { get; init; }
 
-    public string Status { get; set; }
+    public string Status { get; init; }
 
-    public double? Score { get; set; }
+    public double? Score { get; init; }
 
-    public DateTime EndingDate { get; set; }
+    public DateTime EndingDate { get; init; }
 }

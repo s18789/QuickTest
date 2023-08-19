@@ -1,5 +1,4 @@
-<div class="h-full" style="background-color: #F0F4F7;">
-  <app-prepare-to-start-exam *ngIf="examResult.status == 'Active'"></app-prepare-to-start-exam>
+<div class="h-full" *ngIf="examResult$ | async as examResult" style="background-color: #F0F4F7;">
   <div *ngIf="examResult.status != 'Active'" class="h-full p-16">
     <div class="flex p-8 rounded-xl bg-white shadow-lg">
       <div class="flex flex-col">
@@ -24,14 +23,14 @@
         </div>
       </div>
       <div class="flex flex-col ml-auto">
-        <button class="flex text-sm ml-auto" disabled>
+        <button class="flex text-sm ml-auto" (click)="getExamResultPreview()">
           <span class="mr-3">See my answers</span>
           <fa-icon icon="arrow-right"></fa-icon>
         </button>
         <div x-data="scrollProgress" class="my-8 ml-auto inline-flex items-center justify-center rounded-full">
           <svg class="w-36 h-36">
             <circle class="text-gray-100" [innerText]="'elo'" stroke-width="10" stroke="currentColor" fill="transparent" r="60" cx="70" cy="70" />
-            <text x="50%" y="50%" text-anchor="middle" stroke="#07617D" stroke-width="1px" dy=".3em" font-size="x-large">{{percentageResult || 0 | number: '1.0-0'}} %</text>
+            <text x="50%" y="50%" text-anchor="middle" stroke="#07617D" stroke-width="1px" dy=".3em" font-size="x-large">{{examResult.percentageResult || 0 | number: '1.0-0'}} %</text>
             <circle class="text-navy#07617D" stroke-width="10" :stroke-dasharray="282" :stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="60" cx="70" cy="70" />
           </svg>
         </div>
