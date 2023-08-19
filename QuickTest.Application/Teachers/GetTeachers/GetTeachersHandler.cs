@@ -28,10 +28,10 @@ namespace QuickTest.Application.Teachers.GetTeachers
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Email = x.Email,
-                GroupDtos = x.Groups.Select(g => new GroupDto
+                GroupDtos = x.GroupTeachers.Select(gt => new GroupDto
                 {
-                    Id = g.Id,
-                    Name = g.Name
+                    Id = gt.Group.Id,
+                    Name = gt.Group.Name
                 }).ToList()
             });
         }

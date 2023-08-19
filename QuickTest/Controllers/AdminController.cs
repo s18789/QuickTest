@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QuickTest.Application.FileImporter.ImportSchoolData;
 using QuickTest.Application.Schools.GetSchool;
 using QuickTest.Application.Students.GetStudentsByGroup;
 using QuickTest.Application.Teachers.GetTeachers;
@@ -43,6 +44,24 @@ namespace QuickTest.Controllers
             var schools = await this.mediator.Send(new GetSchoolRequest());
 
             return this.Ok(schools);
+        }
+        [HttpPost("import")]
+        public async Task<IActionResult> ImportSchoolData(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var importRequest = new ImportSchoolDataRequest { File = file };
+            var result = await this.mediator.Send(importRequest);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return Ok(result.ImportSummary);
         }
     }
 }

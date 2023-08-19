@@ -12,6 +12,7 @@ using QuickTest.Core.Entities;
 using QuickTest.Infrastructure.Data;
 using QuickTest.Infrastructure.Interfaces;
 using QuickTest.Infrastructure.Repositories;
+using QuickTest.Infrastructure.Utilities;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,7 @@ builder.Services.AddMediatR(typeof(CreateExamHandler));
 builder.Services.AddMediatR(typeof(GetExamsHandler));
 builder.Services.AddMediatR(typeof(GetGroupsHandler));
 builder.Services.AddMediatR(typeof(GetStudentsHandler));
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {

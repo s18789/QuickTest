@@ -10,8 +10,9 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
     {
         builder.Property(x => x.Name).HasMaxLength(100);
 
-        builder.HasOne(e => e.Teacher)
-            .WithMany(m => m.Groups)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasMany(g => g.GroupTeachers)
+           .WithOne(gt => gt.Group)
+           .HasForeignKey(gt => gt.GroupId)
+           .OnDelete(DeleteBehavior.Restrict);
     }
 }

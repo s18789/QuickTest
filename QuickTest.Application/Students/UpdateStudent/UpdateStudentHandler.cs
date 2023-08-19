@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using QuickTest.Infrastructure.Interfaces;
 
 namespace QuickTest.Application.Students.UpdateStudent;
@@ -6,23 +7,40 @@ namespace QuickTest.Application.Students.UpdateStudent;
 public class UpdateStudentHandler : IRequestHandler<UpdateStudentRequest, StudentDto>
 {
     private readonly IStudentRepository studentRepository;
+    private readonly IGroupRepository groupRepository;
+    private readonly IMapper mapper;
 
-    public UpdateStudentHandler(IStudentRepository studentRepository)
+    public UpdateStudentHandler(IStudentRepository studentRepository, IGroupRepository groupRepository, IMapper mapper)
     {
         this.studentRepository = studentRepository;
+        this.groupRepository = groupRepository;
+        this.mapper = mapper;
     }
 
     public async Task<StudentDto> Handle(UpdateStudentRequest request, CancellationToken cancellationToken)
     {
-        var student = await this.studentRepository.GetByIdAsync(request.Student.Id.Value);
+        var existingStudent = await this.studentRepository.GetByIdAsync(request.Student.Id.Value);
 
-        student.FirstName = request.Student.FirstName;
-        student.LastName = request.Student.LastName;
-        student.Email = request.Student.Email;
-        student.GroupId = request.Student.GroupId;
+        if (existingStudent == null)
+        {
+            return null;
+        }
 
-        await this.studentRepository.UpdateAsync(student);
+        mapper.Map(request.Student, existingStudent);
 
-        return request.Student;
+        if (request.Student.GroupDto != null)
+        {
+            var group = await this.groupRepository.GetByIdAsync(request.Student.GroupId);
+            if (group != null)
+            {
+                existingStudent.Group = group;
+            }
+        }
+
+        await this.studentRepository.UpdateAsync(existingStudent);
+
+        var updatedStudentDto = mapper.Map<StudentDto>(existingStudent);
+
+        return updatedStudentDto;
     }
 }

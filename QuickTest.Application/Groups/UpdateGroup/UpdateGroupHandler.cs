@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using QuickTest.Infrastructure.Interfaces;
 
 namespace QuickTest.Application.Groups.UpdateGroup;
@@ -6,20 +7,31 @@ namespace QuickTest.Application.Groups.UpdateGroup;
 public class UpdateGroupHandler : IRequestHandler<UpdateGroupRequest, GroupDto>
 {
     private readonly IGroupRepository groupRepository;
+    private readonly IMapper mapper;
 
-    public UpdateGroupHandler(IGroupRepository groupRepository)
+    public UpdateGroupHandler(IGroupRepository groupRepository, IMapper mapper)
     {
         this.groupRepository = groupRepository;
+        this.mapper = mapper;
     }
 
     public async Task<GroupDto> Handle(UpdateGroupRequest request, CancellationToken cancellationToken)
     {
-        await this.groupRepository.UpdateAsync(new Core.Entities.Group
+        var existingGroup = await groupRepository.GetByIdAsync(request.Group.Id);
+        if (existingGroup == null)
         {
-            Id = request.Group.Id,
-            Name = request.Group.Name,
-        });
+            return null;
+        }
 
-        return request.Group;
+        mapper.Map(request.Group, existingGroup);
+
+        if (existingGroup.Students?.Any() == true && (existingGroup.GroupTeachers == null || !existingGroup.GroupTeachers.Any()))
+        {
+            return null;
+        }
+
+        await this.groupRepository.UpdateAsync(existingGroup);
+
+        return mapper.Map<GroupDto>(existingGroup);
     }
 }

@@ -22,15 +22,11 @@ namespace QuickTest.Application.Teachers.GetTeacher
         {
             var teacher = await this.teacherRepository.GetTeacherIncludeGroups(request.Id);
 
-            var groupDtos = new List<GroupDto>();
-            foreach (var group in teacher.Groups)
+            var groupDtos = teacher.GroupTeachers.Select(gt => new GroupDto
             {
-                groupDtos.Add(new GroupDto
-                {
-                    Id = group.Id,
-                    Name = group.Name
-                });
-            }
+                Id = gt.Group.Id,
+                Name = gt.Group.Name
+            }).ToList();
 
             return new TeacherDto
             {
