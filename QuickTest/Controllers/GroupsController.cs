@@ -40,17 +40,47 @@ public class GroupsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] GroupDto group)
     {
-        await this.mediator.Send(new CreateGroupRequest() { Group = group });
+        if (group == null)
+        {
+            return BadRequest("Invalid group data.");
+        }
 
-        return Ok();
+        if (group.StudentDtos?.Any() == true && group.TeacherDtos?.FirstOrDefault() == null)
+        {
+            return BadRequest("Cannot add students to a group without a teacher.");
+        }
+
+        var createdGroup = await this.mediator.Send(new CreateGroupRequest() { Group = group });
+
+        if (createdGroup == null)
+        {
+            return BadRequest("Failed to create the group.");
+        }
+
+        return Ok(createdGroup);
     }
 
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] GroupDto group)
     {
-        await this.mediator.Send(new UpdateGroupRequest() { Group = group });
+        if (group == null || group.Id == null)
+        {
+            return BadRequest("Invalid group data.");
+        }
 
-        return Ok();
+        if (group.StudentDtos?.Any() == true && group.TeacherDtos?.FirstOrDefault() == null)
+        {
+            return BadRequest("Cannot add students to a group without a teacher.");
+        }
+
+        var updatedGroup = await this.mediator.Send(new UpdateGroupRequest() { Group = group });
+
+        if (updatedGroup == null)
+        {
+            return BadRequest("Failed to update the group.");
+        }
+
+        return Ok(updatedGroup);
     }
 
 }

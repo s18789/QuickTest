@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using QuickTest.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,23 +12,28 @@ namespace QuickTest.Application.Teachers.UpdateTeacher
     public class UpdateTeacherHandler : IRequestHandler<UpdateTeacherRequest, TeacherDto>
     {
         private readonly ITeacherRepository teacherRepository;
+        private readonly IMapper mapper;
 
-        public UpdateTeacherHandler(ITeacherRepository teacherRepository)
+        public UpdateTeacherHandler(ITeacherRepository teacherRepository, IMapper mapper)
         {
             this.teacherRepository = teacherRepository;
+            this.mapper = mapper;
         }
 
         public async Task<TeacherDto> Handle(UpdateTeacherRequest request, CancellationToken cancellationToken)
         {
             var teacher = await this.teacherRepository.GetByIdAsync(request.Teacher.Id.Value);
 
-            teacher.FirstName = request.Teacher.FirstName;
-            teacher.LastName = request.Teacher.LastName;
-            teacher.Email = request.Teacher.Email;
-            
+            if (teacher == null)
+            {
+                return null;
+            }
+
+            mapper.Map(request.Teacher, teacher);
+
             await this.teacherRepository.UpdateAsync(teacher);
 
-            return request.Teacher;
+            return mapper.Map<TeacherDto>(teacher);
         }
     }
 }

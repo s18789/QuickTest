@@ -13,14 +13,18 @@ public class TeacherRepository : BaseRepository<Teacher>, ITeacherRepository
 
     public async Task<IEnumerable<Teacher>> GetTeachersWithGroups()
     {
-        return await this.context.Teachers.Include(x => x.Groups).ToListAsync();
+        return await this.context.Teachers
+            .Include(t => t.GroupTeachers) 
+            .ThenInclude(gt => gt.Group) 
+            .ToListAsync();
     }
 
     public async Task<Teacher> GetTeacherIncludeGroups(int id)
     {
         return await this.context.Teachers
-            .Where(x => x.Id == id)
-            .Include(x => x.Groups)
+            .Where(t => t.Id == id)
+            .Include(t => t.GroupTeachers)
+            .ThenInclude(gt => gt.Group)
             .FirstOrDefaultAsync();
     }
 }
