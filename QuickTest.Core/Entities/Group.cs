@@ -11,4 +11,5 @@ public class Group : IEntity
     public int? TeacherId { get; set; }
 
     public IEnumerable<Student>? Students { get; set; }
+    public School? School { get; set; }
 }
