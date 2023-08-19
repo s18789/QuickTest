@@ -24,4 +24,13 @@ public class ExamRepository : BaseRepository<Exam>, IExamRepository
             .Include(x => x.Questions)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<Exam> GetExamPreview(int id)
+    {
+        return await this.context.Exams
+            .Where(x => x.Id == id)
+            .Include (x => x.Questions)
+                .ThenInclude(x => x.PredefinedAnswers)
+                .FirstOrDefaultAsync();
+    }
 }

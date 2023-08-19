@@ -28,7 +28,7 @@ public class GetExamHandler : IRequestHandler<GetExamRequest, ExamDto>
             Time = exam.Time,
             ExamResults = exam.ExamResults.Select(er => new ExamResultDto
             {
-                Id = er.Id,
+                Id = er.FinishExamTime is null ? null : er.Id,
                 FullName = $"{er.Student.FirstName} {er.Student.LastName}",
                 Email = er.Student.Email,
                 Status = er.FinishExamTime is null

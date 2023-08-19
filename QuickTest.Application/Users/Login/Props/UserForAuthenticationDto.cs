@@ -2,11 +2,11 @@
 
 namespace QuickTest.Application.Users.Login.Props;
 
-public class UserForAuthenticationDto
+public sealed record UserForAuthenticationDto
 {
     [Required(ErrorMessage = "Email is required.")]
-    public string? Email { get; set; }
+    public string? Email { get; init; }
 
     [Required(ErrorMessage = "Password is required.")]
-    public string? Password { get; set; }
+    public string? Password { get; init; }
 }

@@ -1,0 +1,18 @@
+button {
+  font-size: large;
+  width: 2.5em;
+  @apply w-10 md:w-11;
+}
+
+button:hover {
+  background-color: #818cf8;
+  color: white;
+}
+
+span {
+  margin-top: auto;
+}
+
+.manyItemsSeparator {
+  @apply w-10 text-center mb-2 md:w-11;
+}

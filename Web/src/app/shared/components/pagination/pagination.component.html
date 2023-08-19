@@ -1,0 +1,91 @@
+<div *ngIf="data.allItems > 0 && lastPage > 1" class="flex flex-col-reverse sm:justify-between sm:flex-row">
+  <span
+    >Wyświetlono od {{ data.currentPage * data.itemsPerPage - data.itemsPerPage + 1 }} do
+    <span *ngIf="data.currentPage != lastPage">{{
+      data.currentPage * data.itemsPerPage
+    }}</span>
+    <span *ngIf="data.currentPage == lastPage">{{ data.allItems }}</span> z
+    {{ data.allItems }} elementów</span
+  >
+  <div class="flex h-10 w-fit border-2 rounded border-gray-500">
+    <button
+      (click)="handlePageClick(data.currentPage - 1)"
+      [disabled]="data.currentPage <= 1"
+    >
+      <fa-icon icon="chevron-left"></fa-icon>
+    </button>
+    <ng-template [ngIf]="lastPage <= 7">
+      <button
+        *ngFor="let i of [].constructor(lastPage); let ind = index"
+        (click)="handlePageClick(ind + 1)"
+        [ngClass]="{ 'bg-indigo-500 text-white': ind + 1 == data.currentPage }"
+      >
+        {{ ind + 1 }}
+      </button>
+    </ng-template>
+
+    <ng-template [ngIf]="lastPage > 7 && data.currentPage <= 4">
+      <button
+        *ngFor="let i of [].constructor(5); let ind = index"
+        (click)="handlePageClick(ind + 1)"
+        [ngClass]="{ 'bg-indigo-500 text-white': ind + 1 == data.currentPage }"
+      >
+        {{ ind + 1 }}
+      </button>
+      <span class="manyItemsSeparator">...</span>
+      <button (click)="handlePageClick(lastPage)">
+        {{ lastPage }}
+      </button>
+    </ng-template>
+
+    <ng-template
+      [ngIf]="lastPage > 7 && data.currentPage > 4 && data.currentPage < lastPage - 3"
+    >
+      <button (click)="handlePageClick(1)">1</button>
+      <span class="manyItemsSeparator">...</span>
+      <button
+        (click)="handlePageClick(data.currentPage - 1)"
+      >
+        {{ data.currentPage - 1 }}
+      </button>
+
+      <button class="bg-indigo-500 text-white">
+        {{ data.currentPage }}
+      </button>
+
+      <button
+        (click)="handlePageClick(data.currentPage + 1)"
+      >
+        {{ data.currentPage + 1 }}
+      </button>
+      <span class="manyItemsSeparator">...</span>
+
+      <button
+        (click)="handlePageClick(lastPage)"
+      >
+        {{ lastPage }}
+      </button>
+    </ng-template>
+
+    <ng-template [ngIf]="lastPage > 7 && data.currentPage >= lastPage - 3">
+      <button (click)="handlePageClick(1)">1</button>
+      <span class="manyItemsSeparator">...</span>
+      <button
+        *ngFor="let i of [].constructor(5); let index = index"
+        (click)="handlePageClick(lastPage - 4 + index)"
+        [ngClass]="{
+          'bg-indigo-500 text-white': lastPage - 4 + index == data.currentPage
+        }"
+      >
+        {{ lastPage - 4 + index }}
+      </button>
+    </ng-template>
+
+    <button
+      (click)="handlePageClick(data.currentPage + 1)"
+      [disabled]="data.currentPage >= lastPage"
+    >
+      <fa-icon icon="chevron-right"></fa-icon>
+    </button>
+  </div>
+</div>

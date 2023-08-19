@@ -1,0 +1,12 @@
+<app-dialog
+  #dialog
+  (closeEvent)="close()"
+  (saveEvent)="addGroupForm.submit()"
+  MemberTypeName="Group"
+>
+  <app-add-group-form
+    #addGroupForm
+    (submittedForm)="submit($event)"
+  ></app-add-group-form>
+</app-dialog>
+

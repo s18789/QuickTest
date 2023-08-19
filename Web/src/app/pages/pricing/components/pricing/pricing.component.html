@@ -1,0 +1,16 @@
+<div class="py-24 sm:py-16">
+    <div class="mx-auto max-w-7xl px-6 lg:px-16">
+      <div class="mx-auto max-w-4xl text-center">
+        <h2 class="text-base font-semibold leading-7 text-cyan-700">Pricing</h2>
+      </div>
+      <p class="mx-auto mt-2 max-w-2xl text-center text-lg leading-8 text-gray-600">Distinctio et nulla eum soluta et neque labore quibusdam. Saepe et quasi iusto modi velit ut non voluptas in. Explicabo id ut laborum.</p>
+      <div class="isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+        <app-price-card 
+          *ngFor="let pricingPlan of pricingPlans; let i = index" 
+          class="flex flex-col justify-between rounded-3xl bg-white p-8 ring-1 ring-gray-200 xl:p-10"
+          [ngClass]="{'lg:rounded-r-none': i == 0, 'lg:rounded-l-none': i == 2, 'lg:mt-10 lg:mb-10': i != 1}"
+          [pricingPlan]="pricingPlan"
+        ></app-price-card>
+      </div>
+    </div>
+  </div>

@@ -1,6 +1,6 @@
 ﻿namespace QuickTest.Application.ExamsResults.GetExamResultStatus;
 
-public class GetExamResultStatusDto
+public sealed record GetExamResultStatusDto
 {
-    public string Status { get; set; }
+    public string Status { get; init; }
 }

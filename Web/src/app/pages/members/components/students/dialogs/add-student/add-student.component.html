@@ -1,0 +1,13 @@
+<app-dialog
+  #dialog
+  (closeEvent)="close()"
+  (saveEvent)="addStudentForm.submit()"
+  MemberTypeName="Student"
+>
+  <app-add-student-form
+    #addStudentForm
+    [groups]="groups | async"
+    (submittedForm)="submit($event)"
+  ></app-add-student-form>
+</app-dialog>
+

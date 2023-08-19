@@ -41,10 +41,11 @@
         </div>
         <div class="h-80 overflow-y-auto" id="QuestionsContainer">
           <div class="flex flex-col" id="Questions" *ngFor="let question of questions.controls; let idx = index">
-            <div class="flex px-2" (click)="setSelectedQuestion(idx)" [ngClass]="{'bg-blue#E9F7FA': idx == selectedQuestion}">
+            <div class="flex px-2 group" (click)="setSelectedQuestion(idx)" [ngClass]="{'bg-blue#E9F7FA': idx == selectedQuestion}">
               <fa-icon *ngIf="isQuestionInvalid(idx)" class="text-lg text-red-500" icon="circle-exclamation"></fa-icon>
               <span class="truncate ml-2">{{idx+1}}</span>
               <span class="truncate ml-2">{{ question.controls["questionContent"]?.value }}</span>
+              <button class="hidden group-hover:block ml-auto mr-2" (click)="removeQuestion(idx)"><fa-icon icon="trash"></fa-icon></button>
             </div>
           </div>
         </div>
@@ -64,7 +65,7 @@
                   <span>Time Limit
                     <span class="text-red-400 ml-0.5">*</span>
                   </span>
-                  <select disabled name="location" class="border bg-gray-200 location rounded-md border-gray-300 p-0.5 text-xs -ml-1 text-gray-600">
+                  <select disable name="location" class="border bg-gray-200 location rounded-md border-gray-300 p-0.5 text-xs -ml-1 text-gray-600">
                     <option>No type</option>
                   </select>
                 </div>
@@ -72,8 +73,8 @@
                   <span>Question type
                     <span class="text-red-400 ml-0.5">*</span>
                   </span>
-                  <select disabled name="location" class="border bg-gray-200 location rounded-md border-gray-300 py-0.5 px-1.5 text-xs text-gray-600">
-                    <option>No limit</option>
+                  <select name="type" formControlName="type" (change)="onQuestionTypeSelected($event)" name="location" class="border bg-gray-200 location rounded-md border-gray-300 py-0.5 px-1.5 text-xs text-gray-600">
+                    <option *ngFor="let questionType of QuestionType | keyvalue : originalOrder" [value]="questionType.value">{{ questionType.key }}</option>
                   </select>
                 </div>
               </div>
@@ -83,16 +84,17 @@
               <textarea class="border-2 rounded-l text-left bg-transparent w-full h-full text-gray-500" name="questionContent" formControlName="questionContent" [ngClass]="{'border-red-400': (questions.at(i).controls.questionContent.dirty || questions.at(i).controls.questionContent.touched || submitted) && questions.at(i).controls.questionContent.invalid}"></textarea>
             </div>
             <div class="h-1/4 pt-2">
-              <div class="flex flex-col p-2 h-full max-h-full border rounded-lg">
+              <div *ngIf="question.controls['type']?.value != QuestionType.Open" class="flex flex-col p-2 h-full max-h-full border rounded-lg">
                 <div class="flex">
                   <span class="ml-2 mt-2 text-xl font-medium">Answers</span>
-                  <button type="button" class="ml-auto mr-2 mt-auto my-0.5 border-b-2 text-xs" [disabled]="answers.length == 4" (click)="addAnswer()" id="AddAnswer">+ Add next answer</button>
+                  <button *ngIf="question.controls['type']?.value != QuestionType.Open" type="button" class="ml-auto mr-2 mt-auto my-0.5 border-b-2 text-xs" [disabled]="answers.length == 4" (click)="addAnswer('')" id="AddAnswer">+ Add next answer</button>
                 </div>
                 <div class="mt-2 mx-2 h-full grid-col-1 gap-4 overflow-auto scrollbar-thin scrollbar-w-1 scrollbar-thumb-gray-400 scrollbar-track-gray-200 scrollbar-thumb-rounded-full scrollbar-track-rounded-full" formArrayName="answers">
                   <div *ngFor="let answer of answers.controls; let idx = index">
-                    <div class="flex w-full py-0.5" [formGroupName]="idx">
-                      <input type="checkbox" class="" name="correct" formControlName="correct">
+                    <div class="flex w-full py-0.5 group" [formGroupName]="idx">
+                      <input (change)="clearRestCheckboxIfNeeded($event, idx)" type="checkbox" name="correct" formControlName="correct">
                       <input type="text" class="ml-2 mr-4 h w-full border rounded text-left bg-transparent text-gray-600" name="answerContent" formControlName="answerContent" [ngClass]="{'border-red-400': (answers.at(idx).controls.answerContent.dirty || answers.at(idx).controls.answerContent.touched || submitted) && answers.at(idx).controls.answerContent.invalid}"/>
+                      <button *ngIf="question.controls['type']?.value != QuestionType.YesNoChoice && idx >= 2" class="hidden group-hover:block ml-auto mr-2" (click)="removeAnswer(idx)"><fa-icon icon="trash"></fa-icon></button>
                     </div>
                   </div>
                 </div>

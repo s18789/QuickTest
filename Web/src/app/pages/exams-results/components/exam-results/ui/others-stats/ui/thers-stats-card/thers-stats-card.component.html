@@ -1,0 +1,22 @@
+<div class="flex px-4 py-1.5 rounded-xl gap-4" [ngClass]="othersStat.title">
+  <div class="flex flex-col gap-1">
+    <span class="text-sm text-gray-600 font-medium">{{othersStat.title}}</span>
+    <div class="flex ml-2">
+      <svg-icon
+        class="my-auto mr-1"
+        [src]="othersStat.increase
+          ? '../../../../../../../../../assets/Icons/increase.svg'
+          : '../../../../../../../../../assets/Icons/decrease.svg'"
+        ></svg-icon>
+        <span
+          class="text-sm font-medium"
+          [style]="othersStat.increase ? 'color: #177157' : 'color: #F52929'"
+        >{{othersStat.increase ? '+' : '-'}}</span>
+        <span
+          class="text-sm font-medium"
+          [style]="othersStat.increase ? 'color: #177157' : 'color: #F52929'"
+        >{{othersStat.kpi}}%</span>
+    </div>
+  </div>
+  <span class="ml-auto text-2xl my-auto font-semibold text-gray-700">{{othersStat.average}}</span>
+</div>

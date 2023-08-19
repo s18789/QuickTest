@@ -1,0 +1,8 @@
+.trans {
+    transition-duration: 0.6s;
+}
+
+.buttonItem {
+    position: absolute; 
+    top: 5px;
+}

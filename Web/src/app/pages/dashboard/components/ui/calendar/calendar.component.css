@@ -1,0 +1,16 @@
+.mainContainer {
+  box-shadow: inset 0 0 8px #D1D5DB;
+}
+
+th {
+  font-weight: 400;
+  padding-bottom: 8px;
+  font-size: 15px;
+}
+
+td {
+  border-radius: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  font-size: 15px;
+}

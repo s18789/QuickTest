@@ -5,3 +5,7 @@
 .active #ddd {
   background-color: #07617D;
 }
+
+.trans {
+  transition-duration: 0.2s;
+}

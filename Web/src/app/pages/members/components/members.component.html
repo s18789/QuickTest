@@ -1,0 +1,33 @@
+<div class="flex flex-col mx-20 py-12 gap-4">
+  <div class="flex mb-4">
+    <span class="text-4xl font-semibold text-gray-900">Members</span>
+    <button class="ml-auto my-0.5 py-2 px-4 rounded-2xl text-sm font-medium bg-yellow#FDC57B" (click)="addNewMember()">
+      <span class="mr-4">Add new {{currentMemberType.toString()}}</span>
+      <fa-icon icon="plus"></fa-icon>
+    </button>
+  </div>
+  <div class="flex h-10">
+    <button (click)="changeMemberType(memberType.Student)" class="pb-2 pt-1.5 px-4 border-2 rounded-lg text-gray-500 mr-4" [ngClass]="{'bg-navy#07617D text-white border-none': currentMemberType == memberType.Student}">Students</button>
+    <button (click)="changeMemberType(memberType.Group)" class="pb-2 pt-1.5 px-4 border-2 rounded-lg text-gray-500" [ngClass]="{'bg-navy#07617D text-white border-none': currentMemberType == memberType.Group}">Groups</button>
+  </div>
+  <div [ngSwitch]="currentMemberType">
+    <app-grid
+    *ngSwitchCase="memberType.Student"
+    [searchPlaceholder]="'Search...'"
+    [searchConfiguration]="studentsSearchConfiguration"
+    [filterConfiguration]="studentsFilterConfiguration"
+    [configurations]="studentsGridConfigurations"
+    [allItems]="students$ | async"
+    [routerName]="'../examsResults'"
+  ></app-grid>
+  <app-grid
+    *ngSwitchCase="memberType.Group"
+    [searchPlaceholder]="'Search...'"
+    [searchConfiguration]="groupsSearchConfiguration"
+    [filterConfiguration]="groupsFilterConfiguration"
+    [configurations]="groupGridConfigurations"
+    [allItems]="groups$ | async"
+    [routerName]="'../members'"
+  ></app-grid>
+  </div>
+</div>

@@ -5,6 +5,7 @@ using QuickTest.Application.Students;
 using QuickTest.Application.Students.CreateStudent;
 using QuickTest.Application.Students.GetStudent;
 using QuickTest.Application.Students.GetStudents;
+using QuickTest.Application.Students.GetStudentsForExam;
 using QuickTest.Application.Students.UpdateStudent;
 
 namespace QuickTest.Controllers;
@@ -29,6 +30,14 @@ public class StudentsController : ControllerBase
         return this.Ok(students);
     }
 
+    [HttpGet("ForExam/{id}")]
+    public async Task<IActionResult> GetStudentsForExam(int id)
+    {
+        var student = await this.mediator.Send(new GetStudentsForExamRequest() { Id = id });
+
+        return this.Ok(student);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetStudent(int id)
     {
@@ -38,7 +47,7 @@ public class StudentsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateStudent([FromBody] StudentDto student)
+    public async Task<IActionResult> CreateStudent([FromBody] CreateStudentDTO student)
     {
         await this.mediator.Send(new CreateStudentRequest() { Student = student });
 

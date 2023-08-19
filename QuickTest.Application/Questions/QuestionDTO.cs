@@ -1,11 +1,14 @@
 ﻿using QuickTest.Application.Answers;
+using QuickTest.Core.Entities.Enums;
 
 namespace QuickTest.Application.Questions;
-public class QuestionDTO
+public sealed record QuestionDTO
 {
-    public int Points { get; set; }
+    public int Points { get; init; }
 
-    public string QuestionContent { get; set; }
+    public string QuestionContent { get; init; }
 
-    public IEnumerable<AnswerDTO> Answers { get; set; }
+    public QuestionType Type { get; set; }
+
+    public IEnumerable<AnswerDTO> Answers { get; init; }
 }
