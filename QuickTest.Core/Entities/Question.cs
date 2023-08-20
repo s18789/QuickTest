@@ -12,8 +12,8 @@ public class Question : IEntity
     public QuestionType Type { get; set; }
 
     public int ExamId { get; set; }
-    public string Description { get; set; }
-    public string Title { get; set; }
+    public string? Description { get; set; }
+    public string? Title { get; set; }
 
     public Exam Exam { get; set; }
 
