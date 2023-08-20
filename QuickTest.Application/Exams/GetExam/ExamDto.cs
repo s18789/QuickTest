@@ -1,4 +1,6 @@
-﻿namespace QuickTest.Application.Exams.GetExam;
+﻿using QuickTest.Application.Common.Enums;
+
+namespace QuickTest.Application.Exams.GetExam;
 
 public sealed record ExamDto
 {
@@ -6,7 +8,7 @@ public sealed record ExamDto
 
     public string Name { get; init; }
 
-    public string Status { get; init; }
+    public ExamStatus Status { get; init; }
 
     public string Category { get; init; }
 
@@ -29,7 +31,7 @@ public sealed record ExamResultDto
 
     public string Email { get; init; }
 
-    public string Status { get; init; }
+    public ExamResultStatus Status { get; init; }
 
     public DateTime? FinishTime { get; init; }
 

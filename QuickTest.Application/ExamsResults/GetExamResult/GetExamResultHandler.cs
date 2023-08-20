@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using QuickTest.Application.Common.Enums;
 using QuickTest.Infrastructure.Interfaces;
 
 namespace QuickTest.Application.ExamsResults.GetExamResult;
@@ -18,12 +19,17 @@ public class GetExamResultHandler : IRequestHandler<GetExamResultRequest, GetExa
 
         if (examResult.FinishExamTime is null)
         {
-            return new GetExamResultDto { Status = "Active" };
+            return new GetExamResultDto { Status = ExamResultStatus.NotResolved };
+        }
+
+        if (examResult.Score is null)
+        {
+            return new GetExamResultDto { Status = ExamResultStatus.ToCheck };
         }
 
         return  new GetExamResultDto
         {
-            Status = "Inactive",
+            Status = ExamResultStatus.Completed,
             MaxPoints = examResult.Exam.MaxPoints,
             Score = examResult.Score,
             QuestionCount = examResult.Exam.Questions.Count(),

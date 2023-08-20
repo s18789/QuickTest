@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Observable, map } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { ExamsService } from '../../services/exams.service';
 import { ExamPreviewResponse } from 'src/app/shared/components/exam-preview/models/examPreviewResponse.model';
 import { ExamPreviewMapperService } from 'src/app/shared/components/exam-preview/services/examPreviewMapper.service';
@@ -32,7 +32,8 @@ export class CreatedExamPreviewComponent implements OnInit {
   getExamPreviewForm(): Observable<FormGroup<ExamPreviewForm>> {
     return this.examsService.GetCreatedExamPreview(this.examId).pipe(
       map((examPreviewResponse: ExamPreviewResponse) => this.examPreviewMapper.mapExamPreviewResponseToExamPreview(examPreviewResponse)),
-      map((examToSolve: ExamPreview) => this.examPreviewMapper.mpaExamPreviewToExamPreviewForm(examToSolve))
+      map((examToSolve: ExamPreview) => this.examPreviewMapper.mpaExamPreviewToExamPreviewForm(examToSolve)),
+      tap((rrr) => {var z = rrr;debugger})
     );
   }
 

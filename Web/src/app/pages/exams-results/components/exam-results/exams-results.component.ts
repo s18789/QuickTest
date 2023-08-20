@@ -6,7 +6,8 @@ import { ExamResultGridModel } from '../../models/examResult.model';
 import { ExamResultMapperService } from '../../services/examResultMapper.service';
 import { ActionConfiguration } from '../../../../shared/utils/model/actionConfiguration.model';
 import { GridItemConfiguration } from '../../../../shared/utils/model/GridConfiguration.model';
-import { GridComponent } from 'src/app/shared/components/grid/grid.component';
+import { ConfigurationItemType } from 'src/app/shared/utils/model/enums/configurationItemType.enum';
+import { ExamResultStatus } from '../../enums/examResultStatus.enum';
 
 @Component({
   selector: 'app-exams-results',
@@ -20,7 +21,7 @@ export class ExamsResultsComponent implements OnInit {
 
   configurations: GridItemConfiguration[] = [
     { displayName: "Exam name", key: "examName", styles: "w-50/100" },
-    { displayName: "Status", key: "status", styles: "w-15/100" },
+    { displayName: "Status", key: "status", type: ConfigurationItemType.enum, enum: ExamResultStatus, styles: "w-15/100" },
     { displayName: "Points", key: "score", styles: "w-15/100" },
     { displayName: "Ending date", key: "endingDate", styles: "w-15/100" }
   ];

@@ -19,6 +19,8 @@ namespace QuickTest.Application.Common
 
         public double Points { get; init; }
 
+        public double? Score { get; init; }
+
         public string? AnswerContent { get; init; }
 
         public IEnumerable<AnswerPreviewDTO> Answers { get; init; }

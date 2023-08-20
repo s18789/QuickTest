@@ -25,6 +25,7 @@ public class StartExamHandler : IRequestHandler<StartExamRequest, StartExamDto>
             {
                 QuestionId = q.Id,
                 Content = q.QuestionContent,
+                Type = q.Type,
                 Answers = q.PredefinedAnswers.Select(a => new StartExamAnswerDto
                 {
                     AnswerId = a.Id,

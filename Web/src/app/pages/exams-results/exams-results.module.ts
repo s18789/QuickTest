@@ -11,6 +11,7 @@ import { LatestExamComponent } from './components/exam-results/ui/latest-exam/la
 import { OthersStatsComponent } from './components/exam-results/ui/others-stats/others-stats.component';
 import { ThersStatsCardComponent } from './components/exam-results/ui/others-stats/ui/thers-stats-card/thers-stats-card.component';
 import { ExamResultPreviewComponent } from './components/exam-result-preview/exam-result-preview.component';
+import { ExamResultToCheckComponent } from './components/exam-result-to-check/exam-result-to-check.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ExamResultPreviewComponent } from './components/exam-result-preview/exa
     OthersStatsComponent,
     ThersStatsCardComponent,
     ExamResultPreviewComponent,
+    ExamResultToCheckComponent,
   ],
   imports: [
     CommonModule,
@@ -52,6 +54,10 @@ import { ExamResultPreviewComponent } from './components/exam-result-preview/exa
                   {
                     path: "preview",
                     component: ExamResultPreviewComponent
+                  },
+                  {
+                    path: "check",
+                    component: ExamResultToCheckComponent,
                   }
                 ]
               }

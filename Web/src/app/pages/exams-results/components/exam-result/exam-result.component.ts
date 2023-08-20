@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { ExamResult } from '../../models/examResult.model';
 import { ExamsResultsService } from '../../services/exams-results.service';
 import { ExamResultMapperService } from '../../services/examResultMapper.service';
+import { ExamResultStatus } from '../../enums/examResultStatus.enum';
 
 @Component({
   selector: 'app-exam-result',
@@ -14,6 +15,7 @@ import { ExamResultMapperService } from '../../services/examResultMapper.service
 export class ExamResultComponent implements OnInit {
   private readonly examResultId: string = this.route.snapshot.params["id"];
   examResult$: Observable<ExamResult>;
+  ExamResultStatus = ExamResultStatus;
 
   constructor(
     private router: Router,

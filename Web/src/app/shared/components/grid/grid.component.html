@@ -76,6 +76,11 @@
                   <div *ngSwitchCase="'button'">
                     <button>{{ config.text }}</button>
                   </div> -->
+                  <div *ngSwitchCase="configurationItemType.enum">
+                    <span [id]="config.key" class="text-sm text-gray-500" [ngClass]="(item[config.key][config.nestedKey] || '').toString()">
+                      {{ config.enum[item[config.key]] || "" }}
+                    </span>
+                  </div>
                   <div *ngSwitchCase="configurationItemType.object">
                     <span [id]="config.key" class="text-sm text-gray-500" [ngClass]="(item[config.key][config.nestedKey] || '').toString()">
                       {{ item[config.key][config.nestedKey] || "" }}

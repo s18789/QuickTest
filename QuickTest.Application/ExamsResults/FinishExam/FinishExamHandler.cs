@@ -39,7 +39,8 @@ public class FinishExamHandler : IRequestHandler<FinishExamRequest>
 
             if (question.Type == QuestionType.Open)
             {
-                studentAnswer.Content = question.Content;
+                studentAnswer.Content = question.AnswerContent;
+                studentAnswer.QuestionId = question.QuestionId;
             } 
             else
             {

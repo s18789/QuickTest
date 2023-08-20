@@ -1,4 +1,4 @@
-<form class="flex space-x-8 pt-4 px-24 pb-12 bg-blue#E9F7FA h-full" [formGroup]="examPreviewForm" (ngSubmit)="onSubmit(examPreviewForm)">
+<form class="flex space-x-8 pt-4 px-24 pb-12 bg-blue#E9F7FA h-full" [formGroup]="examPreviewForm">
     <div class="flex flex-col w-1/3">
         <div class="h-20"></div>
         <!-- timer!!!! -->
@@ -18,7 +18,10 @@
     <div class="flex flex-col w-full">
         <div class="flex h-20">
             <span class="my-auto text-navy#07617D font-semibold text-3xl">{{examPreviewForm.controls['title']?.value}}</span>
-            <button *ngIf="currentQuestion == questions.length - 1 && previewType == ExamPreviewType.ToSolve" type="submit" (submit)="onSubmit(examPreviewForm)" class="my-auto ml-auto bg-yellow#FDC57B px-8 py-2 rounded-lg text-sm font-semibold">
+            <button *ngIf="currentQuestion == questions.length - 1 && previewType == ExamPreviewType.ToCheck" type="submit" (click)="onCheckSubmit(examPreviewForm)" class="my-auto ml-auto bg-yellow#FDC57B px-8 py-2 rounded-lg text-sm font-semibold">
+                <span>Submit</span>
+            </button>
+            <button *ngIf="currentQuestion == questions.length - 1 && previewType == ExamPreviewType.ToSolve" type="submit" (click)="onSubmit(examPreviewForm)" class="my-auto ml-auto bg-yellow#FDC57B px-8 py-2 rounded-lg text-sm font-semibold">
                 <span>Finish exam</span>
             </button>
             <button *ngIf="currentQuestion != questions.length - 1" type="button" (click)="nextQuestion()" class="my-auto ml-auto bg-yellow#FDC57B px-8 py-2 rounded-lg text-sm font-semibold">

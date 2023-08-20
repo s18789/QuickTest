@@ -17,16 +17,6 @@ export class ExamPreviewMapperService {
     return {
       ...examPreviewResponse,
       examResultId: null,
-      questions: examPreviewResponse.questions.map(q => {
-        var question: QuestionPreview = {
-          ...q,
-          score: null,
-          answerContent: q.answerContent,
-          answers: q.answers
-        }
-
-        return question;
-      })
     };
   }
 
@@ -42,6 +32,8 @@ export class ExamPreviewMapperService {
         questionId: q.questionId,
         content: q.content,
         type:  q.type,
+        points: q.points,
+        score: q.score,
         answerContent: q.type == QuestionType.Open ? q.answerContent : null,
         answers: q.type == QuestionType.Open ? null : new FormArray<FormGroup>([])
       }));
@@ -63,4 +55,5 @@ export class ExamPreviewMapperService {
 
     return examFormGroup;
   }
+
 }

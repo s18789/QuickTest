@@ -11,7 +11,7 @@ export interface QuestionPreview {
     questionId: string,
     type: QuestionType,
     content: string,
-    point: number,
+    points: number,
     score: number,
     answerContent: string | null,
     answers: AnswerPreview[] | null,
@@ -27,4 +27,15 @@ export interface AnswerPreview {
 export interface ExamPreviewForm {
     title: FormControl,
     questions: FormArray<FormGroup>,
+}
+
+export interface CheckedExam {
+    examResultId: string,
+    questions: CheckedQuestion[],
+}
+
+export interface CheckedQuestion {
+    questionId: string,
+    type: QuestionType,
+    score: number,
 }

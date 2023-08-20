@@ -1,8 +1,10 @@
-﻿namespace QuickTest.Application.ExamsResults.GetExamResult;
+﻿using QuickTest.Application.Common.Enums;
+
+namespace QuickTest.Application.ExamsResults.GetExamResult;
 
 public sealed record GetExamResultDto
 {
-    public string? Status { get; init; }
+    public ExamResultStatus Status { get; init; }
 
     public int? MaxPoints { get; init; }
 

@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuickTest.Application.Exams.GetExamPreview;
+using QuickTest.Application.ExamsResults.CheckExam;
 using QuickTest.Application.ExamsResults.FinishExam;
 using QuickTest.Application.ExamsResults.GetExamResult;
 using QuickTest.Application.ExamsResults.GetExamResultPreview;
-using QuickTest.Application.ExamsResults.GetExamResultStatus;
 using QuickTest.Application.ExamsResults.GetExamsResults;
 using QuickTest.Application.ExamsResults.StartExam;
 
@@ -38,14 +38,6 @@ public class ExamsResultsController : ControllerBase
         return this.Ok(examsResults);
     }
 
-    [HttpGet("GetStatus")]
-    public async Task<IActionResult> GetStatus([FromQuery] int examResultId)
-    {
-        var status = await this.mediator.Send(new GetExamResultStatusRequest() { ExamResultId = examResultId });
-
-        return this.Ok(status);
-    }
-
 
     [HttpGet("{examResultId}")]
     public async Task<IActionResult> GetExamResult(int examResultId)
@@ -55,6 +47,13 @@ public class ExamsResultsController : ControllerBase
         return this.Ok(exam);
     }
 
+    [HttpGet("Preview/{id}")]
+    public async Task<IActionResult> GetExamResultPreview(int id)
+    {
+        var exam = await this.mediator.Send(new GetExamResultPreviewRequest() { ExamResultId = id });
+
+        return this.Ok(exam);
+    }
 
     [HttpPost("FinishExam")]
     public async Task<IActionResult> FinishExam([FromBody] FinishExamDto exam)
@@ -64,11 +63,11 @@ public class ExamsResultsController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("Preview/{id}")]
-    public async Task<IActionResult> GetExamResultPreview(int id)
+    [HttpPost("CheckExam")]
+    public async Task<IActionResult> CheckExam([FromBody] CheckedExamDTO checkedExam)
     {
-        var exam = await this.mediator.Send(new GetExamResultPreviewRequest() { ExamResultId = id });
+        await this.mediator.Send(new CheckExamRequest() { CheckedExam = checkedExam });
 
-        return this.Ok(exam);
+        return Ok();
     }
 }

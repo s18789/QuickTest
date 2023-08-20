@@ -1,4 +1,7 @@
 ﻿using MediatR;
+using QuickTest.Application.Common.Enums;
+using QuickTest.Core.Entities;
+using QuickTest.Core.Entities.Enums;
 using QuickTest.Infrastructure.Interfaces;
 
 namespace QuickTest.Application.Exams.GetExam;
@@ -20,7 +23,7 @@ public class GetExamHandler : IRequestHandler<GetExamRequest, ExamDto>
         {
             Id = exam.Id,
             Name = exam.Title,
-            Status = DateTime.Compare(exam.AvailableTo, DateTime.Now) > 0 ? "Active" : "Inactive",
+            Status = DateTime.Compare(exam.AvailableTo, DateTime.Now) > 0 ? ExamStatus.Active : ExamStatus.Inactive,
             Category = "1 Biol-Chem",
             QuestionNumber = exam.Questions.Count(),
             AvailableFrom = exam.AvailableFrom,
@@ -31,12 +34,22 @@ public class GetExamHandler : IRequestHandler<GetExamRequest, ExamDto>
                 Id = er.FinishExamTime is null ? null : er.Id,
                 FullName = $"{er.Student.FirstName} {er.Student.LastName}",
                 Email = er.Student.Email,
-                Status = er.FinishExamTime is null
-                    ? "Not resolved"
-                    : "Completed",
+                Status = this.GetExamResultStatus(er, exam.Questions),
                 FinishTime = er.FinishExamTime,
                 Score = er.Score
             }).OrderBy(er => er.Status).ThenBy(er => er.Score)
         };
+    }
+
+    private ExamResultStatus GetExamResultStatus(ExamResult examResult, IEnumerable<Question> questions)
+    {
+        if (examResult.FinishExamTime is null)
+        {
+            return ExamResultStatus.NotResolved;
+        }
+
+        return questions.Any(x => x.Type == QuestionType.Open) && examResult.Score is null 
+            ? ExamResultStatus.ToCheck 
+            : ExamResultStatus.Completed;
     }
 }
