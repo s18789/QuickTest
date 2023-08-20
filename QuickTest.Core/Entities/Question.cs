@@ -17,7 +17,7 @@ public class Question : IEntity
 
     public Exam Exam { get; set; }
 
-    public IEnumerable<PredefinedAnswer> PredefinedAnswers { get; set; }
+    public IEnumerable<PredefinedAnswer>? PredefinedAnswers { get; set; }
 
-    public IEnumerable<StudentAnswer> StudentAnswers { get; set; }
+    public IEnumerable<StudentAnswer>? StudentAnswers { get; set; }
 }
