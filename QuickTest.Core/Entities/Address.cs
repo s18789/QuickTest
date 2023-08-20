@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QuickTest.Core.Entities
 {
-    public class Address
+    public class Address : IEntity
     {
         public int Id { get; set; }
         public string PostalCode { get; set; }
@@ -16,6 +16,7 @@ namespace QuickTest.Core.Entities
         public string? City { get; set; }
         public string State { get; set; }
         public string? Country { get; set; }
+        public int SchoolId { get; set; }
         public School School { get; set; }
 
     }

@@ -40,5 +40,22 @@ public class StudentRepository : BaseRepository<Student>, IStudentRepository
             .Include(x => x.Group)
             .ToListAsync();
     }
+    public async Task<string> GenerateStudentIndex()
+    {
+        var lastStudentIndex = await context.Students.OrderByDescending(s => s.Index).Select(s => s.Index).FirstOrDefaultAsync();
+
+        if (string.IsNullOrEmpty(lastStudentIndex))
+        {
+            return "s00001";
+        }
+
+        int.TryParse(lastStudentIndex.Substring(1), out int numericPart);
+
+        numericPart++;
+
+        var newIndex = "s" + numericPart.ToString("D5");
+
+        return newIndex;
+    }
 
 }

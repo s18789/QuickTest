@@ -3,17 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuickTest.Infrastructure.Data;
 
 #nullable disable
 
-namespace QuickTest.Migrations
+namespace QuickTest.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230820122014_userEntityUpdate")]
+    partial class userEntityUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +23,49 @@ namespace QuickTest.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("QuickTest.Core.Entities.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("BuildingNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PropertyNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SchoolId")
+                        .IsUnique();
+
+                    b.ToTable("Address");
+                });
 
             modelBuilder.Entity("QuickTest.Core.Entities.Exam", b =>
                 {
@@ -112,14 +157,29 @@ namespace QuickTest.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("TeacherId")
+                    b.Property<int?>("SchoolId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TeacherId");
+                    b.HasIndex("SchoolId");
 
                     b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("QuickTest.Core.Entities.GroupTeacher", b =>
+                {
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GroupId", "TeacherId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("GroupTeacher");
                 });
 
             modelBuilder.Entity("QuickTest.Core.Entities.PredefinedAnswer", b =>
@@ -175,11 +235,31 @@ namespace QuickTest.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExamId");
 
                     b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("QuickTest.Core.Entities.School", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Schools");
                 });
 
             modelBuilder.Entity("QuickTest.Core.Entities.SelectedStudentAnswer", b =>
@@ -216,15 +296,23 @@ namespace QuickTest.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ExamResultId")
                         .HasColumnType("int");
 
                     b.Property<double>("Points")
                         .HasColumnType("float");
 
+                    b.Property<int?>("QuestionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExamResultId");
+
+                    b.HasIndex("QuestionId");
 
                     b.ToTable("StudentAnswers");
                 });
@@ -314,9 +402,25 @@ namespace QuickTest.Migrations
                     b.Property<string>("NormalizedName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("QuickTest.Core.Entities.Admin", b =>
+                {
+                    b.HasBaseType("QuickTest.Core.Entities.User");
+
+                    b.Property<int?>("SchoolId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("SchoolId");
+
+                    b.ToTable("Admins");
                 });
 
             modelBuilder.Entity("QuickTest.Core.Entities.Student", b =>
@@ -340,6 +444,17 @@ namespace QuickTest.Migrations
                     b.HasBaseType("QuickTest.Core.Entities.User");
 
                     b.ToTable("Teachers");
+                });
+
+            modelBuilder.Entity("QuickTest.Core.Entities.Address", b =>
+                {
+                    b.HasOne("QuickTest.Core.Entities.School", "School")
+                        .WithOne("Address")
+                        .HasForeignKey("QuickTest.Core.Entities.Address", "SchoolId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("School");
                 });
 
             modelBuilder.Entity("QuickTest.Core.Entities.Exam", b =>
@@ -374,10 +489,28 @@ namespace QuickTest.Migrations
 
             modelBuilder.Entity("QuickTest.Core.Entities.Group", b =>
                 {
-                    b.HasOne("QuickTest.Core.Entities.Teacher", "Teacher")
+                    b.HasOne("QuickTest.Core.Entities.School", "School")
                         .WithMany("Groups")
+                        .HasForeignKey("SchoolId");
+
+                    b.Navigation("School");
+                });
+
+            modelBuilder.Entity("QuickTest.Core.Entities.GroupTeacher", b =>
+                {
+                    b.HasOne("QuickTest.Core.Entities.Group", "Group")
+                        .WithMany("GroupTeachers")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("QuickTest.Core.Entities.Teacher", "Teacher")
+                        .WithMany("GroupTeachers")
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Group");
 
                     b.Navigation("Teacher");
                 });
@@ -427,7 +560,13 @@ namespace QuickTest.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("QuickTest.Core.Entities.Question", "Question")
+                        .WithMany("StudentAnswers")
+                        .HasForeignKey("QuestionId");
+
                     b.Navigation("ExamResult");
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("QuickTest.Core.Entities.User", b =>
@@ -439,6 +578,21 @@ namespace QuickTest.Migrations
                         .IsRequired();
 
                     b.Navigation("UserRole");
+                });
+
+            modelBuilder.Entity("QuickTest.Core.Entities.Admin", b =>
+                {
+                    b.HasOne("QuickTest.Core.Entities.User", null)
+                        .WithOne()
+                        .HasForeignKey("QuickTest.Core.Entities.Admin", "Id")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("QuickTest.Core.Entities.School", "AdministeredSchool")
+                        .WithMany()
+                        .HasForeignKey("SchoolId");
+
+                    b.Navigation("AdministeredSchool");
                 });
 
             modelBuilder.Entity("QuickTest.Core.Entities.Student", b =>
@@ -481,6 +635,8 @@ namespace QuickTest.Migrations
 
             modelBuilder.Entity("QuickTest.Core.Entities.Group", b =>
                 {
+                    b.Navigation("GroupTeachers");
+
                     b.Navigation("Students");
                 });
 
@@ -492,6 +648,16 @@ namespace QuickTest.Migrations
             modelBuilder.Entity("QuickTest.Core.Entities.Question", b =>
                 {
                     b.Navigation("PredefinedAnswers");
+
+                    b.Navigation("StudentAnswers");
+                });
+
+            modelBuilder.Entity("QuickTest.Core.Entities.School", b =>
+                {
+                    b.Navigation("Address")
+                        .IsRequired();
+
+                    b.Navigation("Groups");
                 });
 
             modelBuilder.Entity("QuickTest.Core.Entities.StudentAnswer", b =>
@@ -513,7 +679,7 @@ namespace QuickTest.Migrations
                 {
                     b.Navigation("Exams");
 
-                    b.Navigation("Groups");
+                    b.Navigation("GroupTeachers");
                 });
 #pragma warning restore 612, 618
         }

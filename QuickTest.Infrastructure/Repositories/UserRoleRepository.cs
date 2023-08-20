@@ -18,7 +18,11 @@ public class UserRoleRepository : BaseRepository<UserRole>, IUserRoleRepository
             .Where(u => u.Id == user.Id)
             .Select(u => u.UserRole)
             .FirstOrDefaultAsync();
-
-        //await this.context.UserRoles.Where(ur => ur.Users.)
+    }
+    public async Task<UserRole> GetRoleByName(string roleName)
+    {
+        return await this.context.UserRoles
+            .Where(ur => ur.RoleName == roleName.ToLower())
+            .FirstOrDefaultAsync();
     }
 }
