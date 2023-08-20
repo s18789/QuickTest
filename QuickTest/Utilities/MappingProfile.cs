@@ -27,13 +27,15 @@ namespace QuickTest.Infrastructure.Utilities
             CreateMap<Teacher, TeacherDto>()
                 .ForMember(dest => dest.GroupDtos, opt => opt.MapFrom(src => src.GroupTeachers.Select(gt => gt.Group)));
 
-            CreateMap<GroupDto, Group>()
-                .ForMember(dest => dest.Students, opt => opt.MapFrom(src => src.StudentDtos))
-                .ForMember(dest => dest.GroupTeachers, opt => opt.MapFrom(src => src.TeacherDtos.Select(tdto => new GroupTeacher { TeacherId = tdto.Id.Value })));
-
             CreateMap<Group, GroupDto>()
-                .ForMember(dest => dest.StudentDtos, opt => opt.MapFrom(src => src.Students))
-                .ForMember(dest => dest.TeacherDtos, opt => opt.MapFrom(src => src.GroupTeachers.Select(gt => gt.Teacher)));
+            .ForMember(dest => dest.Students, opt => opt.MapFrom(src => src.Students))
+            .ForMember(dest => dest.GroupTeachers, opt => opt.MapFrom(src => src.GroupTeachers))
+            .ForMember(dest => dest.School, opt => opt.MapFrom(src => src.School));
+
+            CreateMap<GroupDto, Group>()
+                .ForMember(dest => dest.Students, opt => opt.MapFrom(src => src.Students))
+                .ForMember(dest => dest.GroupTeachers, opt => opt.MapFrom(src => src.GroupTeachers))
+                .ForMember(dest => dest.School, opt => opt.MapFrom(src => src.School));
         }
     }
 }
