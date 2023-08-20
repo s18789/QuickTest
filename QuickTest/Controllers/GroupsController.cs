@@ -10,7 +10,7 @@ using QuickTest.Application.Groups.UpdateGroup;
 namespace QuickTest.Controllers;
 
 [Route("api/[controller]")]
-[Authorize(Roles = "Teacher")]
+[Authorize(Roles = "teacher")]
 [ApiController]
 public class GroupsController : ControllerBase
 {

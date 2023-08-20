@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuickTest.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using QuickTest.Infrastructure.Data;
 namespace QuickTest.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230820124609_initialUsersValuesChange")]
+    partial class initialUsersValuesChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -413,6 +415,18 @@ namespace QuickTest.Infrastructure.Migrations
                 {
                     b.HasBaseType("QuickTest.Core.Entities.User");
 
+                    b.Property<string>("InitialEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InitialFirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InitialLastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("SchoolId")
                         .HasColumnType("int");
 
@@ -429,6 +443,19 @@ namespace QuickTest.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Index")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InitialEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InitialFirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InitialLastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("GroupId");
@@ -439,6 +466,18 @@ namespace QuickTest.Infrastructure.Migrations
             modelBuilder.Entity("QuickTest.Core.Entities.Teacher", b =>
                 {
                     b.HasBaseType("QuickTest.Core.Entities.User");
+
+                    b.Property<string>("InitialEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InitialFirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InitialLastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.ToTable("Teachers");
                 });

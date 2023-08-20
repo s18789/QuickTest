@@ -14,7 +14,7 @@ using System.Data;
 namespace QuickTest.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")] 
+    [Authorize(Roles = "administrator")] 
     [ApiController]
     public class TeachersController : ControllerBase
     {
