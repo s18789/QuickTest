@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using QuickTest.Application.Common.Enums;
 using QuickTest.Infrastructure.Interfaces;
 
 namespace QuickTest.Application.Exams.GetExams;
@@ -19,7 +20,7 @@ public class GetExamsHandler : IRequestHandler<GetExamsRequest, IEnumerable<Exam
         {
             Id = x.Id,
             Title = x.Title,
-            Status = DateTime.Compare(x.AvailableTo, DateTime.Now) > 0 ? "Active" : "Inactive",
+            Status = DateTime.Compare(x.AvailableTo, DateTime.Now) > 0 ? ExamStatus.Active : ExamStatus.Inactive,
             Class = "1 Biol-Chem",
             CompletedExams = x.ExamResults.Where(x => x.FinishExamTime != null).Count(),
             AllExams = x.ExamResults.Count(),

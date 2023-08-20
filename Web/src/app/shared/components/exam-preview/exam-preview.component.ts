@@ -1,10 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { ExamToSolveMapperService } from 'src/app/core/main/components/exam-to-solve/services/examToSolveMapper.service';
 import { ExamSolveService } from 'src/app/core/main/services/examSolveService.service';
 import { ExamPreviewType } from './enums/examPreviewType.enum';
+import { ExamsResultsService } from 'src/app/pages/exams-results/services/exams-results.service';
+import { CheckedExam } from './models/examPreview.model';
 
 @Component({
   selector: 'app-exam-preview',
@@ -20,7 +22,9 @@ export class ExamPreviewComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private examSolveService: ExamSolveService,
+    private examsResultsService: ExamsResultsService,
     private examToSolveMapperService: ExamToSolveMapperService,
   ) { }
 
@@ -37,7 +41,6 @@ export class ExamPreviewComponent implements OnInit {
 
   onSubmit(target: any) {
     var resolvedExam = this.examToSolveMapperService.mapExamToSolveToResolvedExam(this.examSolveService.examResultId, target.value);
-    debugger;
 
     this.examSolveService.finishExam(resolvedExam).pipe(
       tap(() => this.examSolveService.removeStorage()),
@@ -45,4 +48,13 @@ export class ExamPreviewComponent implements OnInit {
     ).subscribe();
   }
 
+  onCheckSubmit(target: any) {
+    const examResultId: string = this.route.snapshot.params["id"];
+    const checkedExam: CheckedExam = this.examToSolveMapperService.mapExamPreviewToCheckedExam(examResultId, target.value);
+
+    this.examsResultsService.checkExamResult(checkedExam).pipe(
+      tap(() => this.router.navigate(['./exams']))
+    ).subscribe();
+
+  }
 }

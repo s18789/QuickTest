@@ -4,8 +4,6 @@ namespace QuickTest.Application.ExamsResults.FinishExam;
 
 public sealed record class FinishExamDto
 {
-    public int ExamId { get; init; }
-
     public int ExamResultId { get; init; }
 
     public IEnumerable<FinishExamQuestionDto> Questions { get; init; }

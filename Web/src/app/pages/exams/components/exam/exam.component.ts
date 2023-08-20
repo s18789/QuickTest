@@ -15,6 +15,8 @@ import { StudentDialogComponent } from '../add-exam/student-dialog/student-dialo
 import { StudentDialog } from 'src/app/pages/members/models/students/studentDialog.model';
 import { StudentResponse } from 'src/app/pages/members/models/students/studentResponse.model';
 import { StudentMapperService } from 'src/app/pages/members/services/students/studentMapper.service';
+import { ConfigurationItemType } from 'src/app/shared/utils/model/enums/configurationItemType.enum';
+import { ExamResultStatus } from 'src/app/pages/exams-results/enums/examResultStatus.enum';
 
 @Component({
   selector: 'app-exam',
@@ -29,7 +31,7 @@ export class ExamComponent implements OnInit {
   configurations: GridItemConfiguration[] = [
     { displayName: "Full name", key: "fullName", styles: "w-1/5" },
     { displayName: "E-mail", key: "email", styles: "w-1/2" },
-    { displayName: "Status", key: "status", styles: "w-1/5" },
+    { displayName: "Status", key: "status", type: ConfigurationItemType.enum, enum: ExamResultStatus, styles: "w-1/5" },
     { displayName: "Score", key: "score", styles: "w-1/10" }
   ];
 

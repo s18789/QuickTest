@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using QuickTest.Application.Common;
+using QuickTest.Core.Entities;
 using QuickTest.Core.Entities.Enums;
 using QuickTest.Infrastructure.Interfaces;
 
@@ -21,14 +22,15 @@ namespace QuickTest.Application.ExamsResults.GetExamResultPreview
             return new ExamPreviewDTO
             {
                 title = examResult.Exam.Title,
-                Questions = examResult.Exam.Questions.Select(q => new QuestionPreviewDTO
+                Questions = examResult.Exam.Questions.Select((q, i) => new QuestionPreviewDTO
                 {
                     QuestionId = q.Id,
                     Content = q.QuestionContent,
                     Type = q.Type,
                     Points = q.Points,
-                    AnswerContent = q.Type != QuestionType.Open ? null : q.StudentAnswers.Where(x => x.QuestionId == examResult.Id).FirstOrDefault()?.Content,
-                    Answers = q.Type == QuestionType.Open ? null : q.PredefinedAnswers.Select(a => new AnswerPreviewDTO
+                    Score = examResult.StudentAnswers?.ElementAt(i)?.Points,
+                    AnswerContent = q.Type != QuestionType.Open ? null : examResult.StudentAnswers?.Where(x => x.QuestionId == q.Id).FirstOrDefault()?.Content,
+                    Answers = q.Type == QuestionType.Open ? null : q.PredefinedAnswers?.Select(a => new AnswerPreviewDTO
                     {
                         AnswerId = a.Id,
                         Content = a.Content,

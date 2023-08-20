@@ -4,7 +4,9 @@ import { ExamsService } from 'src/app/pages/exams/services/exams.service';
 import { ExamListItem } from '../../models/exam.model';
 import { ExamMapperService } from '../../services/examMapper.service';
 import { ActionConfiguration } from '../../../../shared/utils/model/actionConfiguration.model';
-import { GridItemConfiguration } from '../../../../shared/utils/model/GridConfiguration.model';
+import { GridItemConfiguration } from 'src/app/shared/utils/model/GridConfiguration.model';
+import { ExamStatus } from '../../enums/examStatus.enum';
+import { ConfigurationItemType } from 'src/app/shared/utils/model/enums/configurationItemType.enum';
 
 @Component({
   selector: 'app-exams',
@@ -17,7 +19,7 @@ export class ExamsComponent implements OnInit {
 
   configurations: GridItemConfiguration[] = [
     { displayName: "Exam name", key: "title", styles: "w-35/100" },
-    { displayName: "Status", key: "status", styles: "w-15/100" },
+    { displayName: "Status", key: "status", type: ConfigurationItemType.enum, enum: ExamStatus, styles: "w-15/100" },
     { displayName: "Class", key: "class", styles: "w-15/100" },
     { displayName: "Completed exams", key: "completedExams", styles: "w-15/100" },
     { displayName: "Ending date", key: "endingDate", styles: "w-15/100" }
@@ -39,8 +41,7 @@ export class ExamsComponent implements OnInit {
     return this.examsService.getExams().pipe(
       map((exams) =>
         exams.map((exam) =>
-          this.examMapperService.mapExamListItemResponseToExamListItem(exam)
-          )
+          this.examMapperService.mapExamListItemResponseToExamListItem(exam))
       ),
     )
   }

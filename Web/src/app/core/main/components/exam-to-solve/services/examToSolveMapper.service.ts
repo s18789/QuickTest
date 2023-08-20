@@ -3,6 +3,7 @@ import { ExamToSolveResponse } from "../models/examToSolveResponse";
 import { Answer, ExamToSolve, ExamToSolveForm, Question, QuestionDTO, ResolvedExamDTO } from "../models/examToSolve.model";
 import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { QuestionType } from "src/app/shared/enums/questionType.enum";
+import { CheckedExam, CheckedQuestion, ExamPreview } from "src/app/shared/components/exam-preview/models/examPreview.model";
 
 @Injectable({
   providedIn: "root",
@@ -77,18 +78,25 @@ export class ExamToSolveMapperService {
       questions: examToSolve.questions.map(q => {
         var question: QuestionDTO = {
           questionId: q.questionId,
-          type: !q.type  ? Number(QuestionType.MultipleChoice) : Number(q.type),
+          type: Number(q.type),
           content: q.content,
           answerContent: q.answerContent,
-          answers: q.answers.map(a => {
-            var answer: Answer = {
-              answerId: a.answerId,
-              content: a.content,
-              isSelected: !a.isSelected ? false : true
-            }
+          answers: q.type == QuestionType.Open ? null : q.answers
+        }
 
-            return answer;
-          })
+        return question;
+      })
+    }
+  }
+
+  mapExamPreviewToCheckedExam(examResultId: string, examToSolve: ExamPreview): CheckedExam {
+    return {
+      examResultId: examResultId,
+      questions: examToSolve.questions.map(q => {
+        const question: CheckedQuestion = {
+          questionId: q.questionId,
+          type: q.type,
+          score: q.score
         }
 
         return question;

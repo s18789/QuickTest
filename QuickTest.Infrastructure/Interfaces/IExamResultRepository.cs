@@ -14,4 +14,6 @@ public interface IExamResultRepository : IAsyncRepository<ExamResult>
     Task AddMembersToExam(int examId, IEnumerable<int> membersIds);
 
     Task<ExamResult> GetExamResultPreview(int examResultId);
+
+    Task<ExamResult> GetExamResult(int examResultId);
 }

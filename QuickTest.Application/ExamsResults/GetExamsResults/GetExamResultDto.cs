@@ -1,4 +1,6 @@
-﻿namespace QuickTest.Application.ExamsResults.GetExamsResults;
+﻿using QuickTest.Application.Common.Enums;
+
+namespace QuickTest.Application.ExamsResults.GetExamsResults;
 
 public sealed record GetExamResultDto
 {
@@ -6,7 +8,7 @@ public sealed record GetExamResultDto
 
     public string ExamName { get; init; }
 
-    public string Status { get; init; }
+    public ExamResultStatus Status { get; init; }
 
     public double? Score { get; init; }
 

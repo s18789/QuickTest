@@ -22,6 +22,7 @@ export class ExamSolveService {
     localStorage.setItem("isExamResolving", "true");
     localStorage.setItem("examResultId", examResultId);
     this.isExamResolving = true;
+    this.examResultId = examResultId;
   }
 
   startExam(): Observable<ExamToSolveResponse> {
@@ -30,8 +31,6 @@ export class ExamSolveService {
   }
 
   finishExam(examResult: ResolvedExamDTO): Observable<any> {
-    debugger;
-    //localStorage.setItem("isExamResolving", "false");
     return this.http.post(`${this.apiUrl}/FinishExam`, examResult);
   }
 
@@ -39,5 +38,6 @@ export class ExamSolveService {
     localStorage.removeItem("isExamResolving");
     localStorage.removeItem("examResultId");
     this.isExamResolving = false;
+    this.examResultId = null;
   }
 }

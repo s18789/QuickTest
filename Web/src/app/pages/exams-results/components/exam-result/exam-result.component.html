@@ -1,5 +1,5 @@
 <div class="h-full" *ngIf="examResult$ | async as examResult" style="background-color: #F0F4F7;">
-  <div *ngIf="examResult.status != 'Active'" class="h-full p-16">
+  <div *ngIf="examResult.status == ExamResultStatus.Completed" class="h-full p-16">
     <div class="flex p-8 rounded-xl bg-white shadow-lg">
       <div class="flex flex-col">
         <span class="text-3xl mb-4 font-semibold">Well done!</span>

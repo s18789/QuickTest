@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using QuickTest.Application.Common.Enums;
 using QuickTest.Application.Questions;
 using QuickTest.Application.Students;
 
@@ -23,7 +24,7 @@ public sealed record ExamDTO : IRequest
 
     public IEnumerable<StudentDto> Students { get; init; }
 
-    public string Status { get; init; }
+    public ExamStatus Status { get; init; }
 
     public string Class { get; init; }
 

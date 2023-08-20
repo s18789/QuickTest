@@ -12,6 +12,7 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 import { ConfirmationDialogType } from '../../enums/confirmationDialogType.enum';
 import { ConfirmationDialogActionType } from '../../enums/confirmationDialogActionType.enum';
 import { ExamSolveService } from 'src/app/core/main/services/examSolveService.service';
+import { ExamResultStatus } from 'src/app/pages/exams-results/enums/examResultStatus.enum';
 
 @Component({
   selector: 'app-grid',
@@ -142,8 +143,17 @@ export class GridComponent {
   }
 
   handleAction(item: any) {
-    if (item.status?.toLowerCase() == 'active' && this.routerName.includes("examResult")) {
-      this.openExamStartConfirmationDialog(item.id);
+    if (this.routerName.includes("examResult")) {
+      switch(item.status) {
+        case ExamResultStatus.NotResolved:
+          this.openExamStartConfirmationDialog(item.id);
+        break;
+        case ExamResultStatus.ToCheck:
+          this.router.navigate([`${this.routerName}/${item.id}/check`]);
+        break;
+        default:
+          this.router.navigate([`${this.routerName}/${item.id}`]);
+      }
       return;
     }
 

@@ -1,7 +1,8 @@
 import { Entity } from "src/app/shared/utils/models/entity.model";
+import { ExamResultStatus } from "../enums/examResultStatus.enum";
 
 export interface ExamResult {
-  status?: string,
+  status?: ExamResultStatus,
   maxPoints?: number,
   score?: number,
   questionCount?: number,
@@ -14,7 +15,7 @@ export interface ExamResult {
 
 export interface ExamResultGridModel extends Entity {
   examName: string,
-  status: string,
+  status: ExamResultStatus,
   score?: number,
   endingDate: Date,
 }

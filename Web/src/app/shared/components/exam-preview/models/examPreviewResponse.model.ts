@@ -10,7 +10,8 @@ export interface QuestionPreviewResponse {
     type: QuestionType,
     content: string,
     answerContent: string | null,
-    point: number,
+    points: number,
+    score: number,
     answers: AnswerPreviewResponse[] | null,
 }
 

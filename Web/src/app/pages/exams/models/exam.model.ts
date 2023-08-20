@@ -1,8 +1,10 @@
 import { Entity } from "src/app/shared/utils/models/entity.model"
+import { ExamResultStatus } from "../../exams-results/enums/examResultStatus.enum"
+import { ExamStatus } from "../enums/examStatus.enum"
 
 export interface Exam extends Entity {
   name: string,
-  status: string,
+  status: ExamStatus,
   category: string,
   questionNumber: number,
   availableFrom: Date,
@@ -15,7 +17,7 @@ export interface Exam extends Entity {
 export interface ExamResult extends Entity {
   fullName: string,
   email: string,
-  status: string,
+  status: ExamResultStatus,
   finishTime: Date | null,
   score: number | null
 }
@@ -25,5 +27,5 @@ export interface ExamListItem extends Entity {
   completedExams: string,
   endingDate: string,
   examName: string,
-  status: string
+  status: ExamStatus
 }

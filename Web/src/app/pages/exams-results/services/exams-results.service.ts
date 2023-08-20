@@ -6,6 +6,7 @@ import { ExamResultDto } from '../../../core/main/components/exam-to-solve/model
 import { ExamResult } from '../models/examResult.model';
 import { ExamResultGridModelResponse } from '../models/examResultResponse';
 import { ExamPreviewResponse } from 'src/app/shared/components/exam-preview/models/examPreviewResponse.model';
+import { CheckedExam } from 'src/app/shared/components/exam-preview/models/examPreview.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,12 +37,6 @@ export class ExamsResultsService {
     return this.http.get<ExamResult>(`${this.apiUrl}/${id}`)
   }
 
-  getStatus(examResultId: string): any {
-    var params = new HttpParams().set("examResultId", examResultId);
-
-    return this.http.get(`${this.apiUrl}/GetStatus`, { params: params });
-  }
-
   startExam(examResultId: number): Observable<any> {
     var params = new HttpParams().set("examResultId", examResultId);
     return this.http.get<ExamResultDto>(`${this.apiUrl}/StartExam`, { params: params });
@@ -61,5 +56,9 @@ export class ExamsResultsService {
 
   GetExamResultPreview(id: string): Observable<ExamPreviewResponse> {
     return this.http.get<ExamPreviewResponse>(`${this.apiUrl}/Preview/${id}`)
+  }
+
+  checkExamResult(checkedExam: CheckedExam): Observable<any> {
+    return this.http.post(`${this.apiUrl}/CheckExam`, checkedExam);
   }
 }

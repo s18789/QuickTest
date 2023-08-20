@@ -70,6 +70,7 @@ public class ExamResultRepository : BaseRepository<ExamResult>, IExamResultRepos
     public async Task<ExamResult> GetExamResultPreview(int examResultId)
     {
         return await this.context.ExamResults
+            .Include(x => x.StudentAnswers)
             .Include(x => x.Exam)
                 .ThenInclude(x => x.Questions)
                     .ThenInclude(x => x.PredefinedAnswers)
@@ -79,5 +80,11 @@ public class ExamResultRepository : BaseRepository<ExamResult>, IExamResultRepos
              .FirstOrDefaultAsync(x => x.Id == examResultId);
 
 
+    }
+
+    public async Task<ExamResult> GetExamResult(int examResultId)
+    {
+        return await this.context.ExamResults.Include(x => x.StudentAnswers)
+            .FirstOrDefaultAsync(x => x.Id == examResultId);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace QuickTest.Application.ExamsResults.StartExam;
+﻿using QuickTest.Core.Entities.Enums;
+
+namespace QuickTest.Application.ExamsResults.StartExam;
 
 public sealed record StartExamDto
 {
@@ -14,6 +16,8 @@ public sealed record StartExamQuestionDto
     public int QuestionId { get; init; }
 
     public string Content { get; init; }
+
+    public QuestionType Type { get; init; }
 
     public IEnumerable<StartExamAnswerDto> Answers { get; init; }
 }

@@ -26,12 +26,12 @@ export interface ExamToSolveForm {
 }
 
 export interface ResolvedExamDTO {
-    examResultId: string | number,
+    examResultId: string,
     questions: QuestionDTO[],
 }
 
 export interface QuestionDTO {
-    questionId: string | number,
+    questionId: string,
     type: number,
     content: string,
     answerContent: string | null,
