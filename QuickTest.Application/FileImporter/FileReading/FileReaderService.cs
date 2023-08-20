@@ -75,9 +75,7 @@ namespace QuickTest.Application.FileImporter.FileReading
 
             return new ImportedGroupsDto
             {
-                Groups = groupsSet.ToList(),
-                Teachers = teachersSet.ToList(),
-                Students = studentsSet.ToList()
+                ImportedGroups = new List<GroupDto>()
             };
         }
 
