@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using QuickTest.Application.Users.CreateUser;
 using QuickTest.Core.Entities;
+using QuickTest.Core.Entities.Enums;
 using QuickTest.Infrastructure.Interfaces;
 
 namespace QuickTest.Application.Students.CreateStudent;
@@ -14,13 +16,15 @@ public class CreateStudentHandler : IRequestHandler<CreateStudentRequest, Respon
     private readonly IEmailService emailService;
     private readonly IUserRoleRepository roleRepository;
     private readonly UserManager<User> userManager;
+    private readonly IMapper mapper;
 
-    public CreateStudentHandler(IStudentRepository studentRepository, UserManager<User> userManager, IEmailService emailService, IUserRoleRepository userRoleRepository)
+    public CreateStudentHandler(IStudentRepository studentRepository, UserManager<User> userManager, IMapper mapper, IEmailService emailService, IUserRoleRepository userRoleRepository)
     {
         this.studentRepository = studentRepository;
         this.userManager = userManager;
         this.emailService = emailService;
         this.roleRepository = userRoleRepository;
+        this.mapper = mapper;
     }
 
     public async Task<ResponseDto> Handle(CreateStudentRequest request, CancellationToken cancellationToken)
@@ -32,8 +36,8 @@ public class CreateStudentHandler : IRequestHandler<CreateStudentRequest, Respon
             UserName = request.Student.Email.Split('@')[0],
             Email = request.Student.Email,
             NormalizedEmail = request.Student.Email,
-            GroupId = request.Student.GroupDto.Id,
-            UserRoleId = roleRepository.GetRoleByName("student").Result.Id,
+            Group = mapper.Map<Group>(request.Student.GroupDto),
+            UserRole = roleRepository.GetRoleByType(RoleType.STUDENT).Result,
             Index = studentRepository.GenerateStudentIndex().Result,
             PhoneNumber = request.Student.PhoneNumber,
         };

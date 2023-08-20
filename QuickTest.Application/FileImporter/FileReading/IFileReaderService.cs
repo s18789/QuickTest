@@ -11,6 +11,6 @@ namespace QuickTest.Application.FileImporter.FileReading
     public interface IFileReaderService
     {
         Task<List<GroupDto>> ExtractDataFromCsv(IFormFile file);
-        Task<ImportedSchoolDto> ExtractSchoolDataFromXlsx(IFormFile file);
+        Task<ImportedGroupsDto> ExtractSchoolDataFromXlsx(IFormFile file);
     }
 }

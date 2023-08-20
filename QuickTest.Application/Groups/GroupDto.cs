@@ -1,5 +1,6 @@
 ﻿using QuickTest.Application.Students;
 using QuickTest.Application.Teachers;
+using QuickTest.Core.Entities;
 
 namespace QuickTest.Application.Groups;
 
@@ -9,7 +10,8 @@ public sealed record GroupDto
 
 
     public string Name { get; set; }
-    public ICollection<StudentDto> StudentDtos { get; set; }
-    public ICollection<TeacherDto> TeacherDtos { get; set; }
+    public ICollection<StudentDto>? Students { get; set; }
+    public ICollection<GroupTeacherDto> GroupTeachers { get; set; }
+    public School? School { get; set; }
 
 }

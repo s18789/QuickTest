@@ -45,7 +45,7 @@ public class GroupsController : ControllerBase
             return BadRequest("Invalid group data.");
         }
 
-        if (group.StudentDtos?.Any() == true && group.TeacherDtos?.FirstOrDefault() == null)
+        if (group.GroupTeachers?.Any() == true && group.GroupTeachers?.FirstOrDefault() == null)
         {
             return BadRequest("Cannot add students to a group without a teacher.");
         }
@@ -68,7 +68,7 @@ public class GroupsController : ControllerBase
             return BadRequest("Invalid group data.");
         }
 
-        if (group.StudentDtos?.Any() == true && group.TeacherDtos?.FirstOrDefault() == null)
+        if (group.GroupTeachers?.Any() == true && group.GroupTeachers?.FirstOrDefault() == null)
         {
             return BadRequest("Cannot add students to a group without a teacher.");
         }

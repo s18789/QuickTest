@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuickTest.Core.Entities;
+using QuickTest.Core.Entities.Enums;
 using QuickTest.Infrastructure.Data;
 using QuickTest.Infrastructure.Interfaces;
 
@@ -23,6 +24,13 @@ public class UserRoleRepository : BaseRepository<UserRole>, IUserRoleRepository
     {
         return await this.context.UserRoles
             .Where(ur => ur.RoleName == roleName.ToLower())
+            .FirstOrDefaultAsync();
+    }
+    public async Task<UserRole> GetRoleByType(RoleType roleType)
+    {
+        string roleName = roleType.ToString().ToLower();
+        return await this.context.UserRoles
+            .Where(ur => ur.RoleName == roleName)
             .FirstOrDefaultAsync();
     }
 }

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace QuickTest.Application.FileImporter
 {
-    public class ImportedSchoolDto
+    public class ImportedGroupsDto
     {
-        public SchoolDto SchoolDetails { get; set; }
-        public List<GroupDto> DataGroups { get; set; }
+        //public List<TeacherDto> ImportedTeachers { get; set; }
+        public List<GroupDto> ImportedGroups { get; set; }
     }
 }

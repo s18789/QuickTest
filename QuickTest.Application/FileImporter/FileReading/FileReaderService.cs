@@ -32,53 +32,52 @@ namespace QuickTest.Application.FileImporter.FileReading
             return records;
         }
 
-        public async Task<ImportedSchoolDto> ExtractSchoolDataFromXlsx(IFormFile file)
+        public async Task<ImportedGroupsDto> ExtractSchoolDataFromXlsx(IFormFile file)
         {
-            ///do poprawki, moze warto od razu tworzyc grupy?
-            var school = new SchoolDto();
-            var groups = new List<GroupDto>();
+            var groupsSet = new HashSet<string>();
+            var teachersSet = new HashSet<TeacherDto>();
+            var studentsSet = new HashSet<StudentDto>();
 
             using (var stream = file.OpenReadStream())
             {
                 using (var package = new ExcelPackage(stream))
                 {
-                    var schoolWorksheet = package.Workbook.Worksheets[0];
-
-                    school.Name = schoolWorksheet.Cells[1, 2].Text;
-                    school.Address = new Address
+                    foreach (var schoolWorksheet in package.Workbook.Worksheets)
                     {
-                        Street = schoolWorksheet.Cells[2, 2].Text,
-                        BuildingNumber = schoolWorksheet.Cells[3, 2].Text,
-                        City = schoolWorksheet.Cells[4, 2].Text,
-                        Country = schoolWorksheet.Cells[5, 2].Text
-                    };
-
-                    var groupWokrsheets = new List<GroupDto>();
-                    var teachersSet = new HashSet<TeacherDto>();
-                    var studentsSet = new HashSet<StudentDto>();
-
-                    var row = 7;
-                    while (!string.IsNullOrEmpty(schoolWorksheet.Cells[row, 2].Text))
-                    {
-                        var teacher = new TeacherDto()
+                        var row = 1;
+                        while (!string.IsNullOrEmpty(schoolWorksheet.Cells[row, 1].Text))
                         {
-                            FirstName = schoolWorksheet.Cells[row, 2].Text,
-                            LastName = schoolWorksheet.Cells[row, 3].Text
-                        };
-                        groups.Add(new GroupDto { Name = schoolWorksheet.Cells[row, 2].Text });
-                        row++;
-                    }
+                            
+                            var groupName = schoolWorksheet.Cells[row, 1].Text;
+                            groupsSet.Add(groupName);
 
-                    if (groups.Count != package.Workbook.Worksheets.Count - 1)
-                    {
-                        throw new InvalidOperationException("Mismatch between group names and number of sheets.");
-                    }
+                            var teacher = new TeacherDto()
+                            {
+                                FirstName = schoolWorksheet.Cells[row, 2].Text,
+                                LastName = schoolWorksheet.Cells[row, 3].Text,
+                                Email = schoolWorksheet.Cells[row, 4].Text
+                            };
+                            teachersSet.Add(teacher);
 
-                    //school.Groups = groups;
+                            var student = new StudentDto()
+                            {
+                                FirstName = schoolWorksheet.Cells[row, 5].Text,
+                                LastName = schoolWorksheet.Cells[row, 6].Text,
+                                Email = schoolWorksheet.Cells[row, 7].Text
+                            };
+                            studentsSet.Add(student);
+
+                            row++;
+                        }
+                    }
                 }
             }
 
-            return new ImportedSchoolDto();// {SchoolDetails = school, ShortDataGroups = records }; ;
+            return new ImportedGroupsDto
+            {
+                ImportedGroups = new List<GroupDto>()
+            };
         }
+
     }
 }
