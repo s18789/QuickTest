@@ -32,7 +32,7 @@ public class UpdateStudentHandler : IRequestHandler<UpdateStudentRequest, Studen
 
         if (request.Student.GroupDto != null)
         {
-            var group = await this.groupRepository.GetByIdAsync(request.Student.GroupId);
+            var group = await this.groupRepository.GetByIdAsync(request.Student.GroupDto.Id);
             if (group != null)
             {
                 existingStudent.Group = group;

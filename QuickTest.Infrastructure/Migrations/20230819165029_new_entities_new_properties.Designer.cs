@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuickTest.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using QuickTest.Infrastructure.Data;
 namespace QuickTest.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230819165029_new_entities_new_properties")]
+    partial class new_entities_new_properties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -330,6 +332,7 @@ namespace QuickTest.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("EmailConfirmed")
@@ -407,18 +410,6 @@ namespace QuickTest.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserRoles");
-                });
-
-            modelBuilder.Entity("QuickTest.Core.Entities.Admin", b =>
-                {
-                    b.HasBaseType("QuickTest.Core.Entities.User");
-
-                    b.Property<int?>("SchoolId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("SchoolId");
-
-                    b.ToTable("Admins");
                 });
 
             modelBuilder.Entity("QuickTest.Core.Entities.Student", b =>
@@ -576,21 +567,6 @@ namespace QuickTest.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("UserRole");
-                });
-
-            modelBuilder.Entity("QuickTest.Core.Entities.Admin", b =>
-                {
-                    b.HasOne("QuickTest.Core.Entities.User", null)
-                        .WithOne()
-                        .HasForeignKey("QuickTest.Core.Entities.Admin", "Id")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.HasOne("QuickTest.Core.Entities.School", "AdministeredSchool")
-                        .WithMany()
-                        .HasForeignKey("SchoolId");
-
-                    b.Navigation("AdministeredSchool");
                 });
 
             modelBuilder.Entity("QuickTest.Core.Entities.Student", b =>

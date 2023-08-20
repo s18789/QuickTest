@@ -6,6 +6,7 @@ using QuickTest.Application.FileImporter.ImportSchoolData;
 using QuickTest.Application.Schools.GetSchool;
 using QuickTest.Application.Students.GetStudentsByGroup;
 using QuickTest.Application.Teachers.GetTeachers;
+using QuickTest.Application.Users.CreateUser;
 using System.Data;
 
 namespace QuickTest.Controllers
@@ -62,6 +63,18 @@ namespace QuickTest.Controllers
             }
 
             return Ok(result.ImportSummary);
+        }
+        [HttpPost("create-user")]
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserDto userDto)
+        {
+            var result = await this.mediator.Send(new CreateUserRequest { UserDto = userDto });
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return Ok("User created successfully.");
         }
     }
 }

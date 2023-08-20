@@ -22,7 +22,7 @@ public class GetStudentHandler : IRequestHandler<GetStudentRequest, StudentDto>
             FirstName = student.FirstName,
             LastName = student.LastName,
             Email = student.Email,
-            Group = new Groups.GroupDto
+            GroupDto = new Groups.GroupDto
             {
                 Id = student.Group.Id,
                 Name = student.Group.Name

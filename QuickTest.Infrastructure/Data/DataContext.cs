@@ -12,7 +12,8 @@ public class DataContext : DbContext
     }
 
     public DbSet<Question> Questions { get; set; }
-
+    public DbSet<Admin> Admins { get; set; }
+    
     public DbSet<Exam> Exams { get; set; }
 
     public DbSet<ExamResult> ExamResults { get; set; }
@@ -20,6 +21,7 @@ public class DataContext : DbContext
     public DbSet<Student> Students { get; set; }
 
     public DbSet<Teacher> Teachers { get; set; }
+    public DbSet<School> Schools { get; set; }
 
     public DbSet<User> Users { get; set; }
 

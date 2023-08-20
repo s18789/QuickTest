@@ -12,7 +12,9 @@ using QuickTest.Core.Entities;
 using QuickTest.Infrastructure.Data;
 using QuickTest.Infrastructure.Interfaces;
 using QuickTest.Infrastructure.Repositories;
+using QuickTest.Infrastructure.Services;
 using QuickTest.Infrastructure.Utilities;
+using QuickTest.Utilities;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,13 +33,16 @@ builder.Services.AddScoped<IStudentAnswerRepository, StudentAnswerRepository>();
 builder.Services.AddScoped<ISelectedStudentAnswerRepository, SelectedStudentAnswerRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<IPredefinedAnswerRepository, PredefinedAnswerRepository>();
+builder.Services.AddTransient<ISchoolRepository, SchoolRepository>();
+builder.Services.AddTransient<IEmailService, EmailService>();
+
 builder.Services.AddMediatR(typeof(CreateExamHandler));
 builder.Services.AddMediatR(typeof(GetExamsHandler));
 builder.Services.AddMediatR(typeof(GetGroupsHandler));
 builder.Services.AddMediatR(typeof(GetStudentsHandler));
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
-builder.Services.AddIdentity<User, IdentityRole>(options =>
+builder.Services.AddIdentity<User, ApplicationRole>(options =>
 {
     options.Password.RequiredLength = 7;
     options.Password.RequireDigit = true;
@@ -72,7 +77,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer("Server=inzynierka2023.database.windows.net;Database=QuickTest;User Id=adminqt;Password=AdminQuickTest69;"
-        , b => b.MigrationsAssembly("QuickTest"));
+        , b => b.MigrationsAssembly("QuickTest.Infrastructure"));
 });
 
 var app = builder.Build();

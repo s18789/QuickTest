@@ -7,7 +7,7 @@ using QuickTest.Application.Students.AddStudentToGroup;
 using QuickTest.Application.Students.CreateStudent;
 using QuickTest.Application.Students.GetStudent;
 using QuickTest.Application.Students.GetStudents;
-
+using QuickTest.Application.Students.GetStudentsForExam;
 using QuickTest.Application.Students.RemoveStudent;
 
 using QuickTest.Application.Students.UpdateStudent;
@@ -51,7 +51,7 @@ public class StudentsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateStudent([FromBody] CreateStudentDTO student)
+    public async Task<IActionResult> CreateStudent([FromBody] StudentDto student)
     {
         await this.mediator.Send(new CreateStudentRequest() { Student = student });
 
