@@ -39,7 +39,7 @@ export class AuthService implements AuthServiceInterface {
     const decodedToken = this.jwtHelper.decodeToken(<string>token);
     const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
 
-    return role === 'Teacher';
+    return role === 'teacher';
   }
 
   logged(): void {
