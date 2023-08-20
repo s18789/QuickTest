@@ -6,7 +6,7 @@ using QuickTest.Application.Users.Login.Props;
 
 namespace QuickTest.Controllers;
 [Route("api/[controller]")]
-[Authorize(Roles = "Teacher")]
+[Authorize(Roles = "teacher")]
 [ApiController]
 
 public class UsersController : ControllerBase

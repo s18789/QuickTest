@@ -14,7 +14,7 @@ using QuickTest.Application.Students.UpdateStudent;
 
 namespace QuickTest.Controllers;
 [Route("api/[controller]")]
-[Authorize(Roles = "Teacher")]
+[Authorize(Roles = "teacher")]
 [ApiController]
 
 public class StudentsController : ControllerBase
