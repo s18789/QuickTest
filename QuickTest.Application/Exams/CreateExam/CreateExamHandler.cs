@@ -1,6 +1,5 @@
-﻿using AutoMapper;
-using MediatR;
-using QuickTest.Application.Students;
+﻿using MediatR;
+using QuickTest.Application.Services;
 using QuickTest.Core.Entities;
 using QuickTest.Infrastructure.Interfaces;
 
@@ -8,17 +7,19 @@ namespace QuickTest.Application.Exams.CreateExam;
 public class CreateExamHandler : IRequestHandler<CreateExamRequest, CreateExamDto>
 {
     private readonly IExamRepository examRepository;
-    private readonly IMapper mapper;
+    private readonly IUserContextService userContextService;
 
-    public CreateExamHandler(IExamRepository examRepository, IMapper mapper)
+    public CreateExamHandler(IExamRepository examRepository, IUserContextService userContextService)
     {
         this.examRepository = examRepository;
-        this.mapper = mapper;
+        this.userContextService = userContextService;
     }
 
     public async Task<CreateExamDto> Handle(CreateExamRequest request, CancellationToken cancellationToken)
     {
-        var exam = await this.examRepository
+        var user = await this.userContextService.GetUserContextAsync();
+
+        await this.examRepository
             .AddAsync(new Exam()
             {
                 Title = request.Exam.Title,
@@ -27,6 +28,7 @@ public class CreateExamHandler : IRequestHandler<CreateExamRequest, CreateExamDt
                 AvailableFrom = request.Exam.AvailableFrom,
                 AvailableTo = request.Exam.AvailableTo,
                 MaxPoints = request.Exam.Questions.Sum(x => x.Points),
+                Description = "", // do usuniecia z bazy
                 Questions = request.Exam.Questions
                     .Select(x => new Question()
                     {
@@ -41,9 +43,9 @@ public class CreateExamHandler : IRequestHandler<CreateExamRequest, CreateExamDt
                     }).ToList(),
                 ExamResults = request.Exam.Students.Select(x => new ExamResult()
                 {
-                    Student = mapper.Map<Student>(x),
+                    StudentId = x.Id
                 }).ToList(),
-                Teacher = mapper.Map<Teacher>(request.Exam.Teacher),
+                TeacherId = user.Id
             });
 
         return request.Exam;
