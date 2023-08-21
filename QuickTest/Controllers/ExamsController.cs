@@ -6,7 +6,6 @@ using QuickTest.Application.Exams.CreateExam;
 using QuickTest.Application.Exams.GetExam;
 using QuickTest.Application.Exams.GetExamPreview;
 using QuickTest.Application.Exams.GetExams;
-using QuickTest.Infrastructure.Data;
 
 namespace QuickTest.Controllers;
 

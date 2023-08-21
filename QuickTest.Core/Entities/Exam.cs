@@ -14,7 +14,8 @@ public class Exam : IEntity
     public DateTime AvailableTo { get; set; }
 
     public int MaxPoints { get; set; }
-    public string Description { get; set; }
+
+    public string? Description { get; set; }
 
     public Teacher Teacher { get; set; }
 

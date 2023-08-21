@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using QuickTest.Application.Exams.CreateExam;
 using QuickTest.Application.Exams.GetExams;
 using QuickTest.Application.Groups.GetGroups;
+using QuickTest.Application.Services;
 using QuickTest.Application.Students.GetStudents;
 using QuickTest.Application.Users.Login.Services;
 using QuickTest.Core.Entities;
@@ -35,6 +36,8 @@ builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<IPredefinedAnswerRepository, PredefinedAnswerRepository>();
 builder.Services.AddTransient<ISchoolRepository, SchoolRepository>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<IUserContextService, UserContextService>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddMediatR(typeof(CreateExamHandler));
 builder.Services.AddMediatR(typeof(GetExamsHandler));
