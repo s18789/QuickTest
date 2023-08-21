@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Student } from '../../../models/students/student.model';
+import { GridItemConfiguration } from 'src/app/shared/utils/model/GridConfiguration.model';
+import { ConfigurationItemType } from 'src/app/shared/utils/model/enums/configurationItemType.enum';
 
 
 @Component({
@@ -11,12 +13,12 @@ import { Student } from '../../../models/students/student.model';
 export class StudentsComponent {
   @Input() students!: Student[];
 
-  configurations = [
+  configurations: GridItemConfiguration[] = [
     { displayName: "", key: "", styles: "w-5/100" },
     { displayName: "First name", key: "firstName", styles: "w-1/5" },
     { displayName: "Last name", key: "lastName", styles: "w-1/5" },
     { displayName: "E-mail", key: "email", styles: "w-35/100" },
-    { displayName: "Group", key: "group", styles: "w-15/100" }
+    { displayName: "Group", type: ConfigurationItemType.object, nestedKey: "name", key: "group", styles: "w-15/100" }
   ];
 
   constructor() { }

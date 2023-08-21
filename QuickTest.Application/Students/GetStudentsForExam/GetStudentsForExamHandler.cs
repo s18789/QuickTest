@@ -24,7 +24,7 @@ namespace QuickTest.Application.Students.GetStudentsForExam
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Email = x.Email,
-                GroupDto = new GroupDto
+                Group = new GroupDto
                 {
                     Id = x.Group.Id,
                     Name = x.Group.Name

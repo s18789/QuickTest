@@ -37,7 +37,9 @@ export class AddStudentFormComponent implements OnInit {
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
       email: new FormControl('', Validators.required),
-      groupId: new FormControl('', Validators.required),
+      group: new FormGroup({
+        id: new FormControl('', Validators.required)
+      })
     });
   }
 

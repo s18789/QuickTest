@@ -17,18 +17,23 @@ public class CreateStudentHandler : IRequestHandler<CreateStudentRequest, Respon
     private readonly IUserRoleRepository roleRepository;
     private readonly UserManager<User> userManager;
     private readonly IMapper mapper;
+    private readonly IGroupRepository groupRepository;
 
-    public CreateStudentHandler(IStudentRepository studentRepository, UserManager<User> userManager, IMapper mapper, IEmailService emailService, IUserRoleRepository userRoleRepository)
+    public CreateStudentHandler(IStudentRepository studentRepository, UserManager<User> userManager, IMapper mapper, IEmailService emailService, IUserRoleRepository userRoleRepository, IGroupRepository groupRepository)
     {
         this.studentRepository = studentRepository;
         this.userManager = userManager;
         this.emailService = emailService;
         this.roleRepository = userRoleRepository;
         this.mapper = mapper;
+        this.groupRepository = groupRepository;
     }
 
     public async Task<ResponseDto> Handle(CreateStudentRequest request, CancellationToken cancellationToken)
     {
+        var ur = await this.roleRepository.GetRoleByType(RoleType.STUDENT);
+        var g = await this.groupRepository.GetByIdAsync(request.Student.Group.Id);
+
         var student = new Student
         {
             FirstName = request.Student.FirstName,
@@ -36,21 +41,24 @@ public class CreateStudentHandler : IRequestHandler<CreateStudentRequest, Respon
             UserName = request.Student.Email.Split('@')[0],
             Email = request.Student.Email,
             NormalizedEmail = request.Student.Email,
-            Group = mapper.Map<Group>(request.Student.GroupDto),
-            UserRole = roleRepository.GetRoleByType(RoleType.STUDENT).Result,
-            Index = studentRepository.GenerateStudentIndex().Result,
-            PhoneNumber = request.Student.PhoneNumber,
+            Group = g,
+            UserRole = ur,
+            Index = this.studentRepository.GenerateStudentIndex().Result,
+            //PhoneNumber = request.Student.PhoneNumber,
         };
 
-        await this.studentRepository.AddAsync(student);
+        try
+        {
+            await this.studentRepository.AddAsync(student);
+        }
+        catch (Exception ex)
+        {
+            Console.Write(ex.ToString());
+        }
 
         var generatedPassword = UserUtilities.GenerateRandomPassword();
-        var result = await userManager.CreateAsync(student, generatedPassword);
+        await this.userManager.AddPasswordAsync(student, generatedPassword);
 
-        if (!result.Succeeded)
-        {
-            return new ResponseDto { IsSuccess = false, ErrorMessage = "Error creating student" };
-        }
 
         var emailResult = await emailService.SendEmailAsync(student.Email, "Your Account Password", $"Your generated password is: {generatedPassword}. Please change it upon first login.");
 

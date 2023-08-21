@@ -30,9 +30,9 @@ public class UpdateStudentHandler : IRequestHandler<UpdateStudentRequest, Studen
 
         mapper.Map(request.Student, existingStudent);
 
-        if (request.Student.GroupDto != null)
+        if (request.Student.Group != null)
         {
-            var group = await this.groupRepository.GetByIdAsync(request.Student.GroupDto.Id);
+            var group = await this.groupRepository.GetByIdAsync(request.Student.Group.Id);
             if (group != null)
             {
                 existingStudent.Group = group;

@@ -1,8 +1,12 @@
-import { FormControl } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 
 export interface StudentFormGroup {
   firstName: FormControl,
   lastName: FormControl,
   email: FormControl,
-  groupId: FormControl
+  group: FormGroup<GroupFormGroup>
+}
+
+export interface GroupFormGroup {
+  id: FormControl
 }
