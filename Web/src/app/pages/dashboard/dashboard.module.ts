@@ -4,13 +4,19 @@ import { RouterModule } from '@angular/router';
 import { DashboardComponent } from './components/dashboard.component';
 import { AdvertisementComponent } from './components/ui/advertisement/advertisement.component';
 import { CalendarComponent } from './components/ui/calendar/calendar.component';
-import { CreateExamComponent } from './components/ui/create-exam/create-exam.component';
-import { LatestExamsComponent } from './components/ui/latest-exams/latest-exams.component';
-import { RecentExamComponent } from './components/ui/recent-exam/recent-exam.component';
 import { ScheduledExamsComponent } from './components/ui/scheduled-exams/scheduled-exams.component';
 import { ScheduledExamCardComponent } from './components/ui/scheduled-exams/ui/scheduled-exam-card/scheduled-exam-card.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
+import { AddStudentComponent } from './components/adminDashboard/components/ui/add-student/add-student.component';
+import { AdminDashboardComponent } from './components/adminDashboard/components/admin-dashboard.component';
+import { CreateExamComponent } from './components/teacherDashboard/components/ui/create-exam/create-exam.component';
+import { LatestExamsComponent } from './components/teacherDashboard/components/ui/latest-exams/latest-exams.component';
+import { RecentExamComponent } from './components/teacherDashboard/components/ui/recent-exam/recent-exam.component';
+import { ImportFromFileComponent } from './components/adminDashboard/components/ui/import-from-file/import-from-file.component';
+import { AddTeacherComponent } from './components/adminDashboard/components/ui/add-teacher/add-teacher.component';
+import { TeacherDashboardComponent } from './components/teacherDashboard/components/teacher-dashboard.component';
+import { StudentDashboardComponent } from './components/studentDashboard/component/student-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +27,13 @@ import { TranslateModule } from '@ngx-translate/core';
     LatestExamsComponent,
     RecentExamComponent,
     ScheduledExamsComponent,
-    ScheduledExamCardComponent
+    ScheduledExamCardComponent,
+    ImportFromFileComponent,
+    AddTeacherComponent,
+    AddStudentComponent,
+    AdminDashboardComponent,
+    TeacherDashboardComponent,
+    StudentDashboardComponent,
   ],
   imports: [
     CommonModule,

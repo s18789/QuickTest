@@ -1,0 +1,18 @@
+<div class="flex p-6">
+    <div class="flex flex-col w-4/10">
+        <span class="font-semibold text-3xl pl-4 pt-2">Import from file</span>
+        <span class="mt-4 pl-4">Create a new exam for your students share it via a link or through a special group and monitor their progress</span>
+        <div class="mt-auto pl-8">
+            <img src="../../../../../../../../assets/images/importFile.png" alt="">
+        </div>
+    </div>
+
+    <div class="w-2/3 relative">
+        <img class="ml-auto mt-6" src="../../../../../../../../assets/images/setup.png" alt="">
+        <button class="absolute top-0 right-0 bg-yellow#FDC57B py-1.5 px-4 rounded-xl w-max flex" type="button" (click)="fileInput.click()">
+            <span class="font-medium mr-8">Import file</span>
+            <input #fileInput type="file" (change)="importFile($event)" style="display:none;" />
+            <fa-icon icon="file-import"></fa-icon>
+        </button>
+    </div>
+</div>

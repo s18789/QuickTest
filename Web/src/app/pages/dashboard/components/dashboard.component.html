@@ -5,7 +5,10 @@
   </div>
   <div class="flex flex-row gap-4">
     <div class="flex flex-col basis-2/3 gap-6">
-      <app-advertisement
+      <app-admin-dashboard *ngIf="userRole == UserRole.Admin"></app-admin-dashboard>
+      <app-student-dashboard *ngIf="userRole == UserRole.Student"></app-student-dashboard>
+      <app-teacher-dashboard *ngIf="userRole == UserRole.Teacher"></app-teacher-dashboard>
+      <!-- <app-advertisement
 
       ></app-advertisement>
       <app-recent-exam></app-recent-exam>
@@ -17,7 +20,7 @@
         <app-create-exam
         class="flex-1"
         ></app-create-exam>
-      </div>
+      </div> -->
     </div>
     <div class="flex flex-col basis-1/4 gap-6">
       <app-calendar
