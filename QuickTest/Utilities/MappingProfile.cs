@@ -16,7 +16,7 @@ namespace QuickTest.Infrastructure.Utilities
         public MappingProfile()
         {
             CreateMap<Student, StudentDto>()
-                .ForMember(dest => dest.GroupDto, opt => opt.MapFrom(src => src.Group));
+                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.Group));
 
             CreateMap<StudentDto, Student>()
                 .ForMember(dest => dest.Group, opt => opt.Ignore());
