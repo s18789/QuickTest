@@ -1,0 +1,11 @@
+<app-dialog
+  #dialog
+  (closeEvent)="close()"
+  (saveEvent)="addTeacherForm.submit()"
+  MemberTypeName="Teacher"
+>
+  <app-add-teacher-form
+    #addTeacherForm
+    (submittedForm)="submit($event)"
+  ></app-add-teacher-form>
+</app-dialog>

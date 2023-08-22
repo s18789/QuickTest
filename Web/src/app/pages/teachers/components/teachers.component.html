@@ -1,0 +1,17 @@
+<div class="flex flex-col mx-20 py-12 gap-4">
+    <div class="flex mb-4">
+        <span class="text-4xl font-semibold text-gray-900">Teachers</span>
+        <button class="ml-auto my-0.5 py-2 px-4 rounded-2xl text-sm font-medium bg-yellow#FDC57B" (click)="openAddStudentDialog()">
+        <span class="mr-4">Add new Teacher</span>
+        <fa-icon icon="plus"></fa-icon>
+        </button>
+    </div>
+    <app-grid
+        [searchPlaceholder]="'Search...'"
+        [searchConfiguration]="teachersSearchConfiguration"
+        [filterConfiguration]="teachersFilterConfiguration"
+        [configurations]="teachersGridConfigurations"
+        [allItems]="teachers$ | async"
+        [routerName]="'../examsResults'"
+    ></app-grid>
+</div>
