@@ -3,5 +3,6 @@ export enum RouteUrls {
   Exams = "exams",
   ExamsResults = "examsResults",
   Members = "members",
-  Pricing = "pricing"
+  Pricing = "pricing",
+  Teachers = "teachers"
 }

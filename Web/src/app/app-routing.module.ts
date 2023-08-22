@@ -51,6 +51,14 @@ const routes: Routes = [
             (m) => m.PricingModule,
           ),
       },
+      {
+        //canActivate: [MsalGuard],
+        path: RouteUrls.Teachers,
+        loadChildren: () =>
+          import("./pages/teachers/teachers.module").then(
+            (m) => m.TeachersModule,
+          ),
+      },
     ],
   },
   // { path: "", redirectTo: "/dashboard", pathMatch: "full" },

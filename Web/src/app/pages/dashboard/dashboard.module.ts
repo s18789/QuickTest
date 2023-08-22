@@ -8,15 +8,15 @@ import { ScheduledExamsComponent } from './components/ui/scheduled-exams/schedul
 import { ScheduledExamCardComponent } from './components/ui/scheduled-exams/ui/scheduled-exam-card/scheduled-exam-card.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
-import { AddStudentComponent } from './components/adminDashboard/components/ui/add-student/add-student.component';
 import { AdminDashboardComponent } from './components/adminDashboard/components/admin-dashboard.component';
 import { CreateExamComponent } from './components/teacherDashboard/components/ui/create-exam/create-exam.component';
 import { LatestExamsComponent } from './components/teacherDashboard/components/ui/latest-exams/latest-exams.component';
 import { RecentExamComponent } from './components/teacherDashboard/components/ui/recent-exam/recent-exam.component';
 import { ImportFromFileComponent } from './components/adminDashboard/components/ui/import-from-file/import-from-file.component';
-import { AddTeacherComponent } from './components/adminDashboard/components/ui/add-teacher/add-teacher.component';
+import { TeacherComponent } from './components/adminDashboard/components/ui/add-teacher/teacher.component';
 import { TeacherDashboardComponent } from './components/teacherDashboard/components/teacher-dashboard.component';
 import { StudentDashboardComponent } from './components/studentDashboard/component/student-dashboard.component';
+import { StudentComponent } from './components/adminDashboard/components/ui/add-student/student.component';
 
 @NgModule({
   declarations: [
@@ -29,8 +29,8 @@ import { StudentDashboardComponent } from './components/studentDashboard/compone
     ScheduledExamsComponent,
     ScheduledExamCardComponent,
     ImportFromFileComponent,
-    AddTeacherComponent,
-    AddStudentComponent,
+    TeacherComponent,
+    StudentComponent,
     AdminDashboardComponent,
     TeacherDashboardComponent,
     StudentDashboardComponent,
