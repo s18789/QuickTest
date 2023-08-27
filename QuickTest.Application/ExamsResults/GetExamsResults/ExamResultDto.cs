@@ -2,7 +2,7 @@
 
 namespace QuickTest.Application.ExamsResults.GetExamsResults;
 
-public sealed record GetExamResultDto
+public sealed record ExamResultDto
 {
     public int Id { get; init; }
 

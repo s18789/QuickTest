@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { GridItemConfiguration } from 'src/app/shared/utils/model/GridConfiguration.model';
 import { ActionConfiguration } from 'src/app/shared/utils/model/actionConfiguration.model';
-import { ConfigurationItemType } from 'src/app/shared/utils/model/enums/configurationItemType.enum';
 import { TeacherService } from '../services/teacher.service';
 import { Teacher } from '../models/teacher.model';
 import { TeacherResponse } from '../models/teacherResponse.model';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { ADD_TEACHER_DIALOG_OVERLAY_REF, AddTeacherComponent } from './dialogs/add-teacher/add-teacher.component';
 import { TeacherMapperService } from '../services/teacherMapper.service';
+import { LoaderService } from 'src/app/shared/services/loaderService.service';
 
 @Component({
   selector: 'app-teachers',
@@ -34,6 +34,7 @@ export class TeachersComponent implements OnInit {
     private teacherService: TeacherService,
     private teacherMapperService: TeacherMapperService,
     private dialogService: DialogService,
+    private loaderService: LoaderService,
   ) { }
 
   ngOnInit(): void {
@@ -41,11 +42,12 @@ export class TeachersComponent implements OnInit {
   }
 
   getTeachers(): Observable<Teacher[]> {
-    // obsluga backendu
+    this.loaderService.show();
     return this.teacherService.getTeachers().pipe(
       map((teachers) =>
-      teachers.map((teacher: TeacherResponse) =>
-          this.teacherMapperService.mapTeacherResponseToTeacher(teacher)))
+        teachers.map((teacher: TeacherResponse) =>
+          this.teacherMapperService.mapTeacherResponseToTeacher(teacher))),
+      tap(() => this.loaderService.hide()),
     );
   }
 
@@ -57,7 +59,4 @@ export class TeachersComponent implements OnInit {
 
     componentRef.onDestroy(() => this.teachers$ = this.getTeachers());
   }
-
-  // na koniec spięcie z dashboardem
-  // na sam koniec zmianić ikony
 }

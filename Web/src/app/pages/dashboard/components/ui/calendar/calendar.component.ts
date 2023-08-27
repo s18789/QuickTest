@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-
-const maxShownDaysInCaledar: number = 42;
+import { CalendarExam } from '../../../../../shared/components/dashboard-calendar/models/calendarExam.model';
+import { Observable, map, tap } from 'rxjs';
+import { ExamsService } from 'src/app/pages/exams/services/exams.service';
+import { CalendarExamMapperService } from '../../../../../shared/components/dashboard-calendar/services/calendarExamMapper.service';
+import { AuthService } from 'src/app/core/main/services/auth.service';
+import { UserRole } from 'src/app/shared/enums/userRole.enum';
+import { ExamsResultsService } from 'src/app/pages/exams-results/services/exams-results.service';
+import { LoaderService } from 'src/app/shared/services/loaderService.service';
 
 @Component({
   selector: 'app-calendar',
@@ -9,101 +15,36 @@ const maxShownDaysInCaledar: number = 42;
 })
 
 export class CalendarComponent implements OnInit {
-  todayDate: Date = new Date();
-  currentDate: Date;
-  days: number[] = [];
-  daysInWeek: number[][] = [
-    [],[],[],[],[],[]
-  ];
+  exams$: Observable<CalendarExam[]>;
 
-  constructor() { }
+  constructor(
+    private examSService: ExamsService,
+    private examsResultsService: ExamsResultsService,
+    private calendarExamMapper: CalendarExamMapperService,
+    private authService: AuthService,
+    private loaderService: LoaderService,
+  ) { }
 
   ngOnInit(): void {
-    this.currentDate = new Date();
-    this.fillDaysInWeek();
+    const today: Date = new Date();
+    this.exams$ = this.getExamsForMonth(today.getMonth(), today.getFullYear());
   }
 
-  getDaysInMonth(date: Date): number {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  getExamsForMonth(month: number, year: number): Observable<CalendarExam[]> {
+    this.loaderService.show();
+    var exams = this.authService.getUserRole() == UserRole.Student
+      ? this.examsResultsService.getCalendarExamsResults(month, year)
+      : this.examSService.getCalendarExams(month, year);
+
+    return exams.pipe(
+      map((calendarExams: CalendarExam[]) =>
+        calendarExams.map((calendarExam: CalendarExam) => 
+          this.calendarExamMapper.mapCalendarExamResponseCalendarExam(calendarExam))),
+      tap(() => this.loaderService.hide())
+    );
   }
 
-  fillDaysInWeek(): void {
-    let d = 0;
-    this.fillDays();
-
-    for(let i = 0; i < 6; i++) {
-      for(let j = 0; j < 7; j++) {
-        this.daysInWeek[i][j] = this.days[d];
-        d++;
-      }
-    }
-  }
-
-  fillDays() {
-    let dayOfWeek = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1).getDay();
-    dayOfWeek = dayOfWeek == 0
-      ? 6
-      : dayOfWeek - 1
-    this.days = this.getLastDaysOfMonthBefore(dayOfWeek).concat(this.getDaysOfCurrentMonth());
-
-    let daysToFill = maxShownDaysInCaledar - this.days.length;
-    this.days = this.days.concat(this.getFirstDaysOfMonthAfter(daysToFill));
-  }
-
-  getDaysOfCurrentMonth(): number[] {
-    let arrayDaysInMouth: number[] = [];
-    for(let i = 0; i < this.getDaysInMonth(this.currentDate); i++) {
-      arrayDaysInMouth[i] = i+1;
-    }
-
-    return arrayDaysInMouth;
-  }
-
-  getLastDaysOfMonthBefore(daysToFill: number): number[] {
-    let arrayOfLastDaysOfMonthBefore: number[] = [];
-    let monthBefore: number;
-    let year: number;
-
-    if (this.currentDate.getMonth() == 0) {
-      monthBefore = 12;
-      year = this.currentDate.getFullYear() - 1;
-    } else {
-      monthBefore = this.currentDate.getMonth() - 1;
-      year = this.currentDate.getFullYear();
-    }
-
-    let daysInMonth = this.getDaysInMonth(new Date(year, monthBefore));
-    let to = daysInMonth - daysToFill;
-
-    for(let i = 0; daysInMonth > to; daysInMonth--, i++) {
-      arrayOfLastDaysOfMonthBefore[i] = daysInMonth;
-    }
-    return arrayOfLastDaysOfMonthBefore.reverse();
-  }
-
-  getFirstDaysOfMonthAfter(daysToFill: number): number[] {
-    let arrayOfLastDaysOfMonthAfter: number[] = [];
-
-    for(let i = 0; i < daysToFill; i++) {
-      arrayOfLastDaysOfMonthAfter[i] = i+1;
-    }
-
-    return arrayOfLastDaysOfMonthAfter;
-  }
-
-  nextMonth() {
-    this.currentDate = this.currentDate.getMonth() == 11
-      ? new Date(this.currentDate.getFullYear() + 1, 0)
-      : new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1);
-
-    this.fillDaysInWeek();
-  }
-
-  previousMonth() {
-    this.currentDate = this.currentDate.getMonth() == 0
-      ? new Date(this.currentDate.getFullYear() - 1, 11)
-      : new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1);
-
-    this.fillDaysInWeek();
+  getNewExamsForMonth(emittedValue: {month: number, year: number}) {
+    this.exams$ = this.getExamsForMonth(emittedValue.month, emittedValue.year);
   }
 }

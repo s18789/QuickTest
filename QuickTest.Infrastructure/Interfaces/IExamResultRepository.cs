@@ -16,4 +16,14 @@ public interface IExamResultRepository : IAsyncRepository<ExamResult>
     Task<ExamResult> GetExamResultPreview(int examResultId);
 
     Task<ExamResult> GetExamResult(int examResultId);
+
+    Task<IEnumerable<ExamResult>> GetCompletedExamsResults(int studentId);
+
+    Task<IEnumerable<ExamResult>> GetExamsResultsToResolve(int studentId);
+
+    Task<double> GetAvgScoreForExam(int examId);
+
+    Task<IEnumerable<ExamResult>> GetExamsResultsToCheck(int teacherId);
+
+    Task<IEnumerable<ExamResult>> GetExamsResultsForMonth(int studentId, int month, int year);
 }

@@ -13,6 +13,7 @@ import { StudentMapperService } from 'src/app/pages/members/services/students/st
 import { StudentResponse } from 'src/app/pages/members/models/students/studentResponse.model';
 import { StudentDialog } from 'src/app/pages/members/models/students/studentDialog.model';
 import { QuestionType } from 'src/app/shared/enums/questionType.enum';
+import { LoaderService } from 'src/app/shared/services/loaderService.service';
 
 @Component({
   selector: 'app-add-exam',
@@ -37,7 +38,8 @@ export class AddExamComponent{
     private studentService: StudentService,
     private studentMapperService: StudentMapperService,
     public dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private loaderService: LoaderService,
     ) {
     this.examFormGroup = new FormGroup<ExamFormGroup>(
       {
@@ -243,6 +245,7 @@ export class AddExamComponent{
       return;
     }
 
+    this.loaderService.show();
     var result =  {
         title: form.value.title,
         time: form.value.time,
@@ -260,9 +263,9 @@ export class AddExamComponent{
         })
       };
       
-    debugger;
     if (this.authService.access) {
       this.examsService.add(result).pipe(
+        tap(() => this.loaderService.hide()),
         tap(() => this.router.navigate(['/exams']))
       ).subscribe();
     }

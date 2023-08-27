@@ -1,1 +1,8 @@
-<p>student-dashboard works!</p>
+<div *ngIf="data$ | async as data" class="flex flex-col h-full w-full gap-6">
+    <app-advertisement class="rounded-lg flex-1"></app-advertisement>
+    <app-to-resolve-exams [examToResolve]="data.examsToResolve?.at(0)" [examsToResolve]="data.examsToResolve" class="frame rounded-lg flex-1"></app-to-resolve-exams>
+    <div class="flex gap-4">
+      <app-completed-exams [completedExam]="data.completedExams?.at(0)" [completedExams]="data.completedExams" class="frame rounded-lg flex-1"></app-completed-exams>
+      <app-feedback class="frame rounded-lg flex-1"></app-feedback>
+    </div>
+</div>

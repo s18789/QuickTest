@@ -40,7 +40,12 @@ module.exports = {
         'blue#E9F7FA': '#E9F7FA',
         'blue#f0f4fc': '#f0f4fc',
         'navy#07617D': '#07617D',
-        'yellow#FDC57B': '#FDC57B'
+        'yellow#FDC57B': '#FDC57B',
+        'lightYellow': '#FFEACF',
+        'lightNavy': '#567B87',
+        'red#7D0707': '#7D0707',
+        'superLightYellow': '#FFF6E9',
+        'middleLightYellow': '#FFF0DD'
       }
     },
   },

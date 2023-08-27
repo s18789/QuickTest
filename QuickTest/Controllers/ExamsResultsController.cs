@@ -1,12 +1,15 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QuickTest.Application.Exams.GetExamPreview;
 using QuickTest.Application.ExamsResults.CheckExam;
 using QuickTest.Application.ExamsResults.FinishExam;
+using QuickTest.Application.ExamsResults.GetCalendarExamsResults;
+using QuickTest.Application.ExamsResults.GetCompletedExamsResults;
 using QuickTest.Application.ExamsResults.GetExamResult;
 using QuickTest.Application.ExamsResults.GetExamResultPreview;
 using QuickTest.Application.ExamsResults.GetExamsResults;
+using QuickTest.Application.ExamsResults.GetExamsResultsHeader;
+using QuickTest.Application.ExamsResults.GetExamsResultsToCheck;
+using QuickTest.Application.ExamsResults.GetExamsResultsToResolve;
 using QuickTest.Application.ExamsResults.StartExam;
 
 namespace QuickTest.Controllers;
@@ -25,7 +28,7 @@ public class ExamsResultsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetExamsResults([FromQuery] int studentId)
     {
-        var examsResults = await this.mediator.Send(new GetExamsResultsRequest() { StudentId = studentId } );
+        var examsResults = await this.mediator.Send(new GetExamsResultsRequest() { StudentId = studentId });
 
         return this.Ok(examsResults);
     }
@@ -51,6 +54,46 @@ public class ExamsResultsController : ControllerBase
     public async Task<IActionResult> GetExamResultPreview(int id)
     {
         var exam = await this.mediator.Send(new GetExamResultPreviewRequest() { ExamResultId = id });
+
+        return this.Ok(exam);
+    }
+
+    [HttpGet("ExamsResultsToResolve")]
+    public async Task<IActionResult> GetExamsResultsToResolve()
+    {
+        var exams = await this.mediator.Send(new GetExamsResultsToResolveRequest());
+
+        return this.Ok(exams);
+    }
+
+    [HttpGet("CompletedExamsResults")]
+    public async Task<IActionResult> GetCompletedExamsResults()
+    {
+        var exams = await this.mediator.Send(new GetCompletedExamsResultsRequest());
+
+        return this.Ok(exams);
+    }
+
+    [HttpGet("ExamsResultsToCheck")]
+    public async Task<IActionResult> GetExamsResultsToCheck()
+    {
+        var exams = await this.mediator.Send(new GetExamsResultsToCheckRequest());
+
+        return this.Ok(exams);
+    }
+
+    [HttpGet("CalendarExamsResults/{month}/{year}")]
+    public async Task<IActionResult> GetCalendarExamsResults(int month, int year)
+    {
+        var exam = await this.mediator.Send(new GetCalendarExamsResultsRequest() { Month = month, Year = year });
+
+        return this.Ok(exam);
+    }
+
+    [HttpGet("ExamsResultsHeader/{month}/{year}")]
+    public async Task<IActionResult> GetExamsResultsHeader(int month, int year)
+    {
+        var exam = await this.mediator.Send(new GetExamsResultsHeaderRequest() { Month = month, Year = year });
 
         return this.Ok(exam);
     }
