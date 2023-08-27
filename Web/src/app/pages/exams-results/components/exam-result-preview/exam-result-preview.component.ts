@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Observable, map } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { ExamPreviewType } from 'src/app/shared/components/exam-preview/enums/examPreviewType.enum';
 import { ExamPreview, ExamPreviewForm } from 'src/app/shared/components/exam-preview/models/examPreview.model';
 import { ExamPreviewResponse } from 'src/app/shared/components/exam-preview/models/examPreviewResponse.model';
 import { ExamsResultsService } from '../../services/exams-results.service';
 import { ActivatedRoute } from '@angular/router';
 import { ExamPreviewMapperService } from 'src/app/shared/components/exam-preview/services/examPreviewMapper.service';
+import { LoaderService } from 'src/app/shared/services/loaderService.service';
 
 @Component({
   selector: 'app-exam-result-preview',
@@ -21,7 +22,8 @@ export class ExamResultPreviewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private examsResultsService: ExamsResultsService,
-    private examPreviewMapper: ExamPreviewMapperService
+    private examPreviewMapper: ExamPreviewMapperService,
+    private loaderService: LoaderService
   ) { }
 
   ngOnInit() {
@@ -29,9 +31,11 @@ export class ExamResultPreviewComponent implements OnInit {
   }
 
   getExamPreviewForm(): Observable<FormGroup<ExamPreviewForm>> {
+    this.loaderService.show();
     return this.examsResultsService.GetExamResultPreview(this.examResultId).pipe(
       map((examPreviewResponse: ExamPreviewResponse) => this.examPreviewMapper.mapExamPreviewResponseToExamPreview(examPreviewResponse)),
-      map((examToSolve: ExamPreview) => this.examPreviewMapper.mpaExamPreviewToExamPreviewForm(examToSolve))
+      map((examToSolve: ExamPreview) => this.examPreviewMapper.mpaExamPreviewToExamPreviewForm(examToSolve)),
+      tap(() => this.loaderService.hide()),
     );
   }
 }

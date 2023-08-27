@@ -15,6 +15,8 @@ import { HttpClient } from '@angular/common/http';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { ExamPreviewComponent } from './components/exam-preview/exam-preview.component';
 import { QuestionComponent } from './components/exam-preview/ui/question/question.component';
+import { DashboardCalendarComponent } from './components/dashboard-calendar/dashboard-calendar.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 export const createTranslateLoader = (http: HttpClient) => {
   return new TranslateHttpLoader(http);
@@ -30,6 +32,8 @@ export const createTranslateLoader = (http: HttpClient) => {
     ConfirmationDialogComponent,
     ExamPreviewComponent,
     QuestionComponent,
+    DashboardCalendarComponent,
+    SpinnerComponent,
   ],
   imports: [
     CommonModule,
@@ -53,6 +57,8 @@ export const createTranslateLoader = (http: HttpClient) => {
     ModeComponent,
     LanguageComponent,
     ExamPreviewComponent,
+    DashboardCalendarComponent,
+    SpinnerComponent,
   ]
 })
 

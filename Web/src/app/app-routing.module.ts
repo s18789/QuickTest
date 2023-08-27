@@ -59,6 +59,14 @@ const routes: Routes = [
             (m) => m.TeachersModule,
           ),
       },
+      {
+        //canActivate: [MsalGuard],
+        path: RouteUrls.Calendar,
+        loadChildren: () =>
+          import("./pages/calendar/calendar.module").then(
+            (m) => m.CalendarModule,
+          ),
+      },
     ],
   },
   // { path: "", redirectTo: "/dashboard", pathMatch: "full" },

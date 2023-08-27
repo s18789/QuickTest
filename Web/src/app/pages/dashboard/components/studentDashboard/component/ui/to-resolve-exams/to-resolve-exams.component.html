@@ -1,0 +1,53 @@
+<div *ngIf="examToResolve; else nonExamsToResolve" class="relative flex flex-col p-6">
+    <div class="relative mb-4">
+        <span class="pt-2 text-xl font-semibold text-gray-700">Need to be resolved</span>
+        <button class="absolute top-0 right-4 ml-auto h-2 w-2 rounded-full" [ngClass]="!main ? 'bg-gray-200' : 'bg-navy#07617D'" (click)="main = true;"></button>
+        <button class="absolute top-0 right-0 ml-auto h-2 w-2 rounded-full" [ngClass]="main ? 'bg-gray-200' : 'bg-navy#07617D'" (click)="main = false;"></button>
+    </div>
+    <div *ngIf="main; else listContainer" class="flex flex-col">
+        <button class="flex flex-col gap-4 w-full text-left" (click)="openExamStartConfirmationDialog(examToResolve.id)">
+            <div class="flex flex-col gap-1">
+                <div class="flex flex-col">
+                    <span class="text-sm text-gray-400">title</span>
+                    <span class="text-gray-700 font-medium mb-1">{{examToResolve.title}}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm text-gray-400">deadline</span>
+                <span class="text-gray-700 font-medium">{{examToResolve.deadline | date:"dd.MM.yyyy"}}</span>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <div class="flex w-10 h-10 rounded-full bg-red-400 my-auto">
+                    <span class="m-auto font-semibold text-red-800">{{examToResolve.teacher.firstName.charAt(0)}}{{examToResolve.teacher.lastName.charAt(0)}}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-semibold text-gray-700">{{examToResolve.teacher.firstName}} {{examToResolve.teacher.lastName}}</span>
+                    <span class="text-sm text-gray-400">#545845</span>
+                </div>
+            </div>
+            <div class="absolute right-10 bottom-2">
+                <img src="../../../../../../../../assets/images/examToResolve.png" alt="">
+            </div>
+        </button>
+    </div>
+    <ng-template #listContainer>
+        <div class="w-full flex flex-col" style="height: 156px;">
+            <div class="flex border-b">
+                <span class="w-3/4">Title</span>
+                <span>Deadline</span>
+            </div>
+    
+            <div class="overflow-auto no-scrollbar">
+                <div *ngFor="let exam of examsToResolve" class="flex border-b py-1.5">
+                    <button class="flex w-full text-left" (click)="openExamStartConfirmationDialog(exam.id)">
+                        <span class="w-3/4 my-auto text-gray-600">{{exam.title}}</span>
+                        <span class="my-auto text-gray-600">{{exam.deadline | date:"dd.MM.yyyy"}}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </ng-template >
+</div>
+<ng-template #nonExamsToResolve>
+    <span>to do - no exam to resolve</span>
+</ng-template>

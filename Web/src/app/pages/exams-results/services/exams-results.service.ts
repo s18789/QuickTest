@@ -7,6 +7,10 @@ import { ExamResult } from '../models/examResult.model';
 import { ExamResultGridModelResponse } from '../models/examResultResponse';
 import { ExamPreviewResponse } from 'src/app/shared/components/exam-preview/models/examPreviewResponse.model';
 import { CheckedExam } from 'src/app/shared/components/exam-preview/models/examPreview.model';
+import { CompletedExamResponse, ExamToResolveResponse } from '../../dashboard/components/studentDashboard/models/examResponse.model';
+import { ExamToCheckResponse } from '../../dashboard/components/teacherDashboard/models/examResponse.model';
+import { CalendarExamResponse } from 'src/app/shared/components/dashboard-calendar/models/calendarExamResponse.model';
+import { ExamHeaderResponse } from '../../calendar/models/examResponse.model';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +44,26 @@ export class ExamsResultsService {
   startExam(examResultId: number): Observable<any> {
     var params = new HttpParams().set("examResultId", examResultId);
     return this.http.get<ExamResultDto>(`${this.apiUrl}/StartExam`, { params: params });
+  }
+
+  getExamsToResolve(): Observable<ExamToResolveResponse[]> {
+    return this.http.get<ExamToResolveResponse[]>(`${this.apiUrl}/ExamsResultsToResolve`);
+  }
+
+  getCompletedExams(): Observable<CompletedExamResponse[]> {
+    return this.http.get<CompletedExamResponse[]>(`${this.apiUrl}/CompletedExamsResults`);
+  }
+
+  getExamsToCheck(): Observable<ExamToCheckResponse[]> {
+    return this.http.get<ExamToCheckResponse[]>(`${this.apiUrl}/ExamsResultsToCheck`);
+  }
+
+  getCalendarExamsResults(month: number, year: number): Observable<CalendarExamResponse[]> {
+    return this.http.get<CalendarExamResponse[]>(`${this.apiUrl}/CalendarExamsResults/${month}/${year}`);
+  }
+
+  getExamsResultsHeader(month: number, year: number): Observable<ExamHeaderResponse[]> {
+    return this.http.get<ExamHeaderResponse[]>(`${this.apiUrl}/ExamsResultsHeader/${month}/${year}`);
   }
 
   add(examResult: ExamResultDto): Observable<any> {

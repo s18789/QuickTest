@@ -1,12 +1,59 @@
-<div class="flex flex-col gap-2 pt-6 pb-4 px-8 rounded-2xl mainContainer">
-  <div class="flex">
-    <span class="text-xl font-semibold">Your latest exams</span>
-    <button class="ml-auto underline text-gray-500">See all</button>
+<div *ngIf="createdExam; else nonCreatedExams" class="flex flex-col p-6 h-full w-fulll">
+  <div class="relative mb-4">
+    <span class="text-xl font-semibold">Your latest exam</span>
+    <button class="absolute top-0 right-4 ml-auto h-2 w-2 rounded-full" [ngClass]="!main ? 'bg-gray-200' : 'bg-navy#07617D'" (click)="main = true;"></button>
+    <button class="absolute top-0 right-0 ml-auto h-2 w-2 rounded-full" [ngClass]="main ? 'bg-gray-200' : 'bg-navy#07617D'" (click)="main = false;"></button>
   </div>
-  <div class="flex flex-col">
-    <div *ngFor="let exam of exams; let last = last" [ngClass]="{'border-b-2': !last}" class="flex py-2">
-      <span>{{exam.title}}</span>
-      <fa-icon class="ml-auto" icon="chevron-right"></fa-icon>
+  <div *ngIf="main; else listContainer" class="flex flex-col">
+    <a [routerLink]="['..', 'exams', createdExam.id]" class="flex flex-col w-full">
+      <div class="flex flex-col mb-1">
+        <span class="text-sm text-gray-400">title</span>
+        <span class="text-gray-700 font-medium">{{createdExam.title}}</span>
+      </div>
+      <div class="flex">
+        <div class="flex flex-col w-1/2 gap-1">
+          <div class="flex flex-col">
+            <span class="text-sm text-gray-400">valid to</span>
+            <span class="text-gray-700 font-medium">{{createdExam.validTo | date: "dd.MM.yyyy"}}</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-sm text-gray-400">completed</span>
+            <span class="text-gray-700 font-medium">{{createdExam.completedExams}} / {{createdExam.allExams}}</span>
+          </div>
+        </div>
+        <div class="h-full relative flex gap-2">
+          <div class="mt-auto ml-auto h-1 w-5" [ngClass]="createdExam.average > 12.5 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-4 w-5" [ngClass]="createdExam.average > 25 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-8 w-5" [ngClass]="createdExam.average > 37.5 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-12 w-5" [ngClass]="createdExam.average > 50 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-16 w-5" [ngClass]="createdExam.average > 62.5 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-20 w-5" [ngClass]="createdExam.average > 75 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-24 w-5" [ngClass]="createdExam.average > 87.5 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="absolute top-0 left-0 flex flex-col">
+            <span class="text-sm text-gray-400">average</span>
+            <span class="text-gray-700 font-medium">{{!createdExam.average ? '---' : createdExam.average + ' %'}}</span>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <ng-template #listContainer>
+    <div class="w-full flex flex-col" style="height: 144px;">
+        <div class="flex border-b">
+            <span class="w-3/4">Title</span>
+            <span>Deadline</span>
+        </div>
+        <div class="overflow-auto no-scrollbar">
+          <div *ngFor="let exam of createdExams" class="flex border-b py-1.5">
+            <a [routerLink]="['..', 'exams', exam.id]" class="flex w-full">
+              <span class="my-auto text-gray-600 w-3/4">{{exam.title}}</span>
+              <span class="my-auto text-gray-600">{{exam.validTo | date: "dd.MM.yyyy"}}</span>
+            </a>
+          </div>
+        </div>
     </div>
-  </div>
+  </ng-template>
 </div>
+<ng-template #nonCreatedExams>
+  <span>TO DO - NIE MA ŻADNYCH COMPLETED EGZAMINÓW</span>
+</ng-template>

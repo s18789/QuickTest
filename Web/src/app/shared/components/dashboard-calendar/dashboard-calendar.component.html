@@ -1,0 +1,45 @@
+<div class="flex flex-col py-6 px-8">
+    <div class="flex my-2 mx-2 gap-2">
+      <span class="text-lg font-medium">{{currentDate | date: 'MMMM'}}</span>
+      <span class="text-lg font-medium">{{currentDate | date: 'yyyy'}}</span>
+      <div class="flex gap-4 ml-auto text-sm my-auto text-gray-400">
+        <button (click)="setMonth(-1)">
+          <fa-icon icon="chevron-left"></fa-icon>
+        </button>
+        <button (click)="setMonth(1)">
+          <fa-icon icon="chevron-right"></fa-icon>
+        </button>
+      </div>
+    </div>
+    <div class="flex w-full text-gray-400 text-center">
+      <span class="th flex-1">Mo</span>
+      <span class="th flex-1">Tu</span>
+      <span class="th flex-1">We</span>
+      <span class="th flex-1">Th</span>
+      <span class="th flex-1">Fr</span>
+      <span class="th flex-1">Sa</span>
+      <span class="th flex-1">Su</span>
+    </div>
+    <div class="flex flex-col">
+      <div class="grid grid-cols-7 gap-1">
+        <div 
+          [title]="examsOnDay(day) > 0 && i - day < 8 ? getDayTitle(day) : ''"
+          class="relative flex h-7 w-7 rounded-full m-auto" 
+          [ngClass]="{'border-2 border-navy#07617D rounded-full' : examsOnDay(day) > 0 && i - day < 8,
+            'bg-yellow#FDC57B rounded': todayDate.getFullYear() == currentDate.getFullYear() && todayDate.getMonth() == currentDate.getMonth() && todayDate.getDate() == day}"
+          *ngFor="let day of calendar; let i = index">
+          <button class="flex m-auto" [disabled]="examsOnDay(day) == 0" (click)="openExamForDay(day)"> 
+            <span 
+              class="m-auto td"
+              [ngClass]="{'text-gray-400': day < 15 && i > 28}"
+            >{{day != null ? day+1 : ''}}</span>
+          </button>
+          <div *ngIf="isMutipleExamsInOneDayOptionOpen == day" class="absolute flex flex-col z-10 p-0.5 w-44 right-6 top-6 rounded bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ">
+            <button [routerLink]="['..', routName, exam.id]" class="flex" *ngFor="let exam of examsInOneDayOptions;" (click)="changeRoute(exam.id)">
+              <span class="option w-full">{{exam.title}}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

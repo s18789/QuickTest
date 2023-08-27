@@ -3,6 +3,7 @@ import { ExamResultGridModelResponse, ExamResultResponse } from "../models/examR
 import { ExamResult, ExamResultGridModel } from "../models/examResult.model";
 import { ExamResultStatus } from "../enums/examResultStatus.enum";
 import { AuthService } from "src/app/core/main/services/auth.service";
+import { UserRole } from "src/app/shared/enums/userRole.enum";
 
 @Injectable({
   providedIn: "root",
@@ -23,7 +24,8 @@ export class ExamResultMapperService {
   mapExamResultGridModelResponseToExamResultGridModel(examResultGridModelResponse: ExamResultGridModelResponse): ExamResultGridModel {
     return {
       ...examResultGridModelResponse,
-      id: examResultGridModelResponse.status == ExamResultStatus.ToCheck && !this.authService.isUserTeacher()
+      id: examResultGridModelResponse.status == ExamResultStatus.ToCheck && this.authService.getUserRole() != UserRole.Teacher
+        || examResultGridModelResponse.status == ExamResultStatus.NotResolved && this.authService.getUserRole() != UserRole.Student
         ? null
         : examResultGridModelResponse.id,
     }

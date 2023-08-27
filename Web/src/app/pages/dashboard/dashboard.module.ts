@@ -17,6 +17,11 @@ import { TeacherComponent } from './components/adminDashboard/components/ui/add-
 import { TeacherDashboardComponent } from './components/teacherDashboard/components/teacher-dashboard.component';
 import { StudentDashboardComponent } from './components/studentDashboard/component/student-dashboard.component';
 import { StudentComponent } from './components/adminDashboard/components/ui/add-student/student.component';
+import { ToCheckExamsComponent } from './components/teacherDashboard/components/ui/to-check-exams/to-check-exams.component';
+import { ToResolveExamsComponent } from './components/studentDashboard/component/ui/to-resolve-exams/to-resolve-exams.component';
+import { CompletedExamsComponent } from './components/studentDashboard/component/ui/completed-exams/completed-exams.component';
+import { FeedbackComponent } from './components/studentDashboard/component/ui/feedback/feedback.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -34,8 +39,13 @@ import { StudentComponent } from './components/adminDashboard/components/ui/add-
     AdminDashboardComponent,
     TeacherDashboardComponent,
     StudentDashboardComponent,
+    ToCheckExamsComponent,
+    ToResolveExamsComponent,
+    CompletedExamsComponent,
+    FeedbackComponent,
   ],
   imports: [
+    SharedModule,
     CommonModule,
     FontAwesomeModule,
     TranslateModule,

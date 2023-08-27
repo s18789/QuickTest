@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, map } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { ExamResult } from '../../models/examResult.model';
 import { ExamsResultsService } from '../../services/exams-results.service';
 import { ExamResultMapperService } from '../../services/examResultMapper.service';
 import { ExamResultStatus } from '../../enums/examResultStatus.enum';
+import { LoaderService } from 'src/app/shared/services/loaderService.service';
 
 @Component({
   selector: 'app-exam-result',
@@ -22,6 +23,7 @@ export class ExamResultComponent implements OnInit {
     private route: ActivatedRoute,
     private examsResultsService: ExamsResultsService,
     private examResultMapperService: ExamResultMapperService,
+    private loaderService: LoaderService
   ) { }
 
   ngOnInit(): void {
@@ -29,8 +31,10 @@ export class ExamResultComponent implements OnInit {
   }
 
   getExamResult(): Observable<ExamResult> {
+    this.loaderService.show();
     return this.examsResultsService.get(this.examResultId).pipe(
-      map((examResultResponse) => this.examResultMapperService.mapExamResultResponseToExamResult(examResultResponse))
+      map((examResultResponse) => this.examResultMapperService.mapExamResultResponseToExamResult(examResultResponse)),
+      tap(() => this.loaderService.hide()),
     );
   }
 

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { CreatedExam } from '../../../models/exam.model';
 
 @Component({
   selector: 'app-latest-exams',
@@ -6,28 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./latest-exams.component.css']
 })
 export class LatestExamsComponent implements OnInit {
-  exams: any;
+  @Input() createdExam: CreatedExam;
+  @Input() createdExams: CreatedExam[];
+  
+  main: boolean = true;
+
   constructor() { }
 
   ngOnInit(): void {
-    this.exams = [
-      {
-        id: 1,
-        title: "Preparation of salts by precipitation methods",
-      },
-      {
-        id: 2,
-        title: "Concentrations of solutions",
-      },
-      {
-        id: 3,
-        title: "Factors affecting rate of reactions",
-      },
-      {
-        id: 4,
-        title: "The homologous series of the alkanes",
-      },
-    ]
   }
 
 }

@@ -1,0 +1,8 @@
+.frame {
+    background: #FDFDFD;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.10), 0px 2px 8px 0px rgba(0, 0, 0, 0.10) inset;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
