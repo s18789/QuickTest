@@ -60,7 +60,7 @@ export class CalendarComponent implements OnInit {
   }
 
   setMonth(month: number) {
-    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + month, this.currentDate.getDate());
+    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + month, 1);
     this.getCalendarExams().pipe(
       tap((response) => this.exams = response)
     ).subscribe();
@@ -100,6 +100,10 @@ export class CalendarComponent implements OnInit {
   }
 
   getExamsForCurrentDay() {
-    return this.exams?.filter(e => new Date(e.availableTo)?.toDateString() == this.currentDate.toDateString());
+    const examForDay = this.exams?.filter(e => new Date(e.availableTo)?.toDateString() == this.currentDate.toDateString())
+
+    return examForDay.length > 0
+     ? examForDay
+     : null;
   }
 }

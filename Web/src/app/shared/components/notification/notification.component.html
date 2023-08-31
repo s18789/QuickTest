@@ -1,0 +1,17 @@
+<div class="min-w-[20%] sm:max-w-[50%] md:max-w-[40%] lg:max-w-[20%] fixed right-7 top-20 ">
+    <div
+      *ngFor="let notification of notifications"
+      class="flex m-2 p-2.5 rounded-lg break-words text-white"
+      [ngClass]="className(notification)"
+      (click)="close(notification)"
+      [@showNotification]="true"
+    >
+      <span class="my-auto">
+        {{ notification.message }}
+      </span>
+      <div class="flex ml-auto">
+        <fa-icon class="my-auto text-white text-lg" icon="circle-xmark"></fa-icon>
+      </div>
+    </div>
+  </div>
+  

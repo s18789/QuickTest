@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteUrls } from './shared/enums/route-urls.enum';
+import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
   {
     
     path: "",
     children: [
-      { path: '', 
+      { 
+        path: '', 
         redirectTo: RouteUrls.Dashboard, 
         pathMatch: 'full' 
       },
@@ -67,19 +69,12 @@ const routes: Routes = [
             (m) => m.CalendarModule,
           ),
       },
+      {
+        path: "**",
+        component: PageNotFoundComponent
+      },
     ],
   },
-  // { path: "", redirectTo: "/dashboard", pathMatch: "full" },
-  // { path: "dashboard", component: DashboardComponent, canActivate: [AuthTeacherGuard]},
-  // { path: "exams", component: ExamsComponent, canActivate: [AuthTeacherGuard] },
-  // { path: "exam/:id", component: ExamComponent, canActivate: [AuthTeacherGuard]},
-  // { path: "add-exam", component: AddExamComponent, canActivate: [AuthTeacherGuard] },
-  // { path: "exams-results/:id", component: ExamsResultsComponent },
-  // { path: "exams-results", component: ExamsResultsComponent },
-  // { path: "exam-result/:id", component: ExamResultComponent },
-  // { path: "members", component: MembersComponent, canActivate: [AuthGuard] },
-  // { path: "add-student", component: AddStudentComponent },
-  // { path: "**", component: PageNotFoundComponent },
 ];
 
 @NgModule({

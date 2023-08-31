@@ -11,6 +11,7 @@ import { CompletedExamResponse, ExamToResolveResponse } from '../../dashboard/co
 import { ExamToCheckResponse } from '../../dashboard/components/teacherDashboard/models/examResponse.model';
 import { CalendarExamResponse } from 'src/app/shared/components/dashboard-calendar/models/calendarExamResponse.model';
 import { ExamHeaderResponse } from '../../calendar/models/examResponse.model';
+import { ScheduleExamResponse } from '../../dashboard/components/ui/scheduled-exams/models/scheduleExam.model';
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +65,10 @@ export class ExamsResultsService {
 
   getExamsResultsHeader(month: number, year: number): Observable<ExamHeaderResponse[]> {
     return this.http.get<ExamHeaderResponse[]>(`${this.apiUrl}/ExamsResultsHeader/${month}/${year}`);
+  }
+
+  getScheduleExams(): Observable<ScheduleExamResponse[]> {
+    return this.http.get<ScheduleExamResponse[]>(`${this.apiUrl}/ScheduleExams`);
   }
 
   add(examResult: ExamResultDto): Observable<any> {

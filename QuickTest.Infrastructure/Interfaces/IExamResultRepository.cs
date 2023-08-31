@@ -26,4 +26,6 @@ public interface IExamResultRepository : IAsyncRepository<ExamResult>
     Task<IEnumerable<ExamResult>> GetExamsResultsToCheck(int teacherId);
 
     Task<IEnumerable<ExamResult>> GetExamsResultsForMonth(int studentId, int month, int year);
+
+    Task<IEnumerable<ExamResult>> GetScheduleExams(User user);
 }

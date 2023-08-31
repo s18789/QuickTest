@@ -4,6 +4,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { LoaderService } from 'src/app/shared/services/loaderService.service';
 import { TeacherService } from '../../../services/teacher.service';
 import { OverlayRef } from '@angular/cdk/overlay';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 export const ADD_TEACHER_DIALOG_OVERLAY_REF = new InjectionToken<OverlayRef>(
   "ADD_TEACHER_DIALOG_OVERLAY_REF",
@@ -21,6 +22,7 @@ export class AddTeacherComponent {
   private destroyed$ = new Subject<void>();
 
   constructor(
+    private notificationService: NotificationService,
     private loaderService: LoaderService,
     private teacherService: TeacherService,
     @Inject(ADD_TEACHER_DIALOG_OVERLAY_REF) public overlayRef: OverlayRef,
@@ -33,7 +35,7 @@ export class AddTeacherComponent {
       takeUntil(this.destroyed$),
       tap(() => {
         this.loaderService.hide();
-        //this.notificationService.showSuccess("Poprawnie dodano studenta");
+        this.notificationService.showSuccess("Successfully added new teacher.");
         this.close();
       })
     ).subscribe();

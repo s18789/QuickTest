@@ -1,0 +1,15 @@
+.notifications {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    min-width: 400px;
+    max-width: 400px;
+  }
+  .notification {
+    margin: 5px;
+    border-radius: 5px;
+    color: red;
+    overflow: hidden;
+  }
+  

@@ -1,5 +1,6 @@
 <app-auth *ngIf="!authService.access;"></app-auth>
 <div *ngIf="authService.access;" class="flex flex-col h-screen bg-gray#FDFDFD">
+  <app-notification></app-notification>
   <app-exam-to-solve class="h-full" *ngIf="examSolveService.isExamResolving"></app-exam-to-solve>
   <div *ngIf="!examSolveService.isExamResolving" class="flex">
     <app-navigation class="flex flex-col h-screen shadow-2xl text-base font-medium bg-gray#F8F8F8"></app-navigation>

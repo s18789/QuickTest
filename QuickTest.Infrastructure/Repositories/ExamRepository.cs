@@ -60,4 +60,23 @@ public class ExamRepository : BaseRepository<Exam>, IExamRepository
             .Where(x => x.AvailableTo.Year == year)
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<Exam>> GetScheduleExams()
+    {
+        return await this.context.Exams
+            .Where(e => e.AvailableTo > DateTime.Now)
+            .OrderBy(e => e.AvailableTo)
+            .Take(3)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Exam>> GetScheduleExams(User user)
+    {
+        return await this.context.Exams
+            .Where(e => e.TeacherId == user.Id)
+            .Where(e => e.AvailableTo > DateTime.Now)
+            .OrderBy(e => e.AvailableTo)
+            .Take(3)
+            .ToListAsync();
+    }
 }
