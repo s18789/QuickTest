@@ -29,7 +29,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ReactiveFormsModule,
     FontAwesomeModule,
     AngularSvgIconModule.forRoot(),
-    SharedModule
+    SharedModule,
   ],
   exports: [
     MainComponent

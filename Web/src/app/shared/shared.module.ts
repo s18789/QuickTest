@@ -17,6 +17,8 @@ import { ExamPreviewComponent } from './components/exam-preview/exam-preview.com
 import { QuestionComponent } from './components/exam-preview/ui/question/question.component';
 import { DashboardCalendarComponent } from './components/dashboard-calendar/dashboard-calendar.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { NotificationComponent } from './components/notification/notification.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 export const createTranslateLoader = (http: HttpClient) => {
   return new TranslateHttpLoader(http);
@@ -34,6 +36,8 @@ export const createTranslateLoader = (http: HttpClient) => {
     QuestionComponent,
     DashboardCalendarComponent,
     SpinnerComponent,
+    NotificationComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +63,7 @@ export const createTranslateLoader = (http: HttpClient) => {
     ExamPreviewComponent,
     DashboardCalendarComponent,
     SpinnerComponent,
+    NotificationComponent,
   ]
 })
 

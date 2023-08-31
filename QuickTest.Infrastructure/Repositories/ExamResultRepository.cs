@@ -78,8 +78,6 @@ public class ExamResultRepository : BaseRepository<ExamResult>, IExamResultRepos
                             .ThenInclude(x => x.StudentAnswer)
                         .       ThenInclude(x => x.Question)
              .FirstOrDefaultAsync(x => x.Id == examResultId);
-
-
     }
 
     public async Task<ExamResult> GetExamResult(int examResultId)
@@ -149,6 +147,18 @@ public class ExamResultRepository : BaseRepository<ExamResult>, IExamResultRepos
             .Where(x => x.StudentId == studentId)
             .Where(x => x.Exam.AvailableTo.Month == month+1)
             .Where(x => x.Exam.AvailableTo.Year == year)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<ExamResult>> GetScheduleExams(User user)
+    {
+        return await this.context.ExamResults
+            .Include(x => x.Exam)
+            .Where(er => er.StudentId == user.Id)
+            .Where(er => er.FinishExamTime == null)
+            .Where(er => er.Exam.AvailableTo > DateTime.Now)
+            .OrderBy(er => er.Exam.AvailableTo)
+            .Take(3)
             .ToListAsync();
     }
 }

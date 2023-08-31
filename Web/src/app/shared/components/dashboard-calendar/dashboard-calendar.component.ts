@@ -27,6 +27,7 @@ export class DashboardCalendarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.todayDate);
     this.routName = this.authService.getUserRole() == UserRole.Student
       ? "examsResults/examResult"
       : "exams";
@@ -58,7 +59,7 @@ export class DashboardCalendarComponent implements OnInit {
   }
 
   setMonth(month: number) {
-    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + month, this.currentDate.getDate());
+    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + month, 1);
     this.emitChangedMonth()
     this.initCalendarForMonth();
   }
@@ -68,7 +69,7 @@ export class DashboardCalendarComponent implements OnInit {
   }
 
   examsOnDay(day: number): number {
-    return this.exams.filter(e => e.dayOfMonth == day).length;
+    return this.exams?.filter(e => e.dayOfMonth == day).length;
   }
 
   getDayTitle(day: number): string {
@@ -84,15 +85,17 @@ export class DashboardCalendarComponent implements OnInit {
 
   openExamForDay(day: number): void {
     const examsOnDay = this.exams.filter(e => e.dayOfMonth == day);
-
+    debugger;
     if (examsOnDay.length == 1) {
-      if(!this.exams.at(0).id) {
+      if(!examsOnDay.at(0).id) {
         return;
       }
 
-      this.router.navigate([`${this.routName}/${this.exams.at(0).id}`]);
+      this.router.navigate([`${this.routName}/${examsOnDay.at(0).id}`]);
       return;
     }
+
+    // co z nie rozwiazanymi
 
     this.examsInOneDayOptions = examsOnDay;
     this.isMutipleExamsInOneDayOptionOpen = this.isMutipleExamsInOneDayOptionOpen == -1 ? day : -1;

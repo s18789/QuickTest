@@ -7,6 +7,7 @@ import { ExamPreviewResponse } from 'src/app/shared/components/exam-preview/mode
 import { CalendarExamResponse } from '../../../shared/components/dashboard-calendar/models/calendarExamResponse.model';
 import { CreatedExamResponse } from '../../dashboard/components/teacherDashboard/models/examResponse.model';
 import { ExamHeaderResponse } from '../../calendar/models/examResponse.model';
+import { ScheduleExamResponse } from '../../dashboard/components/ui/scheduled-exams/models/scheduleExam.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,10 @@ export class ExamsService {
 
   getExamsHeader(month: number, year: number): Observable<ExamHeaderResponse[]> {
     return this.http.get<ExamHeaderResponse[]>(`${this.apiUrl}/ExamsHeader/${month}/${year}`);
+  }
+
+  getScheduleExams(): Observable<ScheduleExamResponse[]> {
+    return this.http.get<ScheduleExamResponse[]>(`${this.apiUrl}/ScheduleExams`);
   }
 
   add(exam: any): Observable<any> {

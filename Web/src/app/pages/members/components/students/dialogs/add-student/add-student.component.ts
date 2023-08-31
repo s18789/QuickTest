@@ -4,6 +4,7 @@ import { Observable, Subject, takeUntil, tap } from 'rxjs';
 import { StudentService } from 'src/app/pages/members/services/students/student.services';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { LoaderService } from 'src/app/shared/services/loaderService.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 export const ADD_STUDENT_DIALOG_OVERLAY_REF = new InjectionToken<OverlayRef>(
   "ADD_STUDENT_DIALOG_OVERLAY_REF",
@@ -24,6 +25,7 @@ export class AddStudentComponent {
   private destroyed$ = new Subject<void>();
 
   constructor(
+    private notificationService: NotificationService,
     private loaderService: LoaderService,
     private studentService: StudentService,
     @Inject(ADD_STUDENT_DIALOG_OVERLAY_REF) public overlayRef: OverlayRef,
@@ -36,7 +38,7 @@ export class AddStudentComponent {
       takeUntil(this.destroyed$),
       tap(() => {
         this.loaderService.hide();
-        //this.notificationService.showSuccess("Poprawnie dodano studenta");
+        this.notificationService.showSuccess("Successfully added new student.");
         this.close();
       })
     ).subscribe();

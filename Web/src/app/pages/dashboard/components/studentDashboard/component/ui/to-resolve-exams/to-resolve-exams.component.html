@@ -49,5 +49,14 @@
     </ng-template >
 </div>
 <ng-template #nonExamsToResolve>
-    <span>to do - no exam to resolve</span>
+    <div class="flex flex-col p-6 relative">
+        <span class="pt-2 text-xl font-semibold text-gray-700 mb-4">Need to be resolved</span>
+        <div class="w-full flex flex-col text-gray-600" style="height: 156px;">
+            <span>No exams to solve.</span>
+            <span>Keep it up!</span>
+        </div>
+        <div class="absolute right-10 bottom-2">
+            <img src="../../../../../../../../assets/images/examToResolve.png" alt="">
+        </div>
+    </div>
 </ng-template>

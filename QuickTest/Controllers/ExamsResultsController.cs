@@ -10,6 +10,7 @@ using QuickTest.Application.ExamsResults.GetExamsResults;
 using QuickTest.Application.ExamsResults.GetExamsResultsHeader;
 using QuickTest.Application.ExamsResults.GetExamsResultsToCheck;
 using QuickTest.Application.ExamsResults.GetExamsResultsToResolve;
+using QuickTest.Application.ExamsResults.GetScheduleExams;
 using QuickTest.Application.ExamsResults.StartExam;
 
 namespace QuickTest.Controllers;
@@ -96,6 +97,14 @@ public class ExamsResultsController : ControllerBase
         var exam = await this.mediator.Send(new GetExamsResultsHeaderRequest() { Month = month, Year = year });
 
         return this.Ok(exam);
+    }
+
+    [HttpGet("ScheduleExams")]
+    public async Task<IActionResult> GetScheduleExams()
+    {
+        var exams = await this.mediator.Send(new GetScheduleExamsRequest());
+
+        return this.Ok(exams);
     }
 
     [HttpPost("FinishExam")]

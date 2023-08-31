@@ -22,7 +22,6 @@ export class ImportFromFileComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
 
-    debugger;
     this.adminService.import(formData).subscribe();
   }
 

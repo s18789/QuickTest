@@ -4,6 +4,7 @@ import { Observable, Subject, takeUntil, tap } from 'rxjs';
 import { GroupService } from 'src/app/pages/members/services/groups/group.service';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { LoaderService } from 'src/app/shared/services/loaderService.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 export const ADD_GROUP_DIALOG_OVERLAY_REF = new InjectionToken<OverlayRef>(
   "ADD_GROUP_DIALOG_OVERLAY_REF",
@@ -24,6 +25,7 @@ export class AddGroupComponent {
     private destroyed$ = new Subject<void>();
 
     constructor(
+      private notificationService: NotificationService,
       private loaderService: LoaderService,
       private groupService: GroupService,
       @Inject(ADD_GROUP_DIALOG_OVERLAY_REF) public overlayRef: OverlayRef,
@@ -36,7 +38,7 @@ export class AddGroupComponent {
         takeUntil(this.destroyed$),
         tap(() => {
           this.loaderService.hide();
-          //this.notificationService.showSuccess("Poprawnie dodano studenta");
+          this.notificationService.showSuccess("Successfully added new group.");
           this.close();
         })
       ).subscribe();
