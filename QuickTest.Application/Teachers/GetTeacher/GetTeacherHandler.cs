@@ -34,7 +34,7 @@ namespace QuickTest.Application.Teachers.GetTeacher
                 FirstName = teacher.FirstName,
                 LastName = teacher.LastName,
                 Email = teacher.Email,
-                GroupDtos = groupDtos
+                Group = groupDtos
             };
         }
     }

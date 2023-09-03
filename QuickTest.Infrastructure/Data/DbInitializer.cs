@@ -122,7 +122,7 @@ public class DbInitializer
 
             var stud_5 = new Student()
             {
-                Email = "tony.stark@example.com",
+                Email = "tony.stark@example.comtony.stark@example.com",
                 UserName = "tony.stark@example.com".Split('@')[0],
                 FirstName = "Tony",
                 LastName = "Stark",

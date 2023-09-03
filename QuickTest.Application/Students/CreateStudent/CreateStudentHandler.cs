@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using QuickTest.Application.Teachers;
 using QuickTest.Application.Users.CreateUser;
 using QuickTest.Core.Entities;
 using QuickTest.Core.Entities.Enums;
@@ -44,7 +45,6 @@ public class CreateStudentHandler : IRequestHandler<CreateStudentRequest, Respon
             Group = g,
             UserRole = ur,
             Index = this.studentRepository.GenerateStudentIndex().Result,
-            //PhoneNumber = request.Student.PhoneNumber,
         };
 
         try
@@ -53,7 +53,7 @@ public class CreateStudentHandler : IRequestHandler<CreateStudentRequest, Respon
         }
         catch (Exception ex)
         {
-            Console.Write(ex.ToString());
+            return new ResponseDto { IsEmailSent = false, IsSuccess = false, AddedStudent = null, AddedTeacher = null, ErrorMessage = ex.ToString() };
         }
 
         var generatedPassword = UserUtilities.GenerateRandomPassword();
@@ -64,6 +64,6 @@ public class CreateStudentHandler : IRequestHandler<CreateStudentRequest, Respon
 
         
 
-        return new ResponseDto { IsEmailSent = emailResult, IsSuccess= true};
+        return new ResponseDto { IsEmailSent = emailResult, IsSuccess= true, AddedStudent = mapper.Map<StudentDto>(student), AddedTeacher = null};
     }
 }

@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using QuickTest.Application.FileImporter;
+using QuickTest.Application.FileImporter.BulkImport;
 using QuickTest.Application.FileImporter.ImportSchoolData;
 using QuickTest.Application.Schools.GetSchool;
 using QuickTest.Application.Students.GetStudentsByGroup;
@@ -17,10 +20,12 @@ namespace QuickTest.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IMediator mediator;
+        private readonly IMemoryCache memoryCache;
 
-        public AdminController(IMediator mediator)
+        public AdminController(IMediator mediator, IMemoryCache memoryCache)
         {
             this.mediator = mediator;
+            this.memoryCache = memoryCache;
         }
 
         [HttpGet("group/{groupId}/students")]
@@ -59,10 +64,53 @@ namespace QuickTest.Controllers
 
             if (!result.IsSuccess)
             {
-                return BadRequest(result.ErrorMessage);
+                return BadRequest(string.Join(";",result.ErrorMessages));
+            }
+            var importId = Guid.NewGuid().ToString();
+            memoryCache.Set(importId, result.ImportSummary, TimeSpan.FromMinutes(30)); 
+
+
+            return Ok(new { ImportId = importId, Summary = result.ImportSummary });
+        }
+        [HttpGet("import/{importId}")]
+        public IActionResult GetImportSummary(string importId)
+        {
+            if (memoryCache.TryGetValue(importId, out ImportSummaryDto importSummary))
+            {
+                return Ok(importSummary);
+            }
+            return NotFound("Import summary not found.");
+        }
+        [HttpPost("bulk-import")]
+        public async Task<IActionResult> BulkImport([FromBody] BulkImportRequest request)
+        {
+            if (request == null || request.ImportSummary == null)
+            {
+                return BadRequest("Invalid request.");
             }
 
-            return Ok(result.ImportSummary);
+            var bulkImportRequest = new BulkImportHandlerRequest
+            {
+                ImportSummary = request.ImportSummary,
+                SchoolId = request.SchoolId
+            };
+
+            var result = await this.mediator.Send(bulkImportRequest);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(new CreatedAccountsSummary
+                {
+                    IsSuccess = false,
+                    ErrorList = result.ErrorList
+                });
+            }
+
+            return Ok(new CreatedAccountsSummary
+            {
+                IsSuccess = true,
+                ErrorList = result.ErrorList
+            });
         }
         [HttpPost("create-user")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto userDto)

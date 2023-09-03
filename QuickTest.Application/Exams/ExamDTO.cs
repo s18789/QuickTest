@@ -23,9 +23,9 @@ public sealed record ExamDTO : IRequest
     public IEnumerable<QuestionDTO> Questions { get; init; }
 
     public IEnumerable<StudentDto> Students { get; init; }
-
+    //do dodania do encji
     public ExamStatus Status { get; init; }
-
+    //do zamiany na grupe
     public string Class { get; init; }
 
     public int CompletedExams { get; init; }
