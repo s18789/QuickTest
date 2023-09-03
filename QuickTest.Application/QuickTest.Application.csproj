@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Exams\DeleteExam\" />
-    <Folder Include="Exams\UpdateExam\" />
     <Folder Include="Students\AddStudentToGroups\" />
     <Folder Include="Students\CreateStudent\Services\" />
     <Folder Include="Teachers\CreateTeacher\Services\" />

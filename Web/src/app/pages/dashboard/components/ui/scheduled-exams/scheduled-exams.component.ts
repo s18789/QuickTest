@@ -1,4 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable, map } from 'rxjs';
+import { ExamsService } from 'src/app/pages/exams/services/exams.service';
+import { GroupScheduleExams, ScheduleExamResponse } from './models/scheduleExam.model';
+import { ExamScheduleMapperService } from './services/scheduleExamMapper.service';
+import { ExamsResultsService } from 'src/app/pages/exams-results/services/exams-results.service';
+import { AuthService } from 'src/app/core/main/services/auth.service';
+import { UserRole } from 'src/app/shared/enums/userRole.enum';
 
 @Component({
   selector: 'app-scheduled-exams',
@@ -6,37 +13,27 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./scheduled-exams.component.css']
 })
 export class ScheduledExamsComponent implements OnInit {
-  exams: any[];
-  constructor() { }
+  groupScheduleExams$: Observable<GroupScheduleExams[]>;
+
+  constructor(
+    private authService: AuthService,
+    private examsService: ExamsService,
+    private examsResultsService: ExamsResultsService,
+    private examScheduleMapperService: ExamScheduleMapperService
+  ) { }
 
   ngOnInit(): void {
-    this.exams = [
-      {
-        date: new Date(2023, 0, 5),
-        exams: [
-          {
-            date: new Date(2023, 0, 5, 9, 0),
-            title: "The homologous series of the alkanes",
-            class: "3 Biol-Chem"
-          },
-          {
-            date: new Date(2023, 0, 5, 12, 0),
-            title: "Concentrations of solutions",
-            class: "2 Mat-Chem"
-          },
-        ]
-      },
-      {
-        date: new Date(2023, 0, 16),
-        exams: [
-          {
-            date: new Date(2023, 0, 16, 8, 0),
-            title: "Factors affecting rate of reactions",
-            class: "1 Biol-Ger"
-          },
-        ],
-      }
-    ]
+    this.groupScheduleExams$ = this.getScheduleExams();
   }
 
+  getScheduleExams(): Observable<GroupScheduleExams[]> {
+    const scheduleExams = this.authService.getUserRole() == UserRole.Student
+     ? this.examsResultsService.getScheduleExams()
+     : this.examsService.getScheduleExams();
+
+    return scheduleExams.pipe(
+      map((scheduleExamsResponse: ScheduleExamResponse[]) => 
+          this.examScheduleMapperService.mapScheduleExamsResponseToGroupScheduleExams(scheduleExamsResponse))
+    );
+  }
 }

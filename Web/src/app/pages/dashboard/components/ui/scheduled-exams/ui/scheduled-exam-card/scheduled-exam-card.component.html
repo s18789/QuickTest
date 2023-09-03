@@ -1,16 +1,16 @@
 <div class="flex flex-col mb-4">
   <div class="flex">
-    <span class="text-sm text-gray-400">{{scheduledExams.date | date: 'd MMMM'}}</span>
+    <span class="text-sm text-gray-400">{{groupScheduleExams.date | date: 'd MMMM'}}</span>
     <button class="ml-auto">
       <fa-icon></fa-icon>
     </button>
   </div>
-  <div class="flex flex-col gap-2 rounded-2xl p-4 shadow-md">
-    <div class="flex gap-2" *ngFor="let exam of scheduledExams.exams; let index = index">
+  <div class="flex flex-col gap-2 rounded-2xl p-3 shadow-md">
+    <div class="flex gap-2" *ngFor="let exam of groupScheduleExams.exams; let index = index" (click)="moveToExam(exam.id)">
       <span class="my-auto text-lg">{{exam.date | date: 'hh:mm'}}</span>
-      <div class="w-1.5 rounded" [ngClass]="index % 2 == 0 ? 'bg-yellow#FDC57B' : 'bg-navy#07617D'"></div>
+      <div class="w-1.5 h-10 my-auto rounded" [ngClass]="index % 2 == 0 ? 'bg-yellow#FDC57B' : 'bg-navy#07617D'"></div>
       <div class="flex flex-col w-48">
-        <span class="text-sm text-gray-400">{{exam.class}}</span>
+        <span class="text-sm text-gray-400">{{exam.subject}}</span>
         <span class="truncate text-lg" [title]="exam.title">{{exam.title}}</span>
       </div>
     </div>

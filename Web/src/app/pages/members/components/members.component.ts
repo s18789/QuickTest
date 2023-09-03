@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, map } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { MemberType } from '../enums/memberType.enum';
 import { GroupGridModel } from '../models/groups/group.model';
@@ -15,6 +15,7 @@ import { StudentResponse } from '../models/students/studentResponse.model';
 import { ConfigurationItemType } from 'src/app/shared/utils/model/enums/configurationItemType.enum';
 import { ActionConfiguration } from 'src/app/shared/utils/model/actionConfiguration.model';
 import { GridItemConfiguration } from 'src/app/shared/utils/model/GridConfiguration.model';
+import { LoaderService } from 'src/app/shared/services/loaderService.service';
 
 @Component({
   selector: 'app-members',
@@ -59,6 +60,7 @@ export class MembersComponent implements OnInit {
     private groupService: GroupService,
     private groupMapperService: GroupMapperService,
     private dialogService: DialogService,
+    private loaderService: LoaderService,
     ) { }
 
   ngOnInit(): void {
@@ -89,18 +91,22 @@ export class MembersComponent implements OnInit {
   }
 
   getStudents(): Observable<Student[]> {
+    this.loaderService.show();
     return this.studentService.getStudents().pipe(
       map((students) =>
         students.map((student: StudentResponse) =>
-          this.studentMapperService.mapStudentResponseToStudent(student)))
+          this.studentMapperService.mapStudentResponseToStudent(student))),
+      tap(() => this.loaderService.hide()),
     );
   }
 
   getGroups(): Observable<any[]> {
+    this.loaderService.show();
     return this.groupService.getGroups().pipe(
       map((groups) =>
-       groups.map((group) =>
-        this.groupMapperService.mapGroupResponseToGroup(group)))
+        groups.map((group) =>
+          this.groupMapperService.mapGroupResponseToGroup(group))),
+      tap(() => this.loaderService.hide()),
     );
   }
 

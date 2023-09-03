@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -25,6 +25,9 @@ import {
   faSort,
   faSortUp,
   faSortDown,
+  faFileImport,
+  faArrowUpLong,
+  faArrowDownLong,
 } from '@fortawesome/free-solid-svg-icons';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { AppRoutingModule } from './app-routing.module';
@@ -32,6 +35,8 @@ import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
 import { CoreModule } from './core/main/core.module';
 import { SharedModule } from './shared/shared.module';
+import { ErrorHandlerInterceptor } from './shared/interceptors/errorHandler.interceptior';
+import { NotificationService } from './shared/services/notification.service';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -61,7 +66,14 @@ export function tokenGetter() {
       }
     })
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorHandlerInterceptor,
+      multi: true,
+    },
+    NotificationService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
@@ -85,6 +97,9 @@ export class AppModule {
       faCircleXmark,
       faSort,
       faSortUp,
-      faSortDown);
+      faSortDown,
+      faFileImport,
+      faArrowUpLong,
+      faArrowDownLong,);
   }
 }

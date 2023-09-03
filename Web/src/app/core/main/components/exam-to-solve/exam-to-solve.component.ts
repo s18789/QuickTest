@@ -27,7 +27,6 @@ export class ExamToSolveComponent implements OnInit {
 
   getExamToSolveForm(): Observable<FormGroup<ExamToSolveForm>> {
     return this.examSolveService.startExam().pipe(
-      tap(() => {debugger;}),
       map((examToSolveResponse: ExamToSolveResponse) => this.examToSolveMapperService.mapExamToSolveResponseToExamToSolve(examToSolveResponse)),
       map((examToSolve: ExamToSolve) => this.examToSolveMapperService.mapExamToSolveToExamToSolveFormGroup(examToSolve))
     );

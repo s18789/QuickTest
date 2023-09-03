@@ -5,24 +5,12 @@
   </div>
   <div class="flex flex-row gap-4">
     <div class="flex flex-col basis-2/3 gap-6">
-      <app-advertisement
-
-      ></app-advertisement>
-      <app-recent-exam></app-recent-exam>
-      <div class="flex gap-4">
-        <app-latest-exams
-        class="flex-1"
-        ></app-latest-exams>
-
-        <app-create-exam
-        class="flex-1"
-        ></app-create-exam>
-      </div>
+      <app-admin-dashboard *ngIf="userRole == UserRole.Admin"></app-admin-dashboard>
+      <app-student-dashboard *ngIf="userRole == UserRole.Student"></app-student-dashboard>
+      <app-teacher-dashboard *ngIf="userRole == UserRole.Teacher"></app-teacher-dashboard>
     </div>
     <div class="flex flex-col basis-1/4 gap-6">
-      <app-calendar
-
-      ></app-calendar>
+      <app-calendar class="frame rounded-lg"></app-calendar>
 
       <app-scheduled-exams
 

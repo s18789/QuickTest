@@ -33,4 +33,50 @@ public class ExamRepository : BaseRepository<Exam>, IExamRepository
                 .ThenInclude(x => x.PredefinedAnswers)
                 .FirstOrDefaultAsync();
     }
+
+    public async Task<IEnumerable<Exam>> GetCreatedExam(int teacherId)
+    {
+        return await this.context.Exams
+            .Include(e => e.ExamResults)
+            .Where(e => e.TeacherId == teacherId)
+            .OrderBy(e => e.CreationDate)
+            .Take(5)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Exam>> GetExamsForMonth(int teacherId, int month, int year)
+    {
+        return await this.context.Exams
+            .Where(x => x.AvailableTo.Month == month+1)
+            .Where(x => x.AvailableTo.Year == year)
+            .Where(x => x.TeacherId == teacherId)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Exam>> GetExamsForMonth(int month, int year)
+    {
+        return await this.context.Exams
+            .Where(x => x.AvailableTo.Month == month+1)
+            .Where(x => x.AvailableTo.Year == year)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Exam>> GetScheduleExams()
+    {
+        return await this.context.Exams
+            .Where(e => e.AvailableTo > DateTime.Now)
+            .OrderBy(e => e.AvailableTo)
+            .Take(3)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Exam>> GetScheduleExams(User user)
+    {
+        return await this.context.Exams
+            .Where(e => e.TeacherId == user.Id)
+            .Where(e => e.AvailableTo > DateTime.Now)
+            .OrderBy(e => e.AvailableTo)
+            .Take(3)
+            .ToListAsync();
+    }
 }

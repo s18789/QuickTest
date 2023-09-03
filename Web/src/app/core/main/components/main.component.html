@@ -1,10 +1,12 @@
 <app-auth *ngIf="!authService.access;"></app-auth>
 <div *ngIf="authService.access;" class="flex flex-col h-screen bg-gray#FDFDFD">
+  <app-notification></app-notification>
   <app-exam-to-solve class="h-full" *ngIf="examSolveService.isExamResolving"></app-exam-to-solve>
   <div *ngIf="!examSolveService.isExamResolving" class="flex">
     <app-navigation class="flex flex-col h-screen shadow-2xl text-base font-medium bg-gray#F8F8F8"></app-navigation>
     <div class="flex flex-col w-full h-screen">
       <app-header class="shadow-lg" style="height: 8vh;"></app-header>
+      <app-spinner *ngIf="isLoading$ | async"></app-spinner>
       <div class="h-full overflow-auto">
         <router-outlet></router-outlet>
       </div>

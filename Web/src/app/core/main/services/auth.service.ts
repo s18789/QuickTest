@@ -42,6 +42,14 @@ export class AuthService implements AuthServiceInterface {
     return role === 'teacher';
   }
 
+  getUserRole(): string {
+    const token = localStorage.getItem("token");
+    const decodedToken = this.jwtHelper.decodeToken(<string>token);
+    const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+
+    return role;
+  }
+
   logged(): void {
     const teken = localStorage.getItem('token') || '';
     this.http.get<AuthResponseDto>(this.apiUrl, { headers: { authorization: teken } }).subscribe((resp: any) => {

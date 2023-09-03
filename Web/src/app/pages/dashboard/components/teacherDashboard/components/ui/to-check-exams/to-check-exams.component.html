@@ -1,0 +1,73 @@
+<div *ngIf="examToCheck; else nonExamsToCheck" class="relative flex flex-col p-6">
+    <div class="relative mb-4">
+        <span class="pt-2 text-xl font-semibold text-gray-700">Need to be checked</span>
+        <button class="absolute top-0 right-4 ml-auto h-2 w-2 rounded-full" [ngClass]="!main ? 'bg-gray-200' : 'bg-navy#07617D'" (click)="main = true;"></button>
+        <button class="absolute top-0 right-0 ml-auto h-2 w-2 rounded-full" [ngClass]="main ? 'bg-gray-200' : 'bg-navy#07617D'" (click)="main = false;"></button>
+    </div>
+    <div *ngIf="main; else listContainer" class="flex flex-col">
+        <a [routerLink]="['..', 'examsResults', 'examResult', examToCheck.id, 'check']" class="flex flex-col w-full gap-4">
+            <div class="flex flex-col gap-1">
+                <div class="flex flex-col">
+                    <span class="text-sm text-gray-400">title</span>
+                    <span class="text-gray-700 font-medium mb-1">{{examToCheck.title}}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm text-gray-400">completion</span>
+                <span class="text-gray-700 font-medium">{{examToCheck.completionDate | date: "dd.MM.yyyy"}}</span>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <div class="flex w-10 h-10 rounded-full bg-red-400 my-auto">
+                    <span class="m-auto font-semibold text-red-800">{{examToCheck.student.firstName.charAt(0)}}{{examToCheck.student.lastName.charAt(0)}}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-semibold text-gray-700">{{examToCheck.student.firstName}} {{examToCheck.student.lastName}}</span>
+                    <span class="text-sm text-gray-400">#545845</span>
+                </div>
+            </div>
+            <div class="absolute right-10 bottom-2">
+                <img src="../../../../../../../../assets/images/completed.png" alt="">
+            </div>
+        </a>
+    </div>
+    <ng-template #listContainer>
+        <div class="w-full flex flex-col" style="height: 156px;">
+            <div class="flex border-b">
+                <span class="w-3/10">Name</span>
+                <span class="w-1/5">Completion</span>
+                <span>Title</span>
+            </div>
+            <div class="overflow-auto no-scrollbar">
+                <div *ngFor="let exam of examsToCheck" class="flex border-b">
+                    <a [routerLink]="['..', 'examsResults', 'examResult', exam.id, 'check']" class="flex w-full">
+                        <div class="flex gap-2 w-3/10 py-1.5">
+                            <div class="flex w-10 h-10 rounded-full bg-red-400 my-auto">
+                                <span class="m-auto font-semibold text-red-800">{{exam.student.firstName.charAt(0)}}{{exam.student.lastName.charAt(0)}}</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-gray-700">{{exam.student.firstName}} {{exam.student.lastName}}</span>
+                                <span class="text-sm text-gray-400">#545845</span>
+                            </div>
+                        </div>
+                        <span class="w-1/5 my-auto text-gray-600">{{exam.completionDate | date: "dd.MM.yyyy"}}</span>
+                        <span class="my-auto text-gray-600">{{exam.title}}</span>
+                    </a>
+                </div>        
+                
+            </div>
+        </div>
+        
+    </ng-template >
+</div>
+<ng-template #nonExamsToCheck>
+    <div class="relative flex flex-col p-6 gap-4">
+        <span class="text-xl font-semibold text-gray-700">Need to be checked</span>
+        <div class="flex flex-col text-gray-600" style="height: 156px;">
+            <span>No exams to check.</span>
+            <span>Keep it up!</span>
+        </div>
+        <div class="absolute right-10 bottom-2">
+            <img src="../../../../../../../../assets/images/completed.png" alt="">
+        </div>
+    </div>
+</ng-template>

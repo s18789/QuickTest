@@ -7,6 +7,7 @@ import { ExamPreviewMapperService } from 'src/app/shared/components/exam-preview
 import { ExamPreview, ExamPreviewForm } from 'src/app/shared/components/exam-preview/models/examPreview.model';
 import { ActivatedRoute } from '@angular/router';
 import { ExamPreviewType } from 'src/app/shared/components/exam-preview/enums/examPreviewType.enum';
+import { LoaderService } from 'src/app/shared/services/loaderService.service';
 
 @Component({
   selector: 'app-created-exam-preview',
@@ -22,7 +23,8 @@ export class CreatedExamPreviewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private examsService: ExamsService,
-    private examPreviewMapper: ExamPreviewMapperService
+    private examPreviewMapper: ExamPreviewMapperService,
+    private loaderService: LoaderService,
   ) { }
 
   ngOnInit() {
@@ -30,10 +32,11 @@ export class CreatedExamPreviewComponent implements OnInit {
   }
 
   getExamPreviewForm(): Observable<FormGroup<ExamPreviewForm>> {
+    this.loaderService.show();
     return this.examsService.GetCreatedExamPreview(this.examId).pipe(
       map((examPreviewResponse: ExamPreviewResponse) => this.examPreviewMapper.mapExamPreviewResponseToExamPreview(examPreviewResponse)),
       map((examToSolve: ExamPreview) => this.examPreviewMapper.mpaExamPreviewToExamPreviewForm(examToSolve)),
-      tap((rrr) => {var z = rrr;debugger})
+      tap(() => this.loaderService.hide())
     );
   }
 

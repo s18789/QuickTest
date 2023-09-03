@@ -17,6 +17,8 @@ import { StudentResponse } from 'src/app/pages/members/models/students/studentRe
 import { StudentMapperService } from 'src/app/pages/members/services/students/studentMapper.service';
 import { ConfigurationItemType } from 'src/app/shared/utils/model/enums/configurationItemType.enum';
 import { ExamResultStatus } from 'src/app/pages/exams-results/enums/examResultStatus.enum';
+import { LoaderService } from 'src/app/shared/services/loaderService.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-exam',
@@ -46,17 +48,21 @@ export class ExamComponent implements OnInit {
     private studentMapperService: StudentMapperService,
     private dialog: MatDialog,
     private studentService: StudentService,
+    private loaderService: LoaderService,
+    private notificationService: NotificationService,
     ) { }
 
   ngOnInit(): void {
     this.exam$ = this.getExam();
   }
 
-  getExam(): Observable<Exam>{
+  getExam(): Observable<Exam> {
+    this.loaderService.show();
     return this.examsService.getExam(this.examId).pipe(
       map((exam) =>
         this.examMapperService.mapExamResponseToExam(exam)
-      )
+      ),
+      tap(() => this.loaderService.hide())
     );
   }
 
@@ -75,7 +81,9 @@ export class ExamComponent implements OnInit {
     dialogRef.afterClosed().pipe(
       tap((actionType:ConfirmationDialogActionType) => {
         if (actionType == ConfirmationDialogActionType.Submit) {
-          this.examsService.finishExam(this.examId).subscribe();
+          this.examsService.finishExam(this.examId).pipe(
+            tap(() => this.notificationService.showSuccess("Successfully deactivated exam."))
+          ).subscribe();
         }
 
         this.finishExamDialogCount++;

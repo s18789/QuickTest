@@ -7,6 +7,7 @@ import { ExamSolveService } from 'src/app/core/main/services/examSolveService.se
 import { ExamPreviewType } from './enums/examPreviewType.enum';
 import { ExamsResultsService } from 'src/app/pages/exams-results/services/exams-results.service';
 import { CheckedExam } from './models/examPreview.model';
+import { LoaderService } from '../../services/loaderService.service';
 
 @Component({
   selector: 'app-exam-preview',
@@ -26,6 +27,7 @@ export class ExamPreviewComponent implements OnInit {
     private examSolveService: ExamSolveService,
     private examsResultsService: ExamsResultsService,
     private examToSolveMapperService: ExamToSolveMapperService,
+    private loaderService: LoaderService
   ) { }
 
   ngOnInit(): void {
@@ -42,9 +44,11 @@ export class ExamPreviewComponent implements OnInit {
   onSubmit(target: any) {
     var resolvedExam = this.examToSolveMapperService.mapExamToSolveToResolvedExam(this.examSolveService.examResultId, target.value);
 
+    this.loaderService.show();
     this.examSolveService.finishExam(resolvedExam).pipe(
       tap(() => this.examSolveService.removeStorage()),
-      tap(() => this.router.navigate(['./examsResults']))
+      tap(() => this.loaderService.hide()),
+      tap(() => this.router.navigate(['./examsResults'])),
     ).subscribe();
   }
 
@@ -52,8 +56,10 @@ export class ExamPreviewComponent implements OnInit {
     const examResultId: string = this.route.snapshot.params["id"];
     const checkedExam: CheckedExam = this.examToSolveMapperService.mapExamPreviewToCheckedExam(examResultId, target.value);
 
+    this.loaderService.show();
     this.examsResultsService.checkExamResult(checkedExam).pipe(
-      tap(() => this.router.navigate(['./exams']))
+      tap(() => this.router.navigate(['./exams'])),
+      tap(() => this.loaderService.hide()),
     ).subscribe();
 
   }

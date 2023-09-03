@@ -1,13 +1,14 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ExamsResultsService } from '../../services/exams-results.service';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, map } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { ExamResultGridModel } from '../../models/examResult.model';
 import { ExamResultMapperService } from '../../services/examResultMapper.service';
 import { ActionConfiguration } from '../../../../shared/utils/model/actionConfiguration.model';
 import { GridItemConfiguration } from '../../../../shared/utils/model/GridConfiguration.model';
 import { ConfigurationItemType } from 'src/app/shared/utils/model/enums/configurationItemType.enum';
 import { ExamResultStatus } from '../../enums/examResultStatus.enum';
+import { LoaderService } from 'src/app/shared/services/loaderService.service';
 
 @Component({
   selector: 'app-exams-results',
@@ -33,6 +34,7 @@ export class ExamsResultsComponent implements OnInit {
     private route: ActivatedRoute,
     private examsResultsService: ExamsResultsService,
     private examResultMapperService: ExamResultMapperService,
+    private loaderService: LoaderService,
   ) { }
 
   ngOnInit(): void {
@@ -40,10 +42,12 @@ export class ExamsResultsComponent implements OnInit {
   }
 
   getExamsResults(): Observable<ExamResultGridModel[]> {
+    this.loaderService.show();
     return this.examsResultsService.getExamsResults(this.studentId).pipe(
       map((examResults) =>
         examResults.map((examResult) =>
-          this.examResultMapperService.mapExamResultGridModelResponseToExamResultGridModel(examResult)))
+          this.examResultMapperService.mapExamResultGridModelResponseToExamResultGridModel(examResult))),
+      tap(() => this.loaderService.hide()),
     );
   }
 }

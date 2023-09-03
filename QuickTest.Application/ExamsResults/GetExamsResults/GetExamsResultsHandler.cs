@@ -5,7 +5,7 @@ using QuickTest.Infrastructure.Interfaces;
 
 namespace QuickTest.Application.ExamsResults.GetExamsResults;
 
-public class GetExamsResultsHandler : IRequestHandler<GetExamsResultsRequest, IEnumerable<GetExamResultDto>>
+public class GetExamsResultsHandler : IRequestHandler<GetExamsResultsRequest, IEnumerable<ExamResultDto>>
 {
     private readonly IExamResultRepository examResultRepository;
 
@@ -14,11 +14,11 @@ public class GetExamsResultsHandler : IRequestHandler<GetExamsResultsRequest, IE
         this.examResultRepository = examResultRepository;
     }
 
-    public async Task<IEnumerable<GetExamResultDto>> Handle(GetExamsResultsRequest request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ExamResultDto>> Handle(GetExamsResultsRequest request, CancellationToken cancellationToken)
     {
         var examsResults = await this.examResultRepository.GetStudentExamsResults(request.StudentId);
 
-        return examsResults.Select(x => new GetExamResultDto
+        return examsResults.Select(x => new ExamResultDto
         {
             Id = x.Id,
             ExamName = x.Exam.Title,

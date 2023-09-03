@@ -1,11 +1,15 @@
-<div class="flex flex-col gap-2 pl-4">
+<div *ngIf="groupScheduleExams$ | async as scheduleExams; else nonScheduledExams" class="flex flex-col gap-2 pl-4">
   <span class="text-lg font-medium">Scheduled exams</span>
-  <app-scheduled-exam-card
-    [scheduledExams]="scheduledExams"
-    *ngFor="let scheduledExams of exams"
-  ></app-scheduled-exam-card>
-  <button class="ml-auto flex gap-2">
-    <span class="text-sm">See all</span>
-    <fa-icon class="text-sm my-auto" icon="arrow-right-long"></fa-icon>
-  </button>
+  <div class="flex flex-col pl-4">
+    <app-scheduled-exam-card
+      *ngFor="let scheduleExam of scheduleExams"
+      [groupScheduleExams]="scheduleExam"
+    ></app-scheduled-exam-card>
+  </div>
 </div>
+<ng-template #nonScheduledExams>
+  <div class="flex flex-col gap-2 pl-4">
+    <span class="text-lg font-medium">Scheduled exams</span>
+    <span class="pl-4 text-gray-600 text-sm">No scheduled exams.</span>
+  </div>
+</ng-template>

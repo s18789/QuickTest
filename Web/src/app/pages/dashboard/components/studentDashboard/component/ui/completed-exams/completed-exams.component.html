@@ -1,0 +1,74 @@
+<div *ngIf="completedExam; else nonCompletedExams" class="flex flex-col p-6 h-full w-fulll">
+  <div class="relative mb-4">
+    <span class="text-xl font-semibold">Completed</span>
+    <button class="absolute top-0 right-4 ml-auto h-2 w-2 rounded-full" [ngClass]="!main ? 'bg-gray-200' : 'bg-navy#07617D'" (click)="main = true;"></button>
+    <button class="absolute top-0 right-0 ml-auto h-2 w-2 rounded-full" [ngClass]="main ? 'bg-gray-200' : 'bg-navy#07617D'" (click)="main = false;"></button>
+  </div>
+  <div *ngIf="main; else listContainer" class="flex flex-col">
+    <a [routerLink]="['..', 'examsResults', 'examResult', completedExam.id]" class="flex flex-col w-full">
+      <div class="flex flex-col mb-1">
+        <span class="text-sm text-gray-400">title</span>
+        <span class="text-gray-700 font-medium">{{completedExam.title}}</span>
+      </div>
+      <div class="flex">
+        <div class="flex flex-col w-1/2 gap-1">
+          <div class="flex flex-col">
+            <span class="text-sm text-gray-400">completion date</span>
+            <span class="text-gray-700 font-medium">{{completedExam.completionDate | date:"dd.MM.yyyy"}}</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-sm text-gray-400">comparison to others</span>
+            <div class="flex space-x-1">
+                <span *ngIf="completedExam.comparisonToOthers == 0" class="text-gray-700 font-medium">---</span>
+                <span *ngIf="completedExam.comparisonToOthers != 0" class="text-gray-700 font-medium">{{completedExam.comparisonToOthers}} %</span>
+                <fa-icon *ngIf="completedExam.comparisonToOthers > 0" class="text-sm my-auto text-green-600" icon="arrow-up-long"></fa-icon>
+                <fa-icon *ngIf="completedExam.comparisonToOthers < 0" class="text-sm my-auto text-red-600" icon="arrow-down-long"></fa-icon>
+            </div>
+          </div>
+        </div>
+        <div class="h-full relative flex gap-2">
+          <div class="mt-auto ml-auto h-1 w-5" [ngClass]="completedExam.score > 12.5 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-4 w-5" [ngClass]="completedExam.score > 25 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-8 w-5" [ngClass]="completedExam.score > 37.5 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-12 w-5" [ngClass]="completedExam.score > 50 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-16 w-5" [ngClass]="completedExam.score > 62.5 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-20 w-5" [ngClass]="completedExam.score > 75 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-24 w-5" [ngClass]="completedExam.score > 87.5 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="absolute top-0 left-0 flex flex-col">
+            <span class="text-sm text-gray-400">score</span>
+            <span class="text-gray-700 font-medium">{{completedExam.score}} %</span>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <ng-template #listContainer>
+    <div class="w-full flex flex-col" style="height: 144px;">
+        <div class="flex border-b">
+            <span class="w-3/4">Title</span>
+            <span>Score</span>
+        </div>
+
+        <div class="overflow-auto no-scrollbar">
+          <div *ngFor="let exam of completedExams" class="flex border-b py-1.5">
+            <a [routerLink]="['..', 'examsResults', 'examResult', exam.id]" class="flex w-full">
+              <span class="my-auto text-gray-600 w-3/4">{{exam.title}}</span>
+              <span class="my-auto text-gray-600">{{exam.score}} %</span>
+            </a>
+          </div>
+        </div>
+    </div>
+  </ng-template>
+</div>
+<ng-template #nonCompletedExams>
+  <div class="relative flex flex-col p-6 gap-4">
+    <span class="text-xl font-semibold">Completed</span>
+    <div class="w-full flex flex-col" style="height: 144px;">
+      <span class="text-gray-600">No completed exams to show.</span>
+    </div>
+    <div class="absolute right-8 bottom-0">
+      <img src="../../../../../../../../assets/images/completed2.png" alt="">
+    </div>
+  </div>
+</ng-template>
+  

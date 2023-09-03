@@ -4,6 +4,10 @@ import { Observable } from 'rxjs';
 import { Api } from 'src/app/shared/utils/api';
 import { ExamListItemResponse } from '../models/examResponse.model';
 import { ExamPreviewResponse } from 'src/app/shared/components/exam-preview/models/examPreviewResponse.model';
+import { CalendarExamResponse } from '../../../shared/components/dashboard-calendar/models/calendarExamResponse.model';
+import { CreatedExamResponse } from '../../dashboard/components/teacherDashboard/models/examResponse.model';
+import { ExamHeaderResponse } from '../../calendar/models/examResponse.model';
+import { ScheduleExamResponse } from '../../dashboard/components/ui/scheduled-exams/models/scheduleExam.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +25,22 @@ export class ExamsService {
 
   getExam(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`)
+  }
+
+  getCreatedExams(): Observable<CreatedExamResponse[]> {
+    return this.http.get<CreatedExamResponse[]>(`${this.apiUrl}/CreatedExams`);
+  }
+
+  getCalendarExams(month: number, year: number): Observable<CalendarExamResponse[]> {
+    return this.http.get<CalendarExamResponse[]>(`${this.apiUrl}/CalendarExams/${month}/${year}`);
+  }
+
+  getExamsHeader(month: number, year: number): Observable<ExamHeaderResponse[]> {
+    return this.http.get<ExamHeaderResponse[]>(`${this.apiUrl}/ExamsHeader/${month}/${year}`);
+  }
+
+  getScheduleExams(): Observable<ScheduleExamResponse[]> {
+    return this.http.get<ScheduleExamResponse[]>(`${this.apiUrl}/ScheduleExams`);
   }
 
   add(exam: any): Observable<any> {

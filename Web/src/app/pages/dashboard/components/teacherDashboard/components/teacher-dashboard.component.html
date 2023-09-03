@@ -1,0 +1,9 @@
+<div *ngIf="data$ | async as data" class="flex flex-col h-full w-full gap-6">
+    <app-advertisement class="rounded-lg flex-1"></app-advertisement>
+    <app-to-check-exams [examToCheck]="data.examsToCheck?.at(0)" [examsToCheck]="data.examsToCheck" class="frame rounded-lg flex-1"></app-to-check-exams>
+    <div class="flex gap-4">
+      <app-latest-exams [createdExam]="data.createdExams?.at(0)" [createdExams]="data.createdExams" class="frame rounded-lg flex-1"></app-latest-exams>
+      <app-create-exam class="frame rounded-lg flex-1"></app-create-exam>
+    </div>
+</div>
+

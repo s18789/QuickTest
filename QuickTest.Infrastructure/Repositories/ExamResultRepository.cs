@@ -78,13 +78,87 @@ public class ExamResultRepository : BaseRepository<ExamResult>, IExamResultRepos
                             .ThenInclude(x => x.StudentAnswer)
                         .       ThenInclude(x => x.Question)
              .FirstOrDefaultAsync(x => x.Id == examResultId);
-
-
     }
 
     public async Task<ExamResult> GetExamResult(int examResultId)
     {
         return await this.context.ExamResults.Include(x => x.StudentAnswers)
             .FirstOrDefaultAsync(x => x.Id == examResultId);
+    }
+
+    public async Task<IEnumerable<ExamResult>> GetCompletedExamsResults(int studentId)
+    {
+        return await this.context.ExamResults
+            .Include(er => er.Exam)
+            .Where(er => er.StudentId == studentId)
+            .Where(er => er.FinishExamTime != null)
+            .Where(er => er.Score != null)
+            .OrderBy(er => er.FinishExamTime)
+            .Take(5)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<ExamResult>> GetExamsResultsToResolve(int studentId)
+    {
+        return await this.context.ExamResults
+            .Include(er => er.Exam)
+                .ThenInclude(e => e.Teacher)
+            .Where(er => er.StudentId == studentId)
+            .Where(er => er.FinishExamTime == null)
+            .Where(er => er.Exam.AvailableFrom < DateTime.Now)
+            .Where(er => er.Exam.AvailableTo > DateTime.Now)
+            .OrderBy(er => er.Exam.AvailableTo)
+            .Take(5)
+            .ToListAsync();
+    }
+
+    public async Task<double> GetAvgScoreForExam(int examId)
+    {
+        var scoresList = await this.context.ExamResults
+            .Include(er => er.Exam)
+            .Where(er => er.ExamId == examId)
+            .Where(er => er.Score != null)
+            .Where(er => er.FinishExamTime != null)
+            .Select(er => er.Score)
+            .ToListAsync();
+
+        return scoresList.Average().HasValue 
+            ? scoresList.Average().Value
+            : 0;
+    }
+
+    public async Task<IEnumerable<ExamResult>> GetExamsResultsToCheck(int teacherId)
+    {
+        return await this.context.ExamResults
+            .Include(er => er.Student)
+            .Include(er => er.Exam)
+            .Where(er => er.Exam.TeacherId == teacherId)
+            .Where(er => er.Score == null)
+            .Where(er => er.FinishExamTime != null)
+            .OrderBy(er => er.FinishExamTime)
+            .Take(5)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<ExamResult>> GetExamsResultsForMonth(int studentId, int month, int year)
+    {
+        return await this.context.ExamResults
+            .Include(x => x.Exam)
+            .Where(x => x.StudentId == studentId)
+            .Where(x => x.Exam.AvailableTo.Month == month+1)
+            .Where(x => x.Exam.AvailableTo.Year == year)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<ExamResult>> GetScheduleExams(User user)
+    {
+        return await this.context.ExamResults
+            .Include(x => x.Exam)
+            .Where(er => er.StudentId == user.Id)
+            .Where(er => er.FinishExamTime == null)
+            .Where(er => er.Exam.AvailableTo > DateTime.Now)
+            .OrderBy(er => er.Exam.AvailableTo)
+            .Take(3)
+            .ToListAsync();
     }
 }

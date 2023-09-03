@@ -81,7 +81,15 @@ export class ExamToSolveMapperService {
           type: Number(q.type),
           content: q.content,
           answerContent: q.answerContent,
-          answers: q.type == QuestionType.Open ? null : q.answers
+          answers: q.type == QuestionType.Open ? null : q.answers.map(a => {
+            var answer: Answer = {
+              answerId: a.answerId,
+              content: a.content,
+              isSelected: a.isSelected == true ? true : false
+            }
+
+            return answer;
+          })
         }
 
         return question;
