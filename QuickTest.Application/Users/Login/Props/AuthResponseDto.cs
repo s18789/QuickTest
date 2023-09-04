@@ -6,4 +6,5 @@ public sealed record AuthResponseDto
     public bool IsAuthSuccessful { get; init; }
     public string? ErrorMessage { get; init; }
     public string? Token { get; init; }
+    public int SchoolId { get; set; }
 }

@@ -1,4 +1,5 @@
 ﻿using QuickTest.Application.Groups;
+using QuickTest.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,6 @@ namespace QuickTest.Application.Teachers
         public string LastName { get; set; }
 
         public string Email { get; set; }
-
-        public ICollection<GroupDto>? GroupDtos { get; set; }
+        public ICollection<GroupDto> Group { get; set; }
     }
 }

@@ -29,10 +29,11 @@ public class LoginHandler : IRequestHandler<LoginRequest, AuthResponseDto>
 
         var signingCredentials = this.jwtHandler.GetSigningCredentials();
         var claims = await this.jwtHandler.GetClaims(user);
+        var schoolId = await this.jwtHandler.GetSchoolId(user);
         var tokenOptions = this.jwtHandler.GenerateTokenOptions(signingCredentials, claims);
         var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-        return new AuthResponseDto { IsAuthSuccessful = true, Token = token, UserId = user.Id };
+        return new AuthResponseDto { IsAuthSuccessful = true, Token = token, UserId = user.Id , SchoolId = schoolId};
     }
     
 }

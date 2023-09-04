@@ -10,5 +10,6 @@ namespace QuickTest.Infrastructure.Interfaces
     public interface ISchoolRepository
     {
         Task<School> GetSchoolIncludeGroups(int id);
+        Task<int> GetSchoolIdByAdministrator(User user);
     }
 }

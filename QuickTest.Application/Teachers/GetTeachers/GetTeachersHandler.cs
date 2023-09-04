@@ -28,7 +28,7 @@ namespace QuickTest.Application.Teachers.GetTeachers
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Email = x.Email,
-                GroupDtos = x.GroupTeachers.Select(gt => new GroupDto
+                Group = x.GroupTeachers.Select(gt => new GroupDto
                 {
                     Id = gt.Group.Id,
                     Name = gt.Group.Name

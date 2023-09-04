@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace QuickTest.Application.Teachers.CreateTeacher
 {
-    public class CreateTeacherHandler : IRequestHandler<CreateTeacherRequest, TeacherDto>
+    public class CreateTeacherHandler : IRequestHandler<CreateTeacherRequest, ResponseDto>
     {
         public const int passwordLength = 9;
 
@@ -32,7 +32,7 @@ namespace QuickTest.Application.Teachers.CreateTeacher
             this.roleRepository = userRoleRepository;
         }
 
-        public async Task<TeacherDto> Handle(CreateTeacherRequest request, CancellationToken cancellationToken)
+        public async Task<ResponseDto> Handle(CreateTeacherRequest request, CancellationToken cancellationToken)
         {
             var teacher = mapper.Map<Teacher>(request.Teacher);
             teacher.UserName = request.Teacher.Email.Split('@')[0];
@@ -48,17 +48,18 @@ namespace QuickTest.Application.Teachers.CreateTeacher
 
             if (!passwordResult.Succeeded)
             {
-                throw new Exception("Failed to set password for the teacher.");
+                return new ResponseDto { IsEmailSent = false, IsSuccess = true, AddedStudent = null, AddedTeacher = null, ErrorMessage = "Failed to set password for the teacher. " };
             }
 
             var emailResult = await emailService.SendEmailAsync(teacher.Email, "Your Account Password", $"Your generated password is: {generatedPassword}. Please change it upon first login.");
 
             if (!emailResult)
             {
-                throw new Exception("Failed to send email to the teacher.");
+                return new ResponseDto { IsEmailSent = false, IsSuccess = true, AddedStudent = null, AddedTeacher = null, ErrorMessage = "Failed to send email to the teacher." };
+                
             }
 
-            return mapper.Map<TeacherDto>(teacher);
+            return new ResponseDto { IsEmailSent = emailResult, IsSuccess = true, AddedStudent = null, AddedTeacher = mapper.Map<TeacherDto>(teacher) };
         }
     }
 }

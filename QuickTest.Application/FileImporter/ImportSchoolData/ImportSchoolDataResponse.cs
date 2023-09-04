@@ -9,7 +9,7 @@ namespace QuickTest.Application.FileImporter.ImportSchoolData
     public class ImportSchoolDataResponse
     {
         public bool IsSuccess { get; set; }
-        public string ErrorMessage { get; set; }
-        public ImportSummary ImportSummary { get; set; }
+        public List<string> ErrorMessages { get; set; }
+        public ImportSummaryDto ImportSummary { get; set; }
     }
 }

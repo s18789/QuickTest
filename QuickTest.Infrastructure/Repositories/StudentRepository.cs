@@ -57,5 +57,13 @@ public class StudentRepository : BaseRepository<Student>, IStudentRepository
 
         return newIndex;
     }
+    public async Task<bool> CheckIfStudentExists(string email)
+    {
+        var userRoleId = context.UserRoles.Where(x => x.Name.Equals("student")).FirstOrDefault().Id;
+        var foundUser = await this.context.Users
+            .Where(t => t.UserRoleId == userRoleId && t.Email.Equals(email))
+            .FirstOrDefaultAsync();
+        return foundUser == null ? false : true;
+    }
 
 }

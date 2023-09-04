@@ -22,10 +22,10 @@ namespace QuickTest.Infrastructure.Utilities
                 .ForMember(dest => dest.Group, opt => opt.Ignore());
 
             CreateMap<TeacherDto, Teacher>()
-                .ForMember(dest => dest.GroupTeachers, opt => opt.MapFrom(src => src.GroupDtos.Select(gdto => new GroupTeacher { GroupId = gdto.Id })));
+                .ForMember(dest => dest.GroupTeachers, opt => opt.MapFrom(src => src.Group.Select(gdto => new GroupTeacher { GroupId = gdto.Id })));
 
             CreateMap<Teacher, TeacherDto>()
-                .ForMember(dest => dest.GroupDtos, opt => opt.MapFrom(src => src.GroupTeachers.Select(gt => gt.Group)));
+                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.GroupTeachers.Select(gt => gt.Group)));
 
             CreateMap<Group, GroupDto>()
             .ForMember(dest => dest.Students, opt => opt.MapFrom(src => src.Students))

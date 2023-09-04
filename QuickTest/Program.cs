@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using OfficeOpenXml;
 using QuickTest.Application.Exams.CreateExam;
 using QuickTest.Application.Exams.GetExams;
+using QuickTest.Application.Groups.CreateGroup;
 using QuickTest.Application.Groups.GetGroups;
 using QuickTest.Application.Services;
 using QuickTest.Application.Students.GetStudents;
+using QuickTest.Application.Users.CreateUser;
 using QuickTest.Application.Users.Login.Services;
 using QuickTest.Core.Entities;
 using QuickTest.Infrastructure.Data;
@@ -34,6 +37,8 @@ builder.Services.AddScoped<IStudentAnswerRepository, StudentAnswerRepository>();
 builder.Services.AddScoped<ISelectedStudentAnswerRepository, SelectedStudentAnswerRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<IPredefinedAnswerRepository, PredefinedAnswerRepository>();
+builder.Services.AddScoped<CreateUserHandler>();
+builder.Services.AddScoped<CreateGroupHandler>();
 builder.Services.AddTransient<ISchoolRepository, SchoolRepository>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IUserContextService, UserContextService>();
@@ -44,6 +49,7 @@ builder.Services.AddMediatR(typeof(GetExamsHandler));
 builder.Services.AddMediatR(typeof(GetGroupsHandler));
 builder.Services.AddMediatR(typeof(GetStudentsHandler));
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+builder.Services.AddMemoryCache();
 
 builder.Services.AddIdentity<User, ApplicationRole>(options =>
 {
@@ -82,7 +88,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer("Server=inzynierka2023.database.windows.net;Database=QuickTest;User Id=adminqt;Password=AdminQuickTest69;"
         , b => b.MigrationsAssembly("QuickTest.Infrastructure"));
 });
-
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var app = builder.Build();
 var serviceScopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 

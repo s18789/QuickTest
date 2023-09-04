@@ -11,7 +11,14 @@ namespace QuickTest.Application.FileImporter
 {
     public class ImportedGroupsDto
     {
-        //public List<TeacherDto> ImportedTeachers { get; set; }
-        public List<GroupDto> ImportedGroups { get; set; }
+        
+        public List<Tuple<string, Teacher, HashSet<Student>>> ImportedGroups { get; set; }
+        public int SuccessfulTeacherLoads { get; set; }
+        public int FailedTeacherLoads { get; set; }
+        public int SuccessfulStudentLoads { get; set; }
+        public int FailedStudentLoads { get; set; }
+        public int SuccessfulGroupLoads { get; set; }
+        public int FailedGroupLoads { get; set; }
+        public List<string> ErrorList { get; set; }
     }
 }

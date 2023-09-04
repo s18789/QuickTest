@@ -11,4 +11,5 @@ public interface IStudentRepository : IAsyncRepository<Student>
 
     Task<IEnumerable<Student>> GetStudentsWithGroupForExam(int examId);
     Task<string> GenerateStudentIndex();
+    Task<bool> CheckIfStudentExists(string email);
 }
