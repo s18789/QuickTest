@@ -3,4 +3,5 @@ export interface AuthResponseDto {
   errorMessage: string,
   token: string,
   userId: string,
+  schoolId: number
 }

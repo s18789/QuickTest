@@ -65,6 +65,7 @@ export class AuthService implements AuthServiceInterface {
         this._access = response.isAuthSuccessful;
         localStorage.setItem('token', response.token);
         localStorage.setItem('userId', response.userId);
+        localStorage.setItem('schoolId', response.schoolId.toString());
       })
     );
   }
