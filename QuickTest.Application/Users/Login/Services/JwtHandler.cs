@@ -13,11 +13,13 @@ public class JwtHandler
     private readonly IConfiguration configuration;
     private readonly IConfigurationSection jwtSettings;
     private readonly IUserRoleRepository userRoleRepository;
-    public JwtHandler(IConfiguration configuration, IUserRoleRepository userRoleRepository)
+    private readonly ISchoolRepository schoolRepository;
+    public JwtHandler(IConfiguration configuration, IUserRoleRepository userRoleRepository, ISchoolRepository schoolRepository)
     {
         this.configuration = configuration;
         jwtSettings = this.configuration.GetSection("JwtSettings");
         this.userRoleRepository = userRoleRepository;
+        this.schoolRepository = schoolRepository;
     }
 
     public SigningCredentials GetSigningCredentials()
@@ -38,6 +40,18 @@ public class JwtHandler
         };
 
         return claims;
+    }
+    public async Task<int> GetSchoolId(User user)
+    {
+        if (user.UserRole.Name != "administrator")
+        {
+            return 0;
+        }
+        else
+        {
+            return await schoolRepository.GetSchoolIdByAdministrator(user); 
+        }
+        
     }
 
     public JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, IEnumerable<Claim> claims)

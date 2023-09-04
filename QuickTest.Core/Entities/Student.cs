@@ -7,7 +7,7 @@ public class Student : User
 {
     public string? Index { get; set; }
     
-    public Group Group { get; set; }
+    public Group? Group { get; set; }
 
     public int GroupId { get; set; }
 

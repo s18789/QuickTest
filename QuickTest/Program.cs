@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using OfficeOpenXml;
 using QuickTest.Application.Exams.CreateExam;
 using QuickTest.Application.Exams.GetExams;
 using QuickTest.Application.Groups.CreateGroup;
@@ -48,6 +49,7 @@ builder.Services.AddMediatR(typeof(GetExamsHandler));
 builder.Services.AddMediatR(typeof(GetGroupsHandler));
 builder.Services.AddMediatR(typeof(GetStudentsHandler));
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+builder.Services.AddMemoryCache();
 
 builder.Services.AddIdentity<User, ApplicationRole>(options =>
 {
@@ -86,7 +88,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer("Server=inzynierka2023.database.windows.net;Database=QuickTest;User Id=adminqt;Password=AdminQuickTest69;"
         , b => b.MigrationsAssembly("QuickTest.Infrastructure"));
 });
-
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var app = builder.Build();
 var serviceScopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 

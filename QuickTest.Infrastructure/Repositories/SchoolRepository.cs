@@ -26,6 +26,11 @@ namespace QuickTest.Infrastructure.Repositories
                 .Include(s => s.Groups)
                 .FirstOrDefaultAsync();
         }
+        public async Task<int> GetSchoolIdByAdministrator(User user)
+        {
+            var admin = await this.context.Admins.Where(x => x.Id == user.Id).FirstOrDefaultAsync();
+            return  admin == null ? 0: admin.SchoolId ?? 0;
+        }
 
     }
 }

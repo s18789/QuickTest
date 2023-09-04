@@ -59,6 +59,7 @@ namespace QuickTest.Application.FileImporter.FileReading
                 {
                     using (var package = new ExcelPackage(stream))
                     {
+                        
                         foreach (var schoolWorksheet in package.Workbook.Worksheets)
                         {
                             var groupName = schoolWorksheet.Name;
@@ -76,7 +77,7 @@ namespace QuickTest.Application.FileImporter.FileReading
                             var group = groupName;
                             var studentsSet = new HashSet<Student>();
 
-                            var row = 1;
+                            var row = 2;
                             while (row <= schoolWorksheet.Dimension.End.Row)
                             {
                                 var teacher = new Teacher()
@@ -84,14 +85,17 @@ namespace QuickTest.Application.FileImporter.FileReading
                                     FirstName = schoolWorksheet.Cells[row, 1].Text,
                                     LastName = schoolWorksheet.Cells[row, 2].Text,
                                     Email = schoolWorksheet.Cells[row, 3].Text,
-                                    UserName = schoolWorksheet.Cells[row, 4].Text.Split('@')[0],
+                                    UserName = schoolWorksheet.Cells[row, 3].Text.Split('@')[0],
                                     UserRole = teacherRole
                                 };
 
                                 if (string.IsNullOrEmpty(teacher.FirstName) || string.IsNullOrEmpty(teacher.LastName) || string.IsNullOrEmpty(teacher.Email) || string.IsNullOrEmpty(teacher.UserName))
                                 {
                                     row++;
-                                    failedTeacherReadCount++;
+                                    var areAllEmpty = (string.IsNullOrEmpty(teacher.FirstName) && string.IsNullOrEmpty(teacher.LastName) && string.IsNullOrEmpty(teacher.Email) && string.IsNullOrEmpty(teacher.UserName));
+                                    if(!areAllEmpty)
+                                        failedTeacherReadCount++;
+
                                     continue;
                                 }
 
@@ -103,21 +107,24 @@ namespace QuickTest.Application.FileImporter.FileReading
                                 }
                                 successTeacherReadCount++;
 
-                                var studentRow = 1;
+                                var studentRow = 2;
                                 while (studentRow <= schoolWorksheet.Dimension.End.Row)
                                 {
                                     var student = new Student()
                                     {
-                                        FirstName = schoolWorksheet.Cells[studentRow, 5].Text,
-                                        LastName = schoolWorksheet.Cells[studentRow, 6].Text,
-                                        Email = schoolWorksheet.Cells[studentRow, 7].Text,
-                                        UserName = schoolWorksheet.Cells[studentRow, 7].Text.Split('@')[0],
+                                        FirstName = schoolWorksheet.Cells[studentRow, 4].Text,
+                                        LastName = schoolWorksheet.Cells[studentRow, 5].Text,
+                                        Email = schoolWorksheet.Cells[studentRow, 6].Text,
+                                        UserName = schoolWorksheet.Cells[studentRow, 6].Text.Split('@')[0],
                                         UserRole = studentRole
                                     };
 
                                     if (string.IsNullOrEmpty(student.FirstName) || string.IsNullOrEmpty(student.LastName) || string.IsNullOrEmpty(student.Email) || string.IsNullOrEmpty(student.UserName))
                                     {
-                                        failedStudentReadCount++;
+                                        var areAllEmpty = string.IsNullOrEmpty(student.FirstName) && string.IsNullOrEmpty(student.LastName) && string.IsNullOrEmpty(student.Email) && string.IsNullOrEmpty(student.UserName);
+                                        if (!areAllEmpty)
+                                            failedStudentReadCount++;
+
                                         studentRow++;
                                         continue;
                                     }

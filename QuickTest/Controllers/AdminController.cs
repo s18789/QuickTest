@@ -52,7 +52,7 @@ namespace QuickTest.Controllers
             return this.Ok(schools);
         }
         [HttpPost("import")]
-        public async Task<IActionResult> ImportSchoolData(IFormFile file)
+        public async Task<IActionResult> ImportSchoolData([FromForm] IFormFile file)
         {
             if (file == null || file.Length == 0)
             {
@@ -70,16 +70,27 @@ namespace QuickTest.Controllers
             memoryCache.Set(importId, result.ImportSummary, TimeSpan.FromMinutes(30)); 
 
 
-            return Ok(new { ImportId = importId, Summary = result.ImportSummary });
+             return Ok(new { ImportId = importId, Summary = result.ImportSummary });
         }
         [HttpGet("import/{importId}")]
         public IActionResult GetImportSummary(string importId)
         {
             if (memoryCache.TryGetValue(importId, out ImportSummaryDto importSummary))
             {
+                Console.WriteLine("Import summary found.");
                 return Ok(importSummary);
             }
             return NotFound("Import summary not found.");
+        }
+        [HttpDelete("clearCache/{importId}")]
+        public IActionResult ClearCache(string importId)
+        {
+            if (memoryCache.TryGetValue(importId, out _))
+            {
+                memoryCache.Remove(importId);
+                return Ok("Cache cleared.");
+            }
+            return NotFound("Import summary not found in cache.");
         }
         [HttpPost("bulk-import")]
         public async Task<IActionResult> BulkImport([FromBody] BulkImportRequest request)

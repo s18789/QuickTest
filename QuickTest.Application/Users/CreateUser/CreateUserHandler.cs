@@ -39,7 +39,8 @@ namespace QuickTest.Application.Users.CreateUser
                 FirstName = request.UserDto.FirstName,
                 LastName = request.UserDto.LastName,
                 UserRole = request.UserDto.UserRole
-            };
+                
+        };
             var newTeacher = new Teacher();
             var newStudent = new Student();
             var generatedPassword = GenerateRandomPassword();
@@ -51,7 +52,8 @@ namespace QuickTest.Application.Users.CreateUser
                 newTeacher.LastName = user.LastName;
                 newTeacher.Email = user.Email;
                 newTeacher.UserName = user.UserName;
-                newTeacher.UserRole = user.UserRole;
+                newTeacher.NormalizedEmail = request.UserDto.Email.ToUpper();
+                newTeacher.UserRoleId = roleRepository.GetRoleByName("teacher").Result.Id;
 
                 await this.teacherRepository.AddAsync(newTeacher);
 
@@ -64,7 +66,7 @@ namespace QuickTest.Application.Users.CreateUser
                 newStudent.LastName = user.LastName;
                 newStudent.Email = user.Email;
                 newStudent.UserName = user.UserName;
-                newStudent.UserRole = user.UserRole;
+                newTeacher.UserRoleId = roleRepository.GetRoleByName("student").Result.Id;
 
                 await this.studentRepository.AddAsync(newStudent);
 

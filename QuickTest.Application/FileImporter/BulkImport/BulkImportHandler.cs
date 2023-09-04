@@ -40,6 +40,7 @@ namespace QuickTest.Application.FileImporter.BulkImport
         {
             CreatedAccountsSummary createdAccountsSummary = new CreatedAccountsSummary();
             createdAccountsSummary.IsSuccess = false;
+            createdAccountsSummary.ErrorList = new List<string>();
             foreach (var groupData in bulkRequest.ImportSummary.ImportedGroupsFromFile.ImportedGroups)
             {
                 var teacher = groupData.Item2;
@@ -47,6 +48,7 @@ namespace QuickTest.Application.FileImporter.BulkImport
                 if (bulkRequest.ImportSummary.RecordsSummary.ExistingGroups.Contains(groupData.Item1))
                 {
                     createdAccountsSummary.GroupsFailed++;
+                    createdAccountsSummary.ErrorList.Add("Group already exists, no new students or teachers will be added");
                     continue;
                 }
                 else
@@ -58,7 +60,7 @@ namespace QuickTest.Application.FileImporter.BulkImport
                     var createdGroup = new Group();
                     if (school != null)
                     {
-                        createGroupRequest.Group.School = school;
+                        createGroupRequest.Group = new Groups.GroupDto { School = school};
                         createdGroup = await _groupRepository.CreateGropuByName(groupData.Item1, school);
                         if (!bulkRequest.ImportSummary.RecordsSummary.ExistingTeacherEmails.Contains(teacher.Email))
                         {
@@ -137,6 +139,12 @@ namespace QuickTest.Application.FileImporter.BulkImport
 
                         }
                     }
+                    else
+                    {
+                        createdAccountsSummary.ErrorList.Add("Could not find school asociated with the admin. Import aborted");
+                        createdAccountsSummary.IsSuccess = false;
+                        return createdAccountsSummary;
+                    }
 
                     createGroupRequest.Group.Students = successfulStudentsCreated;
                     createGroupRequest.Group.GroupTeachers.Add(new Groups.GroupTeacherDto
@@ -154,6 +162,7 @@ namespace QuickTest.Application.FileImporter.BulkImport
                     else
                     {
                         createdAccountsSummary.GroupsFailed++;
+                        createdAccountsSummary.ErrorList.Add("Could not create group with listed students and teachers. Group name: "+ groupData.Item1);
                     }
 
                 }
