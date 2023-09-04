@@ -1,0 +1,63 @@
+<div class="h-full" *ngIf="importSummary$ | async as importSummary" style="background-color: #F0F4F7;">
+  <div class="h-full p-16">
+    <div class="flex flex-col p-8 rounded-xl bg-white shadow-lg"> 
+      
+      <div class="flex">
+        
+        <div class="flex flex-col" style="width: 100%;">
+          <span class="text-3xl mb-4 font-semibold">Import Completed!</span>
+        <span class="mb-24 font-medium">Here's a summary of your import</span>
+        <span class="text-lg font-medium mb-4">Import Information:</span>
+        <div class="flex mb-2">
+          <div class="flex flex-col mr-4">
+            <span class="mb-2">Already existing teachers:</span>
+            <span class="mb-2">Already existing students:</span>
+            
+            <span class="mb-2">Already existing groups:</span>
+            <span class="mb-2">Successful teacher loads:</span>
+            <span class="mb-2">Successful student loads:</span>
+            <span class="mb-2">Successful group loads:</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="mb-2">{{importSummary.existingTeachers || 0}}</span>
+            <span class="mb-2">{{importSummary.existingStudents || 0}}</span>
+            
+            <span class="mb-2">{{importSummary.recordsSummary?.existingGroups?.length || 0}}</span>
+            <span class="mb-2">
+              {{importSummary.importedGroupsFromFile?.successfulTeacherLoads}} / {{calculateSuccessRate(importSummary.importedGroupsFromFile?.successfulTeacherLoads, importSummary.importedGroupsFromFile?.failedTeacherLoads)}}
+            </span>
+            <span class="mb-2">
+              {{importSummary.importedGroupsFromFile?.successfulStudentLoads}} / {{calculateSuccessRate(importSummary.importedGroupsFromFile?.successfulStudentLoads, importSummary.importedGroupsFromFile?.failedStudentLoads)}}
+            </span>
+            <span class="mb-2">
+              {{importSummary.importedGroupsFromFile?.successfulGroupLoads}} / {{calculateSuccessRate(importSummary.importedGroupsFromFile?.successfulGroupLoads, importSummary.importedGroupsFromFile?.failedGroupLoads)}}
+            </span>
+            
+          </div>
+        </div>
+        </div>
+        
+        <div class="flex flex-col ml-auto">
+          <div x-data="scrollProgress" class="my-8 ml-auto inline-flex items-center justify-center rounded-full">
+            <div x-data="scrollProgress" class="my-8 ml-auto inline-flex items-center justify-center rounded-full">
+			</div>
+			
+          </div>
+          <img style="width: 22vw; height:35vh;" src="../../../../../assets/images/examResultFlag.png" alt="">
+        </div>
+      </div>
+      
+      <div class="flex mt-8 justify-between" style="width: 100%;">
+        
+        <button class="flex bg-yellow#FDC57B py-1.5 px-4 rounded-xl w-max" (click)="goBackToDashboard()">
+          <span class="font-medium">Back</span>
+        </button>
+        
+        <button class="flex bg-yellow#FDC57B py-1.5 px-4 rounded-xl w-max ml-auto" (click)="createAccounts()">
+          <span class="font-medium mr-2">Create Accounts</span>
+          <fa-icon icon="plus"></fa-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

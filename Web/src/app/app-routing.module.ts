@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteUrls } from './shared/enums/route-urls.enum';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
+import { ImportSummaryComponent } from './pages/dashboard/components/adminDashboard/components/ui/import-from-file/components/import-summary/import-summary.component';
+
 
 const routes: Routes = [
   {
@@ -68,6 +70,11 @@ const routes: Routes = [
           import("./pages/calendar/calendar.module").then(
             (m) => m.CalendarModule,
           ),
+      },
+      {
+        //canActivate: [MsalGuard],
+        path: `${RouteUrls.ImportSummary}/:importId`,
+        component: ImportSummaryComponent
       },
       {
         path: "**",

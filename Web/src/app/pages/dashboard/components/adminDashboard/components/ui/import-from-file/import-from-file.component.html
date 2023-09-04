@@ -11,7 +11,7 @@
         <img class="ml-auto mt-6" src="../../../../../../../../assets/images/setup.png" alt="">
         <button class="absolute top-0 right-0 bg-yellow#FDC57B py-1.5 px-4 rounded-xl w-max flex" type="button" (click)="fileInput.click()">
             <span class="font-medium mr-8">Import file</span>
-            <input #fileInput type="file" (change)="importFile($event)" style="display:none;" />
+            <input #fileInput type="file"  accept=".xlsx" (change)="importFile($event)" style="display:none;" />
             <fa-icon icon="file-import"></fa-icon>
         </button>
     </div>
