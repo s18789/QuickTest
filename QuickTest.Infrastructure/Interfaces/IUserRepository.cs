@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace QuickTest.Infrastructure.Interfaces
 {
-    public interface ISchoolRepository
+    public interface IUserRepository : IAsyncRepository<User>
     {
-        Task<School> GetSchoolIncludeGroups(int id);
-        Task<int> GetSchoolIdByAdministrator(User user);
-        Task<School> GetSchoolByUser(User user);
+        Task<User> GetUserByIdAsync(int userId);
     }
 }

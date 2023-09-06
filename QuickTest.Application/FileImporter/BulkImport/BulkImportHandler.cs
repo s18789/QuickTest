@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using QuickTest.Application.FileImporter.ImportSchoolData;
+using QuickTest.Application.Groups;
 using QuickTest.Application.Groups.CreateGroup;
 using QuickTest.Application.Students;
 using QuickTest.Application.Teachers;
@@ -55,7 +56,7 @@ namespace QuickTest.Application.FileImporter.BulkImport
                 {
                     var createGroupRequest = new CreateGroupRequest();
                     var school = await _schoolRepository.GetSchoolIncludeGroups(bulkRequest.SchoolId);
-                    var successfulStudentsCreated = new List<StudentDto>();
+                    var studentsToCreateGroup = new List<StudentDto>();
                     var teacherToAdd = new TeacherDto();
                     var createdGroup = new Group();
                     if (school != null)
@@ -92,6 +93,7 @@ namespace QuickTest.Application.FileImporter.BulkImport
                             }
                             else
                             {
+                                teacherToAdd = teacherResponse.AddedTeacher;
                                 createdAccountsSummary.TeacherCreationFailed++;
                                 continue;
                             }
@@ -123,7 +125,7 @@ namespace QuickTest.Application.FileImporter.BulkImport
                                     if (studentResponse.IsSuccess)
                                     {
                                         createdAccountsSummary.StudentsCreated++;
-                                        successfulStudentsCreated.Add(studentResponse.AddedStudent);
+                                        studentsToCreateGroup.Add(studentResponse.AddedStudent);
 
                                     }
                                     else
@@ -131,11 +133,19 @@ namespace QuickTest.Application.FileImporter.BulkImport
                                         createdAccountsSummary.StudentCreationFailed++;
                                     }
                                 }
+                                else
+                                {
+                                    studentsToCreateGroup.Add(_mapper.Map<StudentDto>(student));
+                                }
                             }
-                            foreach (var student in successfulStudentsCreated)
+                            foreach (var student in studentsToCreateGroup)
                             {
                                 createGroupRequest.Group.Students.Add(student);
                             }
+
+                        }
+                        else
+                        {
 
                         }
                     }
@@ -146,12 +156,15 @@ namespace QuickTest.Application.FileImporter.BulkImport
                         return createdAccountsSummary;
                     }
 
-                    createGroupRequest.Group.Students = successfulStudentsCreated;
-                    createGroupRequest.Group.GroupTeachers.Add(new Groups.GroupTeacherDto
+                    createGroupRequest.Group.Students = studentsToCreateGroup;
+                    createGroupRequest.Group.GroupTeachers = new List<GroupTeacherDto>
                     {
-                        Group = createdGroup,
-                        Teacher = _mapper.Map<Teacher>(teacherToAdd)
-                    });
+                        new Groups.GroupTeacherDto
+                        {
+                            Group = createdGroup,
+                            Teacher = _mapper.Map<Teacher>(teacherToAdd)
+                        }
+                    };
                     createGroupRequest.Group.Name = createdGroup.Name;
                     var groupResponse = await _createGroupHandler.Handle(createGroupRequest, new CancellationToken());
 

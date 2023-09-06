@@ -31,6 +31,53 @@ namespace QuickTest.Infrastructure.Repositories
             var admin = await this.context.Admins.Where(x => x.Id == user.Id).FirstOrDefaultAsync();
             return  admin == null ? 0: admin.SchoolId ?? 0;
         }
+        public async Task<School> GetSchoolByUser(User user)
+        {
+            var userRole = this.context.UserRoles.Where(x=> x.Id== user.UserRoleId).FirstOrDefault();
+            if (userRole.Name.Equals("student"))
+            {
+                var studentGroupsId = context.Students.Where(x => x.Id == user.Id).Select(y => y.GroupId).ToList();
+                var groupsForStudent = new List<Group>();
+                foreach (var id in studentGroupsId)
+                {
+                    var group = context.Groups.Where(x => x.Id== id).FirstOrDefault();
+                    groupsForStudent.Add(group);
+                }
+                var anySchool = groupsForStudent.FirstOrDefault();
+                return context.Schools.FirstOrDefault(x => x.Id == anySchool.Id)?? null;
+
+            }else if (userRole.Name.Equals("teacher"))
+            {
+                var teacherEntity = context.Teachers.FirstOrDefault(t => t.Id == user.Id);
+                if (teacherEntity != null)
+                {
+                    context.Entry(teacherEntity)
+                           .Collection(t => t.GroupTeachers)
+                           .Query()
+                           .Include(gt => gt.Group)
+                           .Load();
+                }
+
+                var anyGroup = teacherEntity.GroupTeachers.Select(gt => gt.Group).FirstOrDefault();
+                if (anyGroup == null)
+                {
+                    return null; 
+                }
+
+                return context.Schools.FirstOrDefault(s => s.Id == anyGroup.School.Id) ?? null;
+
+            }
+            else if (userRole.Name.Equals("admin"))
+            {
+                var adminSchool = GetSchoolIdByAdministrator(user);
+                return context.Schools.Where(x => x.Id == adminSchool.Id).FirstOrDefault()?? null;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
 
     }
 }
