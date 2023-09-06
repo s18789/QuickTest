@@ -26,8 +26,8 @@ public class GroupRepository : BaseRepository<Group>, IGroupRepository
 
         try
         {
-            await context.Groups.AddAsync(groupToInsert);
-            await context.SaveChangesAsync();
+            //await context.Groups.AddAsync(groupToInsert);
+            //await context.SaveChangesAsync();
         }
         catch (Exception ex)
         {
