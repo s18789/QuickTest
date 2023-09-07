@@ -1,0 +1,29 @@
+<div *ngIf="summary">
+    <div *ngIf="summary.IsSuccess; else errorTemplate">
+      <img src="../../../../../../../../assets/images/importFile.png" alt="">
+      <h2>Accounts Created Successfully!</h2>
+      <ul>
+        <li>Teachers Created: {{summary.TeachersCreated}}</li>
+        <li>Students Created: {{summary.StudentsCreated}}</li>
+        <li>Teacher Creation Failed: {{summary.TeacherCreationFailed}}</li>
+        <li>Student Creation Failed: {{summary.StudentCreationFailed}}</li>
+        <li>Groups Created: {{summary.GroupsCreated}}</li>
+        <li>Groups Failed: {{summary.GroupsFailed}}</li>
+      </ul>
+      <button (click)="goToDashboard()">Go to Dashboard</button>
+    </div>
+  
+    <ng-template #errorTemplate>
+      <img src="../../../../../../../../assets/images/pageNotFound.png" alt="">
+      <h2>We were unable to create accounts!</h2>
+      <div *ngIf="summary.GroupsFailed && summary.GroupsFailed === summary.TeachersCreated + summary.StudentsCreated + summary.TeacherCreationFailed + summary.StudentCreationFailed">
+        <ul>
+          <li *ngFor="let error of summary.ErrorList">{{error}}</li>
+        </ul>
+      </div>
+      <div *ngIf="summary.GroupsFailed !== summary.TeachersCreated + summary.StudentsCreated + summary.TeacherCreationFailed + summary.StudentCreationFailed">
+        <!-- Your stats and error list here -->
+      </div>
+      <button (click)="goToDashboard()">Go to Dashboard</button>
+    </ng-template>
+  </div>

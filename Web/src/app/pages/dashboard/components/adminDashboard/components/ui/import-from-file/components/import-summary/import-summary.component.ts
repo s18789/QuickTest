@@ -8,6 +8,7 @@ import { AdminService } from 'src/app/pages/dashboard/components/adminDashboard/
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { BulkImportRequest } from '../../models/bulkImportRequest.model';
+import { CreatedAccountsSummaryService } from '../../services/created-accounts-summary.service'; 
 
 
 @Component({
@@ -26,7 +27,8 @@ export class ImportSummaryComponent implements OnInit {
     private importIdService: ImportIdService,
     private route: ActivatedRoute,
     private adminService: AdminService, 
-    private router: Router
+    private router: Router,
+    private summaryService: CreatedAccountsSummaryService
   ) { }
 
   ngOnInit(): void {
@@ -53,7 +55,7 @@ export class ImportSummaryComponent implements OnInit {
     this.loaderService.show();
     this.importSummary$ = this.adminService.getImportSummary(importId);
     
-    debugger;
+    //debugger;
     this.importSummary$.subscribe(
       (data) => {
         this.loaderService.hide();
@@ -73,7 +75,7 @@ export class ImportSummaryComponent implements OnInit {
     const schoolIdString = localStorage.getItem('schoolId');
     const schoolId = schoolIdString ? parseInt(schoolIdString, 10) : null;
     console.log(schoolId);
-    debugger;
+    //debugger;
     
     const bulkImportRequest: BulkImportRequest = {
       ImportSummary: {
@@ -87,17 +89,18 @@ export class ImportSummaryComponent implements OnInit {
     
     this.adminService.bulkImport(bulkImportRequest).subscribe(
       (response: any) => {
-        
         if (response.IsSuccess) {
           console.log('Bulk import successful:', response);
+          this.summaryService.setSummary(response); 
+          this.router.navigate(['create-accounts-summary/create-accounts-summary']); 
         } else {
           console.error('Bulk import failed:', response.ErrorList);
-          
+          this.summaryService.setSummary(response); 
+          this.router.navigate(['create-accounts-summary/create-accounts-summary']); 
         }
       },
       (error: any) => {
         console.error('An error occurred during bulk import:', error);
-        
       }
     );
   }
