@@ -23,10 +23,12 @@ import { CompletedExamsComponent } from './components/studentDashboard/component
 import { FeedbackComponent } from './components/studentDashboard/component/ui/feedback/feedback.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ImportSummaryComponent } from './components/adminDashboard/components/ui/import-from-file/components/import-summary/import-summary.component';
+import { CreateAccountsSummaryComponent } from './components/adminDashboard/components/ui/import-from-file/components/import-summary/create-accounts-summary/create-accounts-summary.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
+    CreateAccountsSummaryComponent,
     AdvertisementComponent,
     CalendarComponent,
     CreateExamComponent,
