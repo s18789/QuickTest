@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OfficeOpenXml;
 using QuickTest.Application.Exams.CreateExam;
@@ -37,6 +38,7 @@ builder.Services.AddScoped<IStudentAnswerRepository, StudentAnswerRepository>();
 builder.Services.AddScoped<ISelectedStudentAnswerRepository, SelectedStudentAnswerRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<IPredefinedAnswerRepository, PredefinedAnswerRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<CreateUserHandler>();
 builder.Services.AddScoped<CreateGroupHandler>();
 builder.Services.AddTransient<ISchoolRepository, SchoolRepository>();
@@ -87,6 +89,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer("Server=inzynierka2023.database.windows.net;Database=QuickTest;User Id=adminqt;Password=AdminQuickTest69;"
         , b => b.MigrationsAssembly("QuickTest.Infrastructure"));
+    options.EnableSensitiveDataLogging(true);
 });
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var app = builder.Build();
