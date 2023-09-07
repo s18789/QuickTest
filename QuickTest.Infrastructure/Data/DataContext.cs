@@ -30,6 +30,7 @@ public class DataContext : DbContext
     public DbSet<PredefinedAnswer> PredefinedAnswers { get; set; }
 
     public DbSet<Group> Groups { get; set; }
+    public DbSet<GroupTeacher> GroupTeachers { get; set; }
 
     public DbSet<StudentAnswer> StudentAnswers { get; set; }
 

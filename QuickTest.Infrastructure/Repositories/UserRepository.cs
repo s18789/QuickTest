@@ -22,5 +22,22 @@ namespace QuickTest.Infrastructure.Repositories
                 .Where(u => u.Id == userId)
                 .FirstOrDefaultAsync();
         }
+        public async Task<Teacher> GetTeacherByEmailAsync(string email)
+        {
+            var user = await context.Users
+                            .AsNoTracking()
+                            .Where(u => u.Email == email)
+                            .FirstOrDefaultAsync();
+            if (user != null)
+            {
+                return await context.Teachers
+                    .AsNoTracking()
+                    .Where(t => t.Id == user.Id)
+                    .FirstOrDefaultAsync()
+                    ;
+            }
+
+            return null;
+        }
     }
 }

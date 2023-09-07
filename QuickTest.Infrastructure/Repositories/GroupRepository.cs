@@ -26,8 +26,8 @@ public class GroupRepository : BaseRepository<Group>, IGroupRepository
 
         try
         {
-            //await context.Groups.AddAsync(groupToInsert);
-            //await context.SaveChangesAsync();
+            await context.Groups.AddAsync(groupToInsert);
+            await context.SaveChangesAsync();
         }
         catch (Exception ex)
         {
@@ -35,5 +35,21 @@ public class GroupRepository : BaseRepository<Group>, IGroupRepository
         }
 
         return groupToInsert;
+    }
+    public async Task DetachThatMfcker(Group group)
+    {
+        context.Entry(group.School).State = EntityState.Unchanged;
+    }
+    public async Task AddGroupTeacher(GroupTeacher group)
+    {
+        try
+        {
+            context.GroupTeachers.AddAsync(group);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        
     }
 }

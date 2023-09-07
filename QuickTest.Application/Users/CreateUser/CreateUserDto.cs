@@ -1,4 +1,6 @@
-﻿using QuickTest.Core.Entities;
+﻿using QuickTest.Application.Groups;
+using QuickTest.Application.Users.UserRole;
+using QuickTest.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,7 @@ namespace QuickTest.Application.Users.CreateUser
         public string LastName { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }
-        public UserRole UserRole { get; set; }
+        public UserRoleDto UserRole { get; set; }
+        public GroupDto Group { get; set; }
     }
 }

@@ -27,6 +27,12 @@ public class TeacherRepository : BaseRepository<Teacher>, ITeacherRepository
             .ThenInclude(gt => gt.Group)
             .FirstOrDefaultAsync();
     }
+    public async Task<Teacher> GetTeacherWithoutGroups(int id)
+    {
+        return await this.context.Teachers
+            .Where(t => t.Id == id)
+            .FirstOrDefaultAsync();
+    }
     public async Task<bool> CheckIfTeacherExists(string email)
     {
         var userRoleId = context.UserRoles.Where(x => x.Name.Equals("teacher")).FirstOrDefault().Id;

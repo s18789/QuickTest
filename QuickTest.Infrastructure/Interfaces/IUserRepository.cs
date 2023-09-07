@@ -10,5 +10,6 @@ namespace QuickTest.Infrastructure.Interfaces
     public interface IUserRepository : IAsyncRepository<User>
     {
         Task<User> GetUserByIdAsync(int userId);
+        Task<Teacher> GetTeacherByEmailAsync(string email);
     }
 }

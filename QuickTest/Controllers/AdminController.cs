@@ -95,9 +95,12 @@ namespace QuickTest.Controllers
         [HttpPost("bulk-import")]
         public async Task<IActionResult> BulkImport([FromBody] BulkImportRequest request)
         {
-            if (request == null || request.ImportSummary == null)
+            if (request == null || request.ImportSummary == null ||
+                (request.ImportSummary.ExistingStudents== request.ImportSummary.ImportedGroupsFromFile.SuccessfulStudentLoads &&
+                request.ImportSummary.ExistingTeachers == request.ImportSummary.ImportedGroupsFromFile.SuccessfulTeacherLoads &&
+                request.ImportSummary.RecordsSummary.ExistingGroups.Count == request.ImportSummary.ImportedGroupsFromFile.SuccessfulGroupLoads))
             {
-                return BadRequest("Invalid request.");
+                return BadRequest("Invalid request or all groups are already created.");
             }
 
             var bulkImportRequest = new BulkImportHandlerRequest

@@ -43,7 +43,7 @@ public class JwtHandler
     }
     public async Task<int> GetSchoolId(User user)
     {
-        if (user.UserRole.Name != "administrator")
+        if (user.UserRoleId != 3)
         {
             return 0;
         }

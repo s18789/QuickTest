@@ -1,5 +1,8 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
+using QuickTest.Application.Students;
+using QuickTest.Application.Teachers;
 using QuickTest.Core.Entities;
 using QuickTest.Core.Entities.Enums;
 using QuickTest.Infrastructure.Interfaces;
@@ -19,15 +22,17 @@ namespace QuickTest.Application.Users.CreateUser
         private readonly IUserRoleRepository roleRepository;
         private readonly ITeacherRepository teacherRepository;
         private readonly IStudentRepository studentRepository;
+        private readonly IMapper _mapper;
 
 
-        public CreateUserHandler(UserManager<User> userManager, IEmailService emailService, IUserRoleRepository roleRepository, ITeacherRepository teacherRepository, IStudentRepository studentRepository)
+        public CreateUserHandler(IMapper mapper,UserManager<User> userManager, IEmailService emailService, IUserRoleRepository roleRepository, ITeacherRepository teacherRepository, IStudentRepository studentRepository)
         {
             this.userManager = userManager;
             this.emailService = emailService;
             this.roleRepository = roleRepository;
             this.teacherRepository = teacherRepository;
             this.studentRepository = studentRepository;
+            this._mapper = mapper;
         }
 
         public async Task<ResponseDto> Handle(CreateUserRequest request, CancellationToken cancellationToken)
@@ -45,50 +50,61 @@ namespace QuickTest.Application.Users.CreateUser
             var newStudent = new Student();
             var generatedPassword = GenerateRandomPassword();
             var isCreateSuccessful = false;
-
-            if (user.UserRole.Name == "teacher")
+            try
             {
-                newTeacher.FirstName = user.FirstName;
-                newTeacher.LastName = user.LastName;
-                newTeacher.Email = user.Email;
-                newTeacher.UserName = user.UserName;
-                newTeacher.NormalizedEmail = request.UserDto.Email.ToUpper();
-                newTeacher.UserRoleId = roleRepository.GetRoleByName("teacher").Result.Id;
+                if (user.UserRole.Name == "teacher")
+                {
+                    newTeacher.FirstName = user.FirstName;
+                    newTeacher.LastName = user.LastName;
+                    newTeacher.Email = user.Email;
+                    newTeacher.UserName = user.UserName;
+                    newTeacher.NormalizedEmail = request.UserDto.Email.ToUpper();
+                    newTeacher.UserRole = roleRepository.GetRoleByName("teacher").Result;
 
-                await this.teacherRepository.AddAsync(newTeacher);
+                    await this.teacherRepository.AddAsync(newTeacher);
 
-                var result = await userManager.AddPasswordAsync(newTeacher, generatedPassword);
-                isCreateSuccessful = result.Succeeded;
+                    var result = await userManager.AddPasswordAsync(newTeacher, generatedPassword);
+                    isCreateSuccessful = result.Succeeded;
+                }
+                else if (user.UserRole.Name == "student")
+                {
+                    newStudent.FirstName = user.FirstName;
+                    newStudent.LastName = user.LastName;
+                    newStudent.Email = user.Email;
+                    newStudent.UserName = user.UserName;
+                    newStudent.UserRole = roleRepository.GetRoleByName("student").Result;
+                    
+
+                    await this.studentRepository.AddAsync(newStudent);
+
+                    var result = await userManager.AddPasswordAsync(newStudent, generatedPassword);
+                    isCreateSuccessful = result.Succeeded;
+
+                }
+                else
+                {
+                    return new ResponseDto { IsSuccess = false, ErrorMessage = "Such role was not found, creating user failed." };
+                }
+
             }
-            else if(user.UserRole.Name == "student")
+            catch (Exception ex)
             {
-                newStudent.FirstName = user.FirstName;
-                newStudent.LastName = user.LastName;
-                newStudent.Email = user.Email;
-                newStudent.UserName = user.UserName;
-                newTeacher.UserRoleId = roleRepository.GetRoleByName("student").Result.Id;
 
-                await this.studentRepository.AddAsync(newStudent);
-
-                var result = await userManager.AddPasswordAsync(newStudent, generatedPassword);
-                isCreateSuccessful = result.Succeeded;
-
+                return new ResponseDto { IsSuccess = false, ErrorMessage = "Creating user failed. There was an exception: "+ ex.Message };
             }
-            else
-            {
-                return new ResponseDto { IsSuccess = false, ErrorMessage = "Such role was not found, creating user failed." };
-            }
+
+            
 
             
 
             if (!isCreateSuccessful)
             {
-                return new ResponseDto { IsSuccess = false, ErrorMessage = "Error creating user" };
+                return new ResponseDto { IsSuccess = false, ErrorMessage = "Error creating user"};
             }
 
             var emailResult = await emailService.SendEmailAsync(user.Email, "Your Account Password", $"Your generated password is: {generatedPassword}. Please change it upon first login.");
 
-            return new ResponseDto { IsEmailSent = true, IsSuccess = true };
+            return new ResponseDto { IsEmailSent = emailResult, IsSuccess = true, AddedStudent = _mapper.Map<StudentDto>(newStudent), AddedTeacher = _mapper.Map<TeacherDto>(newTeacher) };
         }
 
         private string GenerateRandomPassword()

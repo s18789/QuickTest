@@ -15,6 +15,7 @@ public class UserRoleRepository : BaseRepository<UserRole>, IUserRoleRepository
     public async Task<UserRole> GetRoleAsync(User user)
     {
         return await this.context.Users
+            .AsNoTracking()
             .Include(u => u.UserRole)
             .Where(u => u.Id == user.Id)
             .Select(u => u.UserRole)
@@ -23,6 +24,7 @@ public class UserRoleRepository : BaseRepository<UserRole>, IUserRoleRepository
     public async Task<UserRole> GetRoleByName(string roleName)
     {
         return await this.context.UserRoles
+            .AsNoTracking()
             .Where(ur => ur.RoleName == roleName.ToLower())
             .FirstOrDefaultAsync();
     }
@@ -30,6 +32,7 @@ public class UserRoleRepository : BaseRepository<UserRole>, IUserRoleRepository
     {
         string roleName = roleType.ToString().ToLower();
         return await this.context.UserRoles
+            .AsNoTracking()
             .Where(ur => ur.RoleName == roleName)
             .FirstOrDefaultAsync();
     }

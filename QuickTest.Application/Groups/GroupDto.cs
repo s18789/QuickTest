@@ -1,4 +1,5 @@
-﻿using QuickTest.Application.Students;
+﻿using QuickTest.Application.Schools;
+using QuickTest.Application.Students;
 using QuickTest.Application.Teachers;
 using QuickTest.Core.Entities;
 
@@ -15,6 +16,6 @@ public sealed record GroupDto
 
     public ICollection<GroupTeacherDto>? GroupTeachers { get; set; }
 
-    public School? School { get; set; }
+    public SchoolDto? School { get; set; }
 
 }

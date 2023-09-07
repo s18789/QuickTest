@@ -10,7 +10,9 @@ namespace QuickTest.Infrastructure.Interfaces
     public interface ISchoolRepository
     {
         Task<School> GetSchoolIncludeGroups(int id);
+        Task<School> GetSchoolWithoutGroups(int id);
         Task<int> GetSchoolIdByAdministrator(User user);
         Task<School> GetSchoolByUser(User user);
+        Task DetachThatMfcker(School school);
     }
 }
