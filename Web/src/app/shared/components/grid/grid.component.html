@@ -67,27 +67,28 @@
             <tr *ngFor="let item of (itemView$ | async) ?? allItems" style="height: 54px;">
               <td *ngFor="let config of configurations;let i=index">
                 <div [ngSwitch]="config.type">
-                  <!-- <div *ngSwitchCase="'input'">
-                    <input type="text" [value]="item[config.key]">
-                  </div>
-                  <div *ngSwitchCase="'image'">
-                    <img [src]="item[config.key]" alt="">
-                  </div>
-                  <div *ngSwitchCase="'button'">
-                    <button>{{ config.text }}</button>
-                  </div> -->
                   <div *ngSwitchCase="configurationItemType.enum">
-                    <span [id]="config.key" class="text-sm text-gray-500" [ngClass]="(item[config.key][config.nestedKey] || '').toString()">
+                    <span [id]="config.key" class="text-sm text-gray-500 ml-6 text-center" [ngClass]="(item[config.key] || '').toString()">
                       {{ config.enum?.[item[config.key]] || "" }}
                     </span>
                   </div>
                   <div *ngSwitchCase="configurationItemType.object">
-                    <span [id]="config.key" class="text-sm text-gray-500" [ngClass]="(item[config.key][config.nestedKey] || '').toString()">
+                    <span [id]="config.key" class="text-sm text-gray-500 pl-4 pr-3 text-left sm:pl-6" [ngClass]="(item[config.key][config.nestedKey] || '').toString()">
                       {{ item[config.key][config.nestedKey] || "" }}
                     </span>
                   </div>
+                  <div *ngSwitchCase="configurationItemType.score">
+                    <span [id]="config.key" class="text-sm text-gray-500 pl-4 pr-3 text-left sm:pl-6" [ngClass]="(item[config.key] || '').toString()">
+                      {{ item[config.key] ? (item[config.key] | number : '1.0-0') + ' %' : "" }}
+                    </span>
+                  </div>
+                  <div *ngSwitchCase="configurationItemType.date">
+                    <span [id]="config.key" class="text-sm text-gray-500 pl-4 pr-3 text-left sm:pl-6" [ngClass]="(item[config.key] || '').toString()">
+                      {{ item[config.key] | date: 'dd.MM.yyyy' || "" }}
+                    </span>
+                  </div>
                   <div *ngSwitchDefault>
-                    <span [id]="config.key" class="text-sm text-gray-500" [ngClass]="(item[config.key] || '').toString()">
+                    <span [id]="config.key" class="text-sm text-gray-500 pl-4 pr-3 text-left sm:pl-6" [ngClass]="(item[config.key] || '').toString()">
                       {{ item[config.key] || "" }}
                     </span>
                   </div>

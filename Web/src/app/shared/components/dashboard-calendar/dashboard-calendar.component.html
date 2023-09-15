@@ -26,7 +26,7 @@
           [title]="examsOnDay(day) > 0 && i - day < 8 ? getDayTitle(day) : ''"
           class="relative flex h-7 w-7 rounded-full m-auto" 
           [ngClass]="{'border-2 border-navy#07617D rounded-full' : examsOnDay(day) > 0 && i - day < 8,
-            'bg-yellow#FDC57B rounded': todayDate.getFullYear() == currentDate.getFullYear() && todayDate.getMonth() == currentDate.getMonth() && todayDate.getDate() == day+1}"
+            'bg-yellow#FDC57B rounded': todayDate.getFullYear() == currentDate.getFullYear() && todayDate.getMonth() == currentDate.getMonth() && todayDate.getDate() == day+1 && day != null && i < 15}"
           *ngFor="let day of calendar; let i = index">
           <button class="flex m-auto" [disabled]="examsOnDay(day) == 0" (click)="openExamForDay(day)"> 
             <span 

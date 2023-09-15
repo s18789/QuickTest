@@ -15,6 +15,14 @@ public class ExamRepository : BaseRepository<Exam>, IExamRepository
         return await this.context.Exams.Include(x => x.ExamResults).ToListAsync();
     }
 
+    public async Task<IEnumerable<Exam>> GetExams(User user)
+    {
+        return await this.context.Exams
+            .Include(x => x.ExamResults)
+            .Where(x => x.TeacherId == user.Id)
+            .ToListAsync();
+    }
+
     public async Task<Exam> GetExamIncludeExamResultsAndQuestions(int id)
     {
         return await this.context.Exams
@@ -78,5 +86,34 @@ public class ExamRepository : BaseRepository<Exam>, IExamRepository
             .OrderBy(e => e.AvailableTo)
             .Take(3)
             .ToListAsync();
+    }
+
+    public async Task<(int, double)> FindTheHardestQuestion(int id)
+    {
+        var exam = await this.context.Exams
+            .Include(e => e.Questions)
+                .ThenInclude(q => q.PredefinedAnswers)
+                    .ThenInclude(pa => pa.SelectedStudentAnswers)
+                        .ThenInclude(ssa => ssa.StudentAnswer)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        double minAverage = double.MaxValue;
+        int questionIndex = 0;
+
+        var i = 0;
+        foreach (var question in exam.Questions)
+        {
+            var summaryScoreForAllAnswerForQuestion = question.PredefinedAnswers.FirstOrDefault().SelectedStudentAnswers.Sum(ssa => ssa.StudentAnswer.Points);
+            var averageScoreForQuestion = summaryScoreForAllAnswerForQuestion / (question.Points * exam.ExamResults.Count()) * 100;
+            i++;
+
+            if (minAverage > averageScoreForQuestion)
+            {
+                minAverage = averageScoreForQuestion;
+                questionIndex = i;
+            }
+        }
+
+        return (questionIndex, minAverage);
     }
 }

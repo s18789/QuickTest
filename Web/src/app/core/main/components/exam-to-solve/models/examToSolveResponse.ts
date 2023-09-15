@@ -3,6 +3,8 @@ import { QuestionType } from "src/app/shared/enums/questionType.enum";
 export interface ExamToSolveResponse {
     examResultId: string,
     title: string,
+    startDate: Date,
+    finishDate: Date,
     questions: QuestionResponse[],
 }
 

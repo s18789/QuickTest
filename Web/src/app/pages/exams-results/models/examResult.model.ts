@@ -13,6 +13,22 @@ export interface ExamResult {
   percentageResult?: number,
 }
 
+export interface ExamsResults {
+  lastCompleted: LastCompletedExam,
+  studentAverage: number,
+  best: number,
+  average: number,
+  worst: number,
+  examsResultsGridItems: ExamResultGridModel[],
+}
+
+export interface LastCompletedExam {
+  title: string,
+  completionDate: Date,
+  score: number,
+  comparisonToOthers: number,
+}
+
 export interface ExamResultGridModel extends Entity {
   examName: string,
   status: ExamResultStatus,

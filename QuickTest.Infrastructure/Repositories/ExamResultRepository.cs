@@ -30,16 +30,19 @@ public class ExamResultRepository : BaseRepository<ExamResult>, IExamResultRepos
             .FirstOrDefaultAsync();
     }
 
-    public async Task StartExamTime(int examResultId)
+    public async Task<ExamResult> StartExam(ExamResult examResult)
     {
-        var examResult = await this.context.ExamResults
-            .Where(x => x.Id == examResultId)
-            .FirstOrDefaultAsync();
-
+        var examDurationMilisecords = examResult.Exam.Time * 60000;
+        var startExamTime = DateTime.Now;
+        var finishExamTime = startExamTime.AddMilliseconds(examDurationMilisecords);
+        
         examResult.StartExamTime = DateTime.Now;
+        examResult.FinishExamTime = finishExamTime;
 
         this.context.ExamResults.Update(examResult);
         await this.context.SaveChangesAsync();
+
+        return examResult;
     }
 
     public async Task<ExamResult> GetExamResultById(int examResultId)
@@ -159,6 +162,45 @@ public class ExamResultRepository : BaseRepository<ExamResult>, IExamResultRepos
             .Where(er => er.Exam.AvailableTo > DateTime.Now)
             .OrderBy(er => er.Exam.AvailableTo)
             .Take(3)
+            .ToListAsync();
+    }
+
+    public async Task<double?> GetExamAverageScore(int examId)
+    {
+        return await this.context.ExamResults
+            .Where(er => er.ExamId == examId)
+            .Where(er => er.Score != null)
+            .AverageAsync(x => x.Score);
+    }
+
+    public async Task<double?> GetStudentAverageScore(int studentId)
+    {
+        var zzz = await this.context.ExamResults
+            .Include(er => er.Exam)
+            .Where(er => er.StudentId == studentId)
+            .Where(er => er.Score != null)
+            .ToListAsync();
+
+        return await this.context.ExamResults
+            .Include(er => er.Exam)
+            .Where(er => er.StudentId == studentId)
+            .Where(er => er.Score != null)
+            .Select(er => er.Score / er.Exam.MaxPoints * 100)
+            .AverageAsync();
+    }
+
+    public async Task<IEnumerable<Tuple<int, double?>>> GetGroupStudentsAverageScore(int studentId)
+    {
+        var student = await this.context.Students.SingleAsync(x => x.Id == studentId);
+
+        return await this.context.ExamResults
+            .Include(er => er.Student)
+            .Include(er => er.Exam)
+            .Where(x => x.Student.GroupId == student.GroupId)
+            .Where(x => x.Score != null)
+            .GroupBy(
+                x => x.StudentId,
+                (key, value) => new Tuple<int, double?> (key,  value.Select(er => er.Score / er.Exam.MaxPoints * 100).Average()))
             .ToListAsync();
     }
 }

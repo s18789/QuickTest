@@ -5,4 +5,5 @@ export interface ActionConfiguration {
     propertyName?: string,
     type?: ConfigurationItemType,
     nestedPropertyName?: string,
+    enumType?: any
 }

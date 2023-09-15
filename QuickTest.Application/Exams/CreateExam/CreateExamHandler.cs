@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using QuickTest.Application.Services;
 using QuickTest.Core.Entities;
+using QuickTest.Core.Entities.Enums;
 using QuickTest.Infrastructure.Interfaces;
 
 namespace QuickTest.Application.Exams.CreateExam;

@@ -4,7 +4,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, tap } from 'rxjs';
 import { Api } from 'src/app/shared/utils/api';
 import { AuthDataModel } from '../models/authDataModel';
-import { AuthResponseDto } from '../models/authResponseDto';
+import { AuthResponseDto, UserInfoResponse } from '../models/authResponseDto';
 import { AuthServiceInterface } from '../models/authServiceInterface';
 import { Router } from '@angular/router';
 
@@ -68,6 +68,14 @@ export class AuthService implements AuthServiceInterface {
         localStorage.setItem('schoolId', response.schoolId.toString());
       })
     );
+  }
+
+  changePassword(newPassword: string): Observable<boolean> {
+    return this.http.post<boolean>(`${this.apiUrl}/ChangePassword`, { newPassword: newPassword });
+  }
+
+  getUserInfo(): Observable<UserInfoResponse> {
+    return this.http.get<UserInfoResponse>(`${this.apiUrl}/GetUserProfileInfo`)
   }
 
   logOut(): void {

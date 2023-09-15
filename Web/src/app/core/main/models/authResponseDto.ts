@@ -5,3 +5,11 @@ export interface AuthResponseDto {
   userId: string,
   schoolId: number
 }
+
+export interface UserInfoResponse {
+  userId: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  userName: string
+}
