@@ -6,24 +6,31 @@ public sealed record ExamDto
 {
     public int Id { get; init; }
 
-    public string Name { get; init; }
+    public string Title { get; init; }
 
     public ExamStatus Status { get; init; }
 
-    public string Category { get; init; }
-
-    public int QuestionNumber { get; init; }
+    public int QuestionsCount { get; init; }
 
     public DateTime AvailableFrom { get; init; }
 
     public DateTime AvailableTo { get; init; }
 
-    public int Time { get; init; }
+    public double? Average { get; init; }
+
+    public QuestionDto HardQuestion { get; set; }
 
     public IEnumerable<ExamResultDto> ExamResults { get; init; }
 }
 
-public sealed record ExamResultDto
+public sealed record QuestionDto
+{
+    public int Index { get; init; }
+
+    public double Average { get; init; }
+}
+
+    public sealed record ExamResultDto
 {
     public int? Id { get; init; }
 

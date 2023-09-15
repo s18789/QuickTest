@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { tap } from 'rxjs';
@@ -8,18 +8,21 @@ import { ExamPreviewType } from './enums/examPreviewType.enum';
 import { ExamsResultsService } from 'src/app/pages/exams-results/services/exams-results.service';
 import { CheckedExam } from './models/examPreview.model';
 import { LoaderService } from '../../services/loaderService.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-exam-preview',
   templateUrl: './exam-preview.component.html',
   styleUrls: ['./exam-preview.component.css']
 })
-export class ExamPreviewComponent implements OnInit {
+export class ExamPreviewComponent implements OnChanges {
   @Input() examPreviewForm: FormGroup;
   @Input() previewType: ExamPreviewType;
+  @Input() finishExamTime: Date;
 
   currentQuestion: number = 0;
   ExamPreviewType = ExamPreviewType;
+  intervalId: any;
 
   constructor(
     private router: Router,
@@ -27,10 +30,29 @@ export class ExamPreviewComponent implements OnInit {
     private examSolveService: ExamSolveService,
     private examsResultsService: ExamsResultsService,
     private examToSolveMapperService: ExamToSolveMapperService,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private notificationService: NotificationService,
   ) { }
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    const finishTime = changes['finishExamTime']?.currentValue;
+
+    if (!finishTime) {
+      return;
+    }
+
+    this.intervalId = setInterval(() => {
+      let now = new Date().getTime();
+      let distance = new Date(finishTime).getTime() - now;
+
+      if (distance > 0) {
+        debugger;
+        return;
+      }
+
+      debugger;
+      this.onSubmit(this.examPreviewForm);
+    }, 1000);
   }
 
   nextQuestion() {
@@ -42,12 +64,15 @@ export class ExamPreviewComponent implements OnInit {
   }
 
   onSubmit(target: any) {
+    clearInterval(this.intervalId);
+    debugger
     var resolvedExam = this.examToSolveMapperService.mapExamToSolveToResolvedExam(this.examSolveService.examResultId, target.value);
 
     this.loaderService.show();
     this.examSolveService.finishExam(resolvedExam).pipe(
       tap(() => this.examSolveService.removeStorage()),
       tap(() => this.loaderService.hide()),
+      tap(() => this.notificationService.showSuccess("Exam successfully completed.")),
       tap(() => this.router.navigate(['./examsResults'])),
     ).subscribe();
   }

@@ -12,6 +12,22 @@ export interface ExamResultResponse {
   endTime?: Date
 }
 
+export interface ExamsResultsResponse {
+  lastCompleted: LastCompletedExamResponse,
+  studentAverage: number,
+  best: number,
+  average: number,
+  worst: number,
+  examsResultsGridItems: ExamResultGridModelResponse[],
+}
+
+export interface LastCompletedExamResponse {
+  title: string,
+  completionDate: Date,
+  score: number,
+  comparisonToOthers: number,
+}
+
 export interface ExamResultGridModelResponse extends Entity {
   examName: string,
   status: ExamResultStatus,

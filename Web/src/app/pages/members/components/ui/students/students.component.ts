@@ -14,10 +14,9 @@ export class StudentsComponent {
   @Input() students!: Student[];
 
   configurations: GridItemConfiguration[] = [
-    { displayName: "", key: "", styles: "w-5/100" },
     { displayName: "First name", key: "firstName", styles: "w-1/5" },
     { displayName: "Last name", key: "lastName", styles: "w-1/5" },
-    { displayName: "E-mail", key: "email", styles: "w-35/100" },
+    { displayName: "E-mail", key: "email", styles: "w-4/10" },
     { displayName: "Group", type: ConfigurationItemType.object, nestedKey: "name", key: "group", styles: "w-15/100" }
   ];
 

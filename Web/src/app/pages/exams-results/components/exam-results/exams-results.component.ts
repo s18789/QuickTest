@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ExamsResultsService } from '../../services/exams-results.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, map, tap } from 'rxjs';
-import { ExamResultGridModel } from '../../models/examResult.model';
+import { ExamResultGridModel, ExamsResults } from '../../models/examResult.model';
 import { ExamResultMapperService } from '../../services/examResultMapper.service';
 import { ActionConfiguration } from '../../../../shared/utils/model/actionConfiguration.model';
 import { GridItemConfiguration } from '../../../../shared/utils/model/GridConfiguration.model';
@@ -18,17 +18,17 @@ import { LoaderService } from 'src/app/shared/services/loaderService.service';
 export class ExamsResultsComponent implements OnInit {
   private readonly studentId: string = this.route.snapshot.params["id"];
 
-  examsResults: Observable<ExamResultGridModel[]>;
+  examsResults: Observable<ExamsResults>;
 
   configurations: GridItemConfiguration[] = [
     { displayName: "Exam name", key: "examName", styles: "w-50/100" },
     { displayName: "Status", key: "status", type: ConfigurationItemType.enum, enum: ExamResultStatus, styles: "w-15/100" },
-    { displayName: "Points", key: "score", styles: "w-15/100" },
-    { displayName: "Ending date", key: "endingDate", styles: "w-15/100" }
+    { displayName: "Score", key: "score", type: ConfigurationItemType.score, styles: "w-15/100" },
+    { displayName: "Valid to", key: "endingDate", type: ConfigurationItemType.date, styles: "w-15/100" }
   ];
 
   searchConfiguration: ActionConfiguration = { propertyName: 'examName' };
-  filterConfiguration: ActionConfiguration = { propertyName: 'examName' };
+  filterConfiguration: ActionConfiguration = { propertyName: 'status', type: ConfigurationItemType.enum, enumType: ExamResultStatus, };
 
   constructor(
     private route: ActivatedRoute,
@@ -41,12 +41,11 @@ export class ExamsResultsComponent implements OnInit {
     this.examsResults = this.getExamsResults();
   }
 
-  getExamsResults(): Observable<ExamResultGridModel[]> {
+  getExamsResults(): Observable<ExamsResults> {
     this.loaderService.show();
     return this.examsResultsService.getExamsResults(this.studentId).pipe(
       map((examResults) =>
-        examResults.map((examResult) =>
-          this.examResultMapperService.mapExamResultGridModelResponseToExamResultGridModel(examResult))),
+          this.examResultMapperService.mapExamResultGridModelResponseToExamResultGridModel(examResults)),
       tap(() => this.loaderService.hide()),
     );
   }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Api } from 'src/app/shared/utils/api';
 import { ExamResultDto } from '../../../core/main/components/exam-to-solve/models/examResultDto.model';
 import { ExamResult } from '../models/examResult.model';
-import { ExamResultGridModelResponse } from '../models/examResultResponse';
+import { ExamResultGridModelResponse, ExamsResultsResponse } from '../models/examResultResponse';
 import { ExamPreviewResponse } from 'src/app/shared/components/exam-preview/models/examPreviewResponse.model';
 import { CheckedExam } from 'src/app/shared/components/exam-preview/models/examPreview.model';
 import { CompletedExamResponse, ExamToResolveResponse } from '../../dashboard/components/studentDashboard/models/examResponse.model';
@@ -29,13 +29,13 @@ export class ExamsResultsService {
     return this.http.get(this.apiUrl, { params: params })
   }
 
-  getExamsResults(studentId?: string): Observable<ExamResultGridModelResponse[]> {
+  getExamsResults(studentId?: string): Observable<ExamsResultsResponse> {
     var userId = studentId
       ? studentId
       : <string>localStorage.getItem('userId');
 
     var params = new HttpParams().set("studentId", userId);
-    return this.http.get<ExamResultGridModelResponse[]>(this.apiUrl, { params: params })
+    return this.http.get<ExamsResultsResponse>(this.apiUrl, { params: params })
   }
 
   get(id: string): Observable<ExamResult> {

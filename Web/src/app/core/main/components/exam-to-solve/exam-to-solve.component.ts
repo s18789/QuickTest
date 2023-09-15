@@ -15,6 +15,7 @@ import { ExamPreviewType } from 'src/app/shared/components/exam-preview/enums/ex
 export class ExamToSolveComponent implements OnInit {
   examToSolveForm$: Observable<FormGroup<ExamToSolveForm>>
   ExamPreviewType = ExamPreviewType;
+  finishExamTime: Date;
 
   constructor(
     private examSolveService: ExamSolveService,
@@ -28,6 +29,7 @@ export class ExamToSolveComponent implements OnInit {
   getExamToSolveForm(): Observable<FormGroup<ExamToSolveForm>> {
     return this.examSolveService.startExam().pipe(
       map((examToSolveResponse: ExamToSolveResponse) => this.examToSolveMapperService.mapExamToSolveResponseToExamToSolve(examToSolveResponse)),
+      tap((examToSolve: ExamToSolve) => this.finishExamTime = examToSolve.finishDate),
       map((examToSolve: ExamToSolve) => this.examToSolveMapperService.mapExamToSolveToExamToSolveFormGroup(examToSolve))
     );
   }

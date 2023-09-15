@@ -21,13 +21,13 @@ export class ExamsComponent implements OnInit {
   configurations: GridItemConfiguration[] = [
     { displayName: "Exam name", key: "title", styles: "w-35/100" },
     { displayName: "Status", key: "status", type: ConfigurationItemType.enum, enum: ExamStatus, styles: "w-15/100" },
-    { displayName: "Class", key: "class", styles: "w-15/100" },
-    { displayName: "Completed exams", key: "completedExams", styles: "w-15/100" },
-    { displayName: "Ending date", key: "endingDate", styles: "w-15/100" }
+    { displayName: "Completed", key: "completedExams", styles: "w-15/100" },
+    { displayName: "Valid from", key: "availableFrom", type: ConfigurationItemType.date, styles: "w-15/100"},
+    { displayName: "Valid to", key: "availableTo", type: ConfigurationItemType.date, styles: "w-15/100" },
   ];
 
   searchConfiguration: ActionConfiguration = { propertyName: 'title' };
-  filterConfiguration: ActionConfiguration = { propertyName: 'class' };
+  filterConfiguration: ActionConfiguration = { propertyName: 'status', type: ConfigurationItemType.enum, enumType: ExamStatus };
 
   constructor(
     private examsService: ExamsService,

@@ -6,5 +6,6 @@ export enum RouteUrls {
   Pricing = "pricing",
   Teachers = "teachers",
   Calendar = "calendar",
-  ImportSummary = "import-summary"
+  ImportSummary = "import-summary",
+  Profile = "profile",
 }

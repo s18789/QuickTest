@@ -1,15 +1,110 @@
-<div class="flex flex-col mx-20 py-12 gap-8">
+<div *ngIf="examsResults | async as examsResults" class="flex flex-col mx-20 py-12 gap-8">
   <span class="text-4xl font-semibold text-gray-900">Student exams</span>
-  <div class="flex gap-6 mb-4 w-full">
-    <app-latest-exam class="w-1/3"></app-latest-exam>
-    <app-average-stats class="w-5/12"></app-average-stats>
-    <app-others-stats class="w-1/4"></app-others-stats>
+  <div class="frame flex gap-6 mb-4 w-full rounded-xl">
+    <div class="flex flex-col bg-lightYellow pt-6 pl-8 pr-4 pb-2 rounded-l-xl">
+      <span class="text-xl font-semibold mb-4">Completed</span>
+      <div class="flex flex-col mb-1">
+        <span class="text-sm text-gray-400">title</span>
+        <span class="text-gray-700 font-medium">{{examsResults.lastCompleted.title}}</span>
+      </div>
+      <div class="flex mt-auto gap-16">
+        <div class="flex flex-col w-1/2 gap-1">
+          <div class="flex flex-col">
+            <span class="text-sm text-gray-400">completion date</span>
+            <span class="text-gray-700 font-medium">{{examsResults.lastCompleted.completionDate}}</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-sm text-gray-400">comparison to others</span>
+            <div class="flex space-x-1">
+                <span *ngIf="examsResults.lastCompleted.comparisonToOthers == 0" class="text-gray-700 font-medium">---</span>
+                <span *ngIf="examsResults.lastCompleted.comparisonToOthers != 0" class="text-gray-700 font-medium">{{examsResults.lastCompleted.comparisonToOthers | number : '1.0-0'}} %</span>
+                <fa-icon *ngIf="examsResults.lastCompleted.comparisonToOthers > 0" class="text-sm my-auto text-green-600" icon="arrow-up-long"></fa-icon>
+                <fa-icon *ngIf="examsResults.lastCompleted.comparisonToOthers < 0" class="text-sm my-auto text-red-600" icon="arrow-down-long"></fa-icon>
+            </div>
+          </div>
+        </div>
+        <div class="h-full relative flex gap-2">
+          <div class="mt-auto ml-auto h-1 w-5" [ngClass]="examsResults.lastCompleted.score > 12.5 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-4 w-5" [ngClass]="examsResults.lastCompleted.score > 25 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-8 w-5" [ngClass]="examsResults.lastCompleted.score > 37.5 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-12 w-5" [ngClass]="examsResults.lastCompleted.score > 50 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-16 w-5" [ngClass]="examsResults.lastCompleted.score > 62.5 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-20 w-5" [ngClass]="examsResults.lastCompleted.score > 75 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="mt-auto ml-auto h-24 w-5" [ngClass]="examsResults.lastCompleted.score > 87.5 ? 'bg-yellow#FDC57B' : 'bg-gray-200'"></div>
+          <div class="absolute top-0 left-0 flex flex-col">
+            <span class="text-sm text-gray-400">score</span>
+            <span class="text-gray-700 font-medium">{{examsResults.lastCompleted.score | number : '1.0-0'}} %</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-1 flex flex-col p-4">
+      <span class="text-xl font-semibold mb-4">Average</span>
+      <div class="flex gap-8">
+        <span class="text-sm text-gray-500 w-1/3">Your results, on average, exceed those of others. keep it up!</span>
+        <div class="relative">
+          <svg width="160" height="160" viewBox="0 0 160 160" style="transform: rotate(-90deg)">
+            <circle r="70" cx="80" cy="80" fill="transparent" stroke="#e0e0e0" stroke-width="20px"></circle>
+            <circle r="70" cx="80" cy="80" fill="transparent" stroke="#07617D" stroke-width="20px" [attr.stroke-dasharray]="2*3.14*70" [attr.stroke-dashoffset]="2*3.14*70*((100-examsResults.studentAverage)/100)"></circle>
+          </svg>
+          <span class="absolute text-navy#07617D font-semibold text-3xl top-16 left-12">{{examsResults.studentAverage | number : '1.0-0' }} %</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col ml-auto mr-4 pb-4 bg-blue#E9F7FA">
+      <span class="text-xl font-semibold pt-4 pl-4 mb-2 text-navy#07617D">Others</span>
+      <div class="flex px-4 py-1.5 bg-navy#07617D gap-20">
+        <div class="flex flex-col gap-1">
+          <span class="text-sm font-medium text-white">the best</span>
+          <div class="flex ml-2">
+            <svg-icon
+              class="my-auto mr-1"
+              [src]="examsResults.studentAverage - examsResults.best > 0
+                ? '../../../../../../../../../assets/Icons/increase.svg'
+                : '../../../../../../../../../assets/Icons/decrease.svg'"
+              ></svg-icon>
+              <span class="text-sm font-medium text-white">{{examsResults.studentAverage - examsResults.best | number : '1.0-0'}} %</span>
+          </div>
+        </div>
+        <span class="ml-auto text-2xl my-auto font-semibold text-white">{{examsResults.best | number : '1.0-0'}} %</span>
+      </div>
+      <div class="flex px-4 py-1.5 gap-20">
+        <div class="flex flex-col gap-1">
+          <span class="text-sm font-medium text-gray-700">average</span>
+          <div class="flex ml-2">
+            <svg-icon
+              class="my-auto mr-1"
+              [src]="examsResults.studentAverage - examsResults.average > 0
+                ? '../../../../../../../../../assets/Icons/increase.svg'
+                : '../../../../../../../../../assets/Icons/decrease.svg'"
+              ></svg-icon>
+              <span class="text-sm font-medium text-gray-700">{{examsResults.studentAverage - examsResults.average | number : '1.0-0'}} %</span>
+          </div>
+        </div>
+        <span class="ml-auto text-2xl my-auto font-semibold text-gray-700">{{examsResults.average | number : '1.0-0'}} %</span>
+      </div>
+      <div class="flex px-4 py-1.5 bg-navy#07617D gap-20">
+        <div class="flex flex-col gap-1">
+          <span class="text-sm font-medium text-white">the worste</span>
+          <div class="flex ml-2">
+            <svg-icon
+              class="my-auto mr-1"
+              [src]="examsResults.studentAverage - examsResults.worst > 0
+                ? '../../../../../../../../../assets/Icons/increase.svg'
+                : '../../../../../../../../../assets/Icons/decrease.svg'"
+              ></svg-icon>
+              <span class="text-sm font-medium text-white">{{examsResults.studentAverage - examsResults.worst | number : '1.0-0'}} %</span>
+          </div>
+        </div>
+        <span class="ml-auto text-2xl my-auto font-semibold text-white">{{examsResults.worst | number : '1.0-0'}} %</span>
+      </div>
+    </div>
   </div>
   <app-grid #grid
     [searchPlaceholder]="'Enter exam title'"
     [searchConfiguration]="searchConfiguration"
     [filterConfiguration]="filterConfiguration"
     [configurations]="configurations"
-    [allItems]="examsResults | async"
+    [allItems]="examsResults.examsResultsGridItems"
     [routerName]="'../../examsResults/examResult'"></app-grid>
 </div>

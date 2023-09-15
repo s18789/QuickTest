@@ -13,6 +13,7 @@ import { ConfirmationDialogType } from '../../enums/confirmationDialogType.enum'
 import { ConfirmationDialogActionType } from '../../enums/confirmationDialogActionType.enum';
 import { ExamSolveService } from 'src/app/core/main/services/examSolveService.service';
 import { ExamResultStatus } from 'src/app/pages/exams-results/enums/examResultStatus.enum';
+import { ExamStatus } from 'src/app/pages/exams/enums/examStatus.enum';
 
 @Component({
   selector: 'app-grid',
@@ -137,9 +138,14 @@ export class GridComponent {
   }
 
   getPropertyBasedOnType(item: any, property: ActionConfiguration): string {
-    return property?.type == ConfigurationItemType.object
-      ? item[property.propertyName][property.nestedPropertyName]
-      : item[property.propertyName];
+    switch (property?.type) {
+      case ConfigurationItemType.object:
+        return item[property.propertyName][property.nestedPropertyName];
+      case ConfigurationItemType.enum:
+        return property.enumType[item[property.propertyName]];
+      default:
+        return item[property.propertyName];
+    }
   }
 
   handleAction(item: any) {

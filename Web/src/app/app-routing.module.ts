@@ -73,6 +73,14 @@ const routes: Routes = [
       },
       {
         //canActivate: [MsalGuard],
+        path: RouteUrls.Profile,
+        loadChildren: () =>
+          import("./pages/profile/profile.module").then(
+            (m) => m.ProfileModule,
+          ),
+      },
+      {
+        //canActivate: [MsalGuard],
         path: `${RouteUrls.ImportSummary}/:importId`,
         component: ImportSummaryComponent
       },

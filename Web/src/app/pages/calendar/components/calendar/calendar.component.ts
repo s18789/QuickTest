@@ -32,7 +32,7 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
     this.currentDate = new Date();
     this.getCalendarExams().pipe(
-      tap((response) => {debugger;this.exams = response})
+      tap((response) => {this.exams = response})
     ).subscribe();
     this.initCalendarForMonth();
   }
