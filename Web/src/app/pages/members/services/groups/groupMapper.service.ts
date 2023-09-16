@@ -12,6 +12,7 @@ export class GroupMapperService {
   mapGroupResponseToGroup(groupResponse: GroupResponse): Group {
     return {
       ...groupResponse,
+      id: null,
     };
   }
 }

@@ -35,7 +35,7 @@ public class GetExamHandler : IRequestHandler<GetExamRequest, ExamDto>
                 Email = er.Student.Email,
                 Status = this.GetExamResultStatus(er, exam.Questions),
                 FinishTime = er.FinishExamTime,
-                Score = er.Score
+                Score = er.Score / exam.MaxPoints * 100,
             }).OrderBy(er => er.Status).ThenBy(er => er.Score)
         };
 

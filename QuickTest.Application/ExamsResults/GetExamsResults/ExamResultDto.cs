@@ -30,7 +30,7 @@ public sealed record LastCompletedDto
 
 public sealed record ExamResultGridItemDto
 {
-    public int Id { get; init; }
+    public int? Id { get; init; }
 
     public string ExamName { get; init; }
 
