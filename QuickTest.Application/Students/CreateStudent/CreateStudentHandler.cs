@@ -15,35 +15,26 @@ public class CreateStudentHandler : IRequestHandler<CreateStudentRequest, Respon
 
     private readonly IStudentRepository studentRepository;
     private readonly IEmailService emailService;
-    private readonly IUserRoleRepository roleRepository;
     private readonly UserManager<User> userManager;
-    private readonly IMapper mapper;
-    private readonly IGroupRepository groupRepository;
 
-    public CreateStudentHandler(IStudentRepository studentRepository, UserManager<User> userManager, IMapper mapper, IEmailService emailService, IUserRoleRepository userRoleRepository, IGroupRepository groupRepository)
+    public CreateStudentHandler(IStudentRepository studentRepository, UserManager<User> userManager, IEmailService emailService)
     {
         this.studentRepository = studentRepository;
         this.userManager = userManager;
         this.emailService = emailService;
-        this.roleRepository = userRoleRepository;
-        this.mapper = mapper;
-        this.groupRepository = groupRepository;
     }
 
     public async Task<ResponseDto> Handle(CreateStudentRequest request, CancellationToken cancellationToken)
     {
-        var ur = await this.roleRepository.GetRoleByType(RoleType.STUDENT);
-        var g = await this.groupRepository.GetByIdAsync(request.Student.Group.Id);
-
         var student = new Student
         {
             FirstName = request.Student.FirstName,
             LastName = request.Student.LastName,
             UserName = request.Student.Email.Split('@')[0],
             Email = request.Student.Email,
-            NormalizedEmail = request.Student.Email,
-            Group = g,
-            UserRole = ur,
+            NormalizedEmail = request.Student.Email.ToUpper(),
+            GroupId = request.Student.Group.Id,
+            UserRoleId = (int)RoleType.STUDENT,
             Index = this.studentRepository.GenerateStudentIndex().Result,
         };
 
@@ -59,11 +50,8 @@ public class CreateStudentHandler : IRequestHandler<CreateStudentRequest, Respon
         var generatedPassword = UserUtilities.GenerateRandomPassword();
         await this.userManager.AddPasswordAsync(student, generatedPassword);
 
-
         var emailResult = await emailService.SendEmailAsync(student.Email, "Your Account Password", $"Your generated password is: {generatedPassword}. Please change it upon first login.");
 
-        
-
-        return new ResponseDto { IsEmailSent = emailResult, IsSuccess= true, AddedStudent = mapper.Map<StudentDto>(student), AddedTeacher = null};
+        return new ResponseDto { IsEmailSent = emailResult, IsSuccess= true, AddedStudent = new StudentDto { Id = student.Id }, AddedTeacher = null};
     }
 }

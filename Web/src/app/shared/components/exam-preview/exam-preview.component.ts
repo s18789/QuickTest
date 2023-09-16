@@ -46,11 +46,9 @@ export class ExamPreviewComponent implements OnChanges {
       let distance = new Date(finishTime).getTime() - now;
 
       if (distance > 0) {
-        debugger;
         return;
       }
 
-      debugger;
       this.onSubmit(this.examPreviewForm);
     }, 1000);
   }
@@ -65,7 +63,6 @@ export class ExamPreviewComponent implements OnChanges {
 
   onSubmit(target: any) {
     clearInterval(this.intervalId);
-    debugger
     var resolvedExam = this.examToSolveMapperService.mapExamToSolveToResolvedExam(this.examSolveService.examResultId, target.value);
 
     this.loaderService.show();

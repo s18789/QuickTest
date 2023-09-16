@@ -41,7 +41,6 @@ export class ProfileComponent implements OnInit {
   
         this.authService.changePassword(newPassword).pipe(
           tap((response: Boolean) => {
-            debugger;
             if(response)
               this.notificationService.showSuccess("Password changed successfully.");
           })
