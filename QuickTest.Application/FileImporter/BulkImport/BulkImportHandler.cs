@@ -55,6 +55,7 @@ namespace QuickTest.Application.FileImporter.BulkImport
             createdAccountsSummary.ErrorList = new List<string>();
             HashSet<string> existingGroups = new HashSet<string>();
             HashSet<string> distinctStudents = new HashSet<string>();
+            var alreadyAddedGroups = new HashSet<string>();
             foreach (var groupData in bulkRequest.ImportSummary.ImportedGroupsFromFile.ImportedGroups)
             {
                 var teacher = _mapper.Map<TeacherDto>(groupData.Item2);
@@ -177,7 +178,7 @@ namespace QuickTest.Application.FileImporter.BulkImport
                     createGroupRequest.Group=createdGroup;
                     //_schoolRepository.DetachThatMfcker(createGroupRequest.Group.School);
                     var groupResponse = await _createGroupHandler.HandleGroupTeacher(createGroupRequest, new CancellationToken());
-                    var alreadyAddedGroups = new HashSet<string>();
+                    
 
                     if (groupResponse != null)
                     {
