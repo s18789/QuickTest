@@ -31,10 +31,9 @@ export class MembersComponent implements OnInit {
   groups$: Observable<GroupGridModel[]>;
 
   studentsGridConfigurations: GridItemConfiguration[] = [
-    { displayName: "", key: "", styles: "w-5/100" },
     { displayName: "First name", key: "firstName", styles: "w-1/5" },
     { displayName: "Last name", key: "lastName", styles: "w-1/5" },
-    { displayName: "E-mail", key: "email", styles: "w-35/100" },
+    { displayName: "E-mail", key: "email", styles: "w-4/10" },
     { displayName: "Group", type: ConfigurationItemType.object, key: "group", nestedKey:"name", styles: "w-15/100" }
   ];
 
@@ -47,7 +46,7 @@ export class MembersComponent implements OnInit {
 
   groupGridConfigurations = [
     { displayName: "Name", key: "name", styles: "w-3/5" },
-    { displayName: "Students", key: "allStudents", styles: "w-35/100" },
+    { displayName: "Students", key: "studentsCount", styles: "w-35/100" },
   ];
 
   groupsSearchConfiguration: ActionConfiguration = { propertyName: 'name' };
@@ -103,9 +102,6 @@ export class MembersComponent implements OnInit {
   getGroups(): Observable<any[]> {
     this.loaderService.show();
     return this.groupService.getGroups().pipe(
-      map((groups) =>
-        groups.map((group) =>
-          this.groupMapperService.mapGroupResponseToGroup(group))),
       tap(() => this.loaderService.hide()),
     );
   }

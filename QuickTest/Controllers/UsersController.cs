@@ -33,10 +33,11 @@ public class UsersController : ControllerBase
 
         return Ok(response);
     }
+
     [HttpGet("GetUserProfileInfo")]
-    public async Task<IActionResult> GetUserInfoAndSchool(int id)
+    public async Task<IActionResult> GetUserInfoAndSchool()
     {
-        var response = await this.mediator.Send(new GetUserProfileInfoRequest() { UserId = id });
+        var response = await this.mediator.Send(new GetUserProfileInfoRequest());
 
         if (response == null)
         {
@@ -45,6 +46,7 @@ public class UsersController : ControllerBase
 
         return Ok(response);
     }
+
     [HttpPost("ChangePassword")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
     {

@@ -85,7 +85,7 @@ export class DashboardCalendarComponent implements OnInit {
 
   openExamForDay(day: number): void {
     const examsOnDay = this.exams.filter(e => e.dayOfMonth == day);
-    debugger;
+    
     if (examsOnDay.length == 1) {
       if(!examsOnDay.at(0).id) {
         return;

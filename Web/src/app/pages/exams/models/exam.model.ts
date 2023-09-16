@@ -3,15 +3,19 @@ import { ExamResultStatus } from "../../exams-results/enums/examResultStatus.enu
 import { ExamStatus } from "../enums/examStatus.enum"
 
 export interface Exam extends Entity {
-  name: string,
+  title: string,
   status: ExamStatus,
-  category: string,
-  questionNumber: number,
+  questionsCount: number,
   availableFrom: Date,
   availableTo: Date,
-  time: number,
-  completedExams: number,
+  average?: number,
+  hardQuestion?: Question,
   examResults: ExamResult[]
+}
+
+export interface Question {
+  index: number,
+  average: number,
 }
 
 export interface ExamResult extends Entity {
@@ -23,9 +27,9 @@ export interface ExamResult extends Entity {
 }
 
 export interface ExamListItem extends Entity {
-  class: string,
+  title: string,
+  status: ExamStatus,
   completedExams: string,
-  endingDate: string,
-  examName: string,
-  status: ExamStatus
+  availableFrom: Date,
+  availableTo: Date,
 }

@@ -61,8 +61,9 @@ namespace QuickTest.Controllers
                 return StatusCode(500, "A problem occurred while handling your request.");
             }
 
-            return CreatedAtRoute("GetTeacher", new { id = result.AddedTeacher.Id }, result);
+            return CreatedAtAction(nameof(GetTeacher), new { id = result.AddedTeacher.Id }, result.AddedTeacher);
         }
+
         [HttpDelete("{teacherId}")]
         public async Task<IActionResult> RemoveTeacher(int teacherId)
         {

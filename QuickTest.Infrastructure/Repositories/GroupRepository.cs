@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient.DataClassification;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using QuickTest.Core.Entities;
 using QuickTest.Infrastructure.Data;
 using QuickTest.Infrastructure.Interfaces;
@@ -16,6 +15,13 @@ public class GroupRepository : BaseRepository<Group>, IGroupRepository
     private DataContext CreateNewContext()
     {
         return new DataContext(new DbContextOptionsBuilder<DataContext>().UseSqlServer(_connectionString).Options);
+    }
+
+    public async Task<IEnumerable<Group>> GetGroups()
+    {
+        return await this.context.Groups
+            .Include(g => g.Students)
+            .ToListAsync();
     }
 
     public async Task<bool> CheckIfGroupExists(string groupName)

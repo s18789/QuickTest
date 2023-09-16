@@ -16,7 +16,7 @@ export class ExamToSolveMapperService {
 
   mapExamToSolveResponseToExamToSolve(examToSolveResponse: ExamToSolveResponse): ExamToSolve {
     return {
-      title: examToSolveResponse.title,
+      ...examToSolveResponse,
       questions: examToSolveResponse.questions.map(q => {
         var question: Question = {
             questionId: q.questionId,

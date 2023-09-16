@@ -19,6 +19,7 @@ import { ConfigurationItemType } from 'src/app/shared/utils/model/enums/configur
 import { ExamResultStatus } from 'src/app/pages/exams-results/enums/examResultStatus.enum';
 import { LoaderService } from 'src/app/shared/services/loaderService.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { ExamStatus } from '../../enums/examStatus.enum';
 
 @Component({
   selector: 'app-exam',
@@ -28,17 +29,19 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 export class ExamComponent implements OnInit {
   private readonly examId: string = this.route.snapshot.params["id"];
   exam$!: Observable<Exam>;
+
+  ExamStatus = ExamStatus;
   finishExamDialogCount: number = 0;
 
   configurations: GridItemConfiguration[] = [
     { displayName: "Full name", key: "fullName", styles: "w-1/5" },
     { displayName: "E-mail", key: "email", styles: "w-1/2" },
     { displayName: "Status", key: "status", type: ConfigurationItemType.enum, enum: ExamResultStatus, styles: "w-1/5" },
-    { displayName: "Score", key: "score", styles: "w-1/10" }
+    { displayName: "Score", key: "score", type: ConfigurationItemType.score, styles: "w-1/10" }
   ];
 
   searchConfiguration: ActionConfiguration = { propertyName: 'fullName' };
-  filterConfiguration: ActionConfiguration = { propertyName: 'status' };
+  filterConfiguration: ActionConfiguration = { propertyName: 'status', type: ConfigurationItemType.enum, enumType: ExamResultStatus, };
 
   constructor(
     private router: Router,

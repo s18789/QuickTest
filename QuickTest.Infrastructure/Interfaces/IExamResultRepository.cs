@@ -7,7 +7,7 @@ public interface IExamResultRepository : IAsyncRepository<ExamResult>
 
     Task<ExamResult> GetExamResultToSolve(int examResultId);
 
-    Task StartExamTime(int examResultId);
+    Task<ExamResult> StartExam(ExamResult examResult);
 
     Task<ExamResult> GetExamResultById(int examResultId);
 
@@ -28,4 +28,10 @@ public interface IExamResultRepository : IAsyncRepository<ExamResult>
     Task<IEnumerable<ExamResult>> GetExamsResultsForMonth(int studentId, int month, int year);
 
     Task<IEnumerable<ExamResult>> GetScheduleExams(User user);
+
+    Task<double?> GetExamAverageScore(int id);
+
+    Task<double?> GetStudentAverageScore(int studentId);
+
+    Task<IEnumerable<Tuple<int, double?>>> GetGroupStudentsAverageScore(int studentId);
 }

@@ -28,6 +28,7 @@ import {
   faFileImport,
   faArrowUpLong,
   faArrowDownLong,
+  faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { AppRoutingModule } from './app-routing.module';
@@ -100,6 +101,8 @@ export class AppModule {
       faSortDown,
       faFileImport,
       faArrowUpLong,
-      faArrowDownLong,);
+      faArrowDownLong,
+      faCheck,
+      );
   }
 }

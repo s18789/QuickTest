@@ -8,6 +8,10 @@ public sealed record StartExamDto
 
     public int ExamResultId { get; init; }
 
+    public DateTime? StartDate { get; set; }
+
+    public DateTime? FinishDate { get; set; }
+
     public IEnumerable<StartExamQuestionDto> Questions { get; init; }
 }
 

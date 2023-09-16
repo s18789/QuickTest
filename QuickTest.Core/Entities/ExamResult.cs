@@ -1,5 +1,5 @@
 ﻿namespace QuickTest.Core.Entities;
-public class ExamResult: IEntity
+public class ExamResult : IEntity
 {
     public int Id { get; set; }
 

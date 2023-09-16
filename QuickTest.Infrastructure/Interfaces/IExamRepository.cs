@@ -5,6 +5,8 @@ public interface IExamRepository : IAsyncRepository<Exam>
 {
     Task<IEnumerable<Exam>> GetAllExams();
 
+    Task<IEnumerable<Exam>> GetExams(User user);
+
     Task<Exam> GetExamIncludeExamResultsAndQuestions(int id);
 
     Task<Exam> GetExamPreview(int id);
@@ -18,4 +20,6 @@ public interface IExamRepository : IAsyncRepository<Exam>
     Task<IEnumerable<Exam>> GetScheduleExams();
 
     Task<IEnumerable<Exam>> GetScheduleExams(User user);
+
+    Task<(int, double)> FindTheHardestQuestion(int id);
 }

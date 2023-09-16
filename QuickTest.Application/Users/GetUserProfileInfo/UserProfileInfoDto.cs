@@ -14,6 +14,6 @@ namespace QuickTest.Application.Users.GetUserProfileInfo
         public string LastName { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }
-        public SchoolDto School { get; set; }
+        public SchoolDto? School { get; set; }
     }
 }

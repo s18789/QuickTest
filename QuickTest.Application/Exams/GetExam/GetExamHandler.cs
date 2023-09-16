@@ -19,16 +19,15 @@ public class GetExamHandler : IRequestHandler<GetExamRequest, ExamDto>
     {
         var exam = await examRepository.GetExamIncludeExamResultsAndQuestions(request.Id);
 
-        return new ExamDto
+        var result = new ExamDto
         {
             Id = exam.Id,
-            Name = exam.Title,
+            Title = exam.Title,
             Status = DateTime.Compare(exam.AvailableTo, DateTime.Now) > 0 ? ExamStatus.Active : ExamStatus.Inactive,
-            Category = "1 Biol-Chem",
-            QuestionNumber = exam.Questions.Count(),
+            QuestionsCount = exam.Questions.Count(),
             AvailableFrom = exam.AvailableFrom,
             AvailableTo = exam.AvailableTo,
-            Time = exam.Time,
+            Average = exam.ExamResults.Where(er => er.Score != null).Average(er => er.Score) / exam.MaxPoints * 100,
             ExamResults = exam.ExamResults.Select(er => new ExamResultDto
             {
                 Id = er.FinishExamTime is null ? null : er.Id,
@@ -36,9 +35,21 @@ public class GetExamHandler : IRequestHandler<GetExamRequest, ExamDto>
                 Email = er.Student.Email,
                 Status = this.GetExamResultStatus(er, exam.Questions),
                 FinishTime = er.FinishExamTime,
-                Score = er.Score
+                Score = er.Score / exam.MaxPoints * 100,
             }).OrderBy(er => er.Status).ThenBy(er => er.Score)
         };
+
+        if (exam.ExamResults.Any())
+        {
+            var hardestQuestion = await examRepository.FindTheHardestQuestion(request.Id);
+            result.HardQuestion = new QuestionDto
+            {
+                Index = hardestQuestion.Item1,
+                Average = hardestQuestion.Item2,
+            };
+        }
+
+        return result;
     }
 
     private ExamResultStatus GetExamResultStatus(ExamResult examResult, IEnumerable<Question> questions)

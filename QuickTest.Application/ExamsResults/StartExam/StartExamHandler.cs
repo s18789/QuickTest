@@ -15,12 +15,18 @@ public class StartExamHandler : IRequestHandler<StartExamRequest, StartExamDto>
     public async Task<StartExamDto> Handle(StartExamRequest request, CancellationToken cancellationToken)
     {
         var examResult = await this.examResultRepository.GetExamResultToSolve(request.ExamResultId);
-        await this.examResultRepository.StartExamTime(request.ExamResultId);
+
+        if (examResult.StartExamTime == null && examResult.FinishExamTime == null)
+        {
+            examResult = await this.examResultRepository.StartExam(examResult);
+        }
 
         return new StartExamDto
         {
-            ExamResultId = request.ExamResultId,
+            ExamResultId = examResult.Id,
             ExamId = examResult.ExamId,
+            StartDate = examResult.StartExamTime,
+            FinishDate = examResult.FinishExamTime,
             Questions = examResult.Exam.Questions.Select(q => new StartExamQuestionDto
             {
                 QuestionId = q.Id,

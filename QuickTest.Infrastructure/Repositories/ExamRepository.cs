@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuickTest.Core.Entities;
+using QuickTest.Core.Entities.Enums;
 using QuickTest.Infrastructure.Data;
 using QuickTest.Infrastructure.Interfaces;
 
@@ -13,6 +14,14 @@ public class ExamRepository : BaseRepository<Exam>, IExamRepository
     public async Task<IEnumerable<Exam>> GetAllExams()
     {
         return await this.context.Exams.Include(x => x.ExamResults).ToListAsync();
+    }
+
+    public async Task<IEnumerable<Exam>> GetExams(User user)
+    {
+        return await this.context.Exams
+            .Include(x => x.ExamResults)
+            .Where(x => x.TeacherId == user.Id)
+            .ToListAsync();
     }
 
     public async Task<Exam> GetExamIncludeExamResultsAndQuestions(int id)
@@ -78,5 +87,44 @@ public class ExamRepository : BaseRepository<Exam>, IExamRepository
             .OrderBy(e => e.AvailableTo)
             .Take(3)
             .ToListAsync();
+    }
+
+    public async Task<(int, double)> FindTheHardestQuestion(int id)
+    {
+        var exam = await this.context.Exams
+            .Include(e => e.Questions)
+                .ThenInclude(q => q.StudentAnswers)
+            .Include(e => e.Questions)
+                .ThenInclude(q => q.PredefinedAnswers)
+                    .ThenInclude(pa => pa.SelectedStudentAnswers)
+                        .ThenInclude(ssa => ssa.StudentAnswer)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        double minAverage = double.MaxValue;
+        int questionIndex = 0;
+
+        var i = 0;
+        foreach (var question in exam.Questions)
+        {
+            var summaryScoreForAllAnswerForQuestion = question.Type != QuestionType.Open
+                ? question.PredefinedAnswers?.FirstOrDefault()?.SelectedStudentAnswers?.Sum(ssa => ssa.StudentAnswer.Points)
+                : question.StudentAnswers?.Where(x => x.Points != null)?.Sum(x => x.Points);
+
+            if (summaryScoreForAllAnswerForQuestion is null)
+            {
+                continue;
+            }
+
+            var averageScoreForQuestion = (double)summaryScoreForAllAnswerForQuestion / (question.Points * exam.ExamResults.Where(x => x.FinishExamTime != null).Count()) * 100;
+            i++;
+
+            if (minAverage > averageScoreForQuestion)
+            {
+                minAverage = averageScoreForQuestion;
+                questionIndex = i;
+            }
+        }
+
+        return (questionIndex, minAverage);
     }
 }

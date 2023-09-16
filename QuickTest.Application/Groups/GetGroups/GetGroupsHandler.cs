@@ -14,12 +14,13 @@ public class GetGroupsHandler : IRequestHandler<GetGroupsRequest, IEnumerable<Gr
 
     public async Task<IEnumerable<GroupDto>> Handle(GetGroupsRequest request, CancellationToken cancellationToken)
     {
-        var groups = await this.groupRepository.ListAllAsync();
+        var groups = await this.groupRepository.GetGroups();
 
         return groups.Select(x => new GroupDto 
         {
             Id = x.Id,
-            Name = x.Name
+            Name = x.Name,
+            StudentsCount = x.Students.Count,
         });
     }
 }

@@ -11,11 +11,9 @@ public class TeacherRepository : BaseRepository<Teacher>, ITeacherRepository
     {
     }
 
-    public async Task<IEnumerable<Teacher>> GetTeachersWithGroups()
+    public async Task<IEnumerable<Teacher>> GetTeachers()
     {
         return await this.context.Teachers
-            .Include(t => t.GroupTeachers) 
-            .ThenInclude(gt => gt.Group) 
             .ToListAsync();
     }
 

@@ -22,6 +22,7 @@ import { ToResolveExamsComponent } from './components/studentDashboard/component
 import { CompletedExamsComponent } from './components/studentDashboard/component/ui/completed-exams/completed-exams.component';
 import { FeedbackComponent } from './components/studentDashboard/component/ui/feedback/feedback.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ImportSummaryComponent } from './components/adminDashboard/components/ui/import-from-file/components/import-summary/import-summary.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ToResolveExamsComponent,
     CompletedExamsComponent,
     FeedbackComponent,
+    ImportSummaryComponent
   ],
   imports: [
     SharedModule,

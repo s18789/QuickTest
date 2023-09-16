@@ -28,8 +28,8 @@
                         class="px-4"
                         *ngFor="let day of calendar; let i = index">
 
-                        <div *ngIf="day < 15 && i > 28 || day == null; else calendarButton" class="flex flex-col m-auto h-full w-full pt-5">
-                            <span class="mx-auto text-gray-400">{{day != null ? day+1 : ''}}</span>
+                        <div *ngIf="day < 15 && i > 28 || day == null; else calendarButton" class="flex flex-col m-auto h-full w-full">
+                            <span class="mx-auto text-gray-400 pt-7">{{day != null ? day+1 : ''}}</span>
                         </div>
                         <ng-template #calendarButton>
                             <button 
@@ -38,7 +38,7 @@
                                 (click)="setCurrentDay(day+1)">
                                 <div 
                                     class="flex mx-auto gap-2"
-                                    [ngClass]="{'invisible': getExamsCountForDay(day+1) < 1}">
+                                    [ngClass]="{'pt-2': getExamsCountForDay(day+1) < 1}">
                                     <div *ngIf="getExamsCountForDay(day+1) > 0"
                                         class="w-3 h-3 rounded-full"
                                         [ngClass]="todayDate.getFullYear() == currentDate.getFullYear() && todayDate.getMonth() == currentDate.getMonth() && todayDate.getDate() == day+1 ? 'bg-blue#E9F7FA' : 'bg-yellow#FDC57B'"
@@ -90,6 +90,4 @@
             </div>
         </div>
     </div>
-
-
 </div>
