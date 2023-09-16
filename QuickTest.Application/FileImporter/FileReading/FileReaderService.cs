@@ -135,16 +135,18 @@ namespace QuickTest.Application.FileImporter.FileReading
                                         studentRow++;
                                         continue;
                                     }
-
-                                    studentsSet.Add(student);
-                                    successStudentReadCount++;
+                                    var doesItContainStudent = studentsSet.FirstOrDefault(x => x.Email == student.Email) != null;
+                                    if(!doesItContainStudent)
+                                        studentsSet.Add(student);
+                                    
                                     studentRow++;
                                 }
-
+                                //successStudentReadCount = studentsSet.Count();
                                 groupsWithTeacherAndStudents.Add(new Tuple<string, Teacher, HashSet<Student>>(group, teacher, studentsSet));
                                 row++;
                             }
                         }
+                        successStudentReadCount= groupsWithTeacherAndStudents.SelectMany(group => group.Item3).Distinct().Count();
                     }
                 }
             }

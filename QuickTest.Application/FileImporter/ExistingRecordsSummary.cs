@@ -8,8 +8,8 @@ namespace QuickTest.Application.FileImporter
 {
     public class ExistingRecordsSummary
     {
-        public List<string> ExistingTeacherEmails { get; set; } = new List<string>();
-        public List<string> ExistingStudentEmails { get; set; } = new List<string>();
-        public List<string> ExistingGroups { get; set; } = new List<string>();
+        public HashSet<string> ExistingTeacherEmails { get; set; } = new HashSet<string>();
+        public HashSet<string> ExistingStudentEmails { get; set; } = new HashSet<string>();
+        public HashSet<string> ExistingGroups { get; set; } = new HashSet<string>();
     }
 }

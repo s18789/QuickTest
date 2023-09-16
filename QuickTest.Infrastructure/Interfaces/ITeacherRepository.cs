@@ -8,4 +8,6 @@ public interface ITeacherRepository : IAsyncRepository<Teacher>
     Task<IEnumerable<Teacher>> GetTeachers();
     Task<bool> CheckIfTeacherExists(string email);
     Task<Teacher> GetTeacherWithoutGroups(int id);
+    Task<Teacher> GetTeacherByEmail(string email);
+    Task ReloadTheEntity(Teacher entity);
 }

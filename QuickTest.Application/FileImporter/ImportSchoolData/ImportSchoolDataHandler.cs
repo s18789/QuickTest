@@ -73,7 +73,6 @@ namespace QuickTest.Application.FileImporter.ImportSchoolData
                 if (group)
                 {
                     summary.ExistingGroups.Add(groupData.Item1);
-                    continue;
                 }
                 var teacher = groupData.Item2;
                 if (await teacherRepository.CheckIfTeacherExists(teacher.Email))

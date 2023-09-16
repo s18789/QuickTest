@@ -48,6 +48,7 @@ namespace QuickTest.Infrastructure.Utilities
            .ForMember(dest => dest.Groups, opt => opt.MapFrom(src => src.Groups));
 
             CreateMap<Group, GroupDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Students, opt => opt.MapFrom(src => src.Students))
             .ForMember(dest => dest.GroupTeachers, opt => opt.MapFrom(src => src.GroupTeachers))
             .ForMember(dest => dest.School, opt => opt.MapFrom(src => src.School));

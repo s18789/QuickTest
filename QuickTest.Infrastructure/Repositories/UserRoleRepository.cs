@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Ardalis.Specification;
+using Microsoft.EntityFrameworkCore;
 using QuickTest.Core.Entities;
 using QuickTest.Core.Entities.Enums;
 using QuickTest.Infrastructure.Data;
@@ -35,5 +36,12 @@ public class UserRoleRepository : BaseRepository<UserRole>, IUserRoleRepository
             .AsNoTracking()
             .Where(ur => ur.RoleName == roleName)
             .FirstOrDefaultAsync();
+    }
+    public async Task AttachUserRole(UserRole userRole)
+    {
+        if (context.Entry(userRole).State == EntityState.Detached)
+        {
+            context.Attach(userRole);
+        }
     }
 }

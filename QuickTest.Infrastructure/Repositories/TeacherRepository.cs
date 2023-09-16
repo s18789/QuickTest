@@ -39,4 +39,14 @@ public class TeacherRepository : BaseRepository<Teacher>, ITeacherRepository
             .FirstOrDefaultAsync();
         return foundUser == null ? false : true;
     }
+    public async Task ReloadTheEntity(Teacher entity)
+    {
+        context.Entry(entity).Reload();
+    }
+    public async Task<Teacher> GetTeacherByEmail(string email)
+    {
+        return await this.context.Teachers
+            .Where(t => t.Email == email)
+            .FirstOrDefaultAsync();
+    }
 }
