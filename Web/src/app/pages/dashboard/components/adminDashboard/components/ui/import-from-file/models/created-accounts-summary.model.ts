@@ -1,21 +1,21 @@
 export class CreatedAccountsSummary {
-    TeachersCreated: number;
-    StudentsCreated: number;
-    TeacherCreationFailed: number;
-    StudentCreationFailed: number;
-    GroupsCreated: number;
-    GroupsFailed: number;
-    ErrorList: string[];
-    IsSuccess: boolean;
+    teachersCreated: number;
+    studentsCreated: number;
+    teacherCreationFailed: number;
+    studentCreationFailed: number;
+    groupsCreated: number;
+    groupsFailed: number;
+    errorList: string[];
+    isSuccess: boolean;
   
     constructor() {
-      this.TeachersCreated = 0;
-      this.StudentsCreated = 0;
-      this.TeacherCreationFailed = 0;
-      this.StudentCreationFailed = 0;
-      this.GroupsCreated = 0;
-      this.GroupsFailed = 0;
-      this.ErrorList = [];
-      this.IsSuccess = false;
+      this.teachersCreated = 0;
+      this.studentsCreated = 0;
+      this.teacherCreationFailed = 0;
+      this.studentCreationFailed = 0;
+      this.groupsCreated = 0;
+      this.groupsFailed = 0;
+      this.errorList = [];
+      this.isSuccess = false;
     }
   }

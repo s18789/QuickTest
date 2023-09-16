@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { RouteUrls } from './shared/enums/route-urls.enum';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 import { ImportSummaryComponent } from './pages/dashboard/components/adminDashboard/components/ui/import-from-file/components/import-summary/import-summary.component';
-
+import { CreateAccountsSummaryComponent } from './pages/dashboard/components/adminDashboard/components/ui/import-from-file/components/import-summary/create-accounts-summary/create-accounts-summary.component';
 
 const routes: Routes = [
   {
@@ -75,6 +75,11 @@ const routes: Routes = [
         //canActivate: [MsalGuard],
         path: `${RouteUrls.ImportSummary}/:importId`,
         component: ImportSummaryComponent
+      },
+      {
+        //canActivate: [MsalGuard],
+        path: 'create-accounts-summary', 
+        component: CreateAccountsSummaryComponent
       },
       {
         path: "**",

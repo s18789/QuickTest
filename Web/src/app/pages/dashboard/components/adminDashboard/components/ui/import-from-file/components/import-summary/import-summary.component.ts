@@ -89,14 +89,25 @@ export class ImportSummaryComponent implements OnInit {
     
     this.adminService.bulkImport(bulkImportRequest).subscribe(
       (response: any) => {
-        if (response.IsSuccess) {
+        if (response.isSuccess) {
           console.log('Bulk import successful:', response);
           this.summaryService.setSummary(response); 
-          this.router.navigate(['create-accounts-summary/create-accounts-summary']); 
+           // Debugging the navigation
+        this.router.navigate(['/create-accounts-summary']).then(nav => {
+          console.log('Nav:', nav);  // true if navigation is successful
+        }, err => {
+          console.log('Nav Error:', err);
+        });
         } else {
+          debugger;
+          console.log("Response error: ", response);
           console.error('Bulk import failed:', response.ErrorList);
           this.summaryService.setSummary(response); 
-          this.router.navigate(['create-accounts-summary/create-accounts-summary']); 
+          this.router.navigate(['/create-accounts-summary']).then(nav => {
+            console.log('Nav:', nav);  // true if navigation is successful
+          }, err => {
+            console.log('Nav Error:', err);
+          });
         }
       },
       (error: any) => {

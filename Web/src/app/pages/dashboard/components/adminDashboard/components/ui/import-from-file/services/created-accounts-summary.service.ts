@@ -12,6 +12,7 @@ export class CreatedAccountsSummaryService {
 
   setSummary(summary: CreatedAccountsSummary): void {
     this.summary = summary;
+    console.log('Summary set:', this.summary);
   }
 
   getSummary(): CreatedAccountsSummary {
