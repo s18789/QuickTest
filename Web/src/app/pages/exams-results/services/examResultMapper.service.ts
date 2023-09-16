@@ -26,11 +26,11 @@ export class ExamResultMapperService {
       ...examsResultsResponse,
       examsResultsGridItems: examsResultsResponse.examsResultsGridItems.map((examResultGridItemResponse: ExamResultGridModelResponse) => {
         let examResultGridItem: ExamResultGridModel = {
+          ...examResultGridItemResponse,
           id: examResultGridItemResponse.status == ExamResultStatus.ToCheck && this.authService.getUserRole() != UserRole.Teacher
             || examResultGridItemResponse.status == ExamResultStatus.NotResolved && this.authService.getUserRole() != UserRole.Student
             ? null
             : examResultGridItemResponse.id,
-          ...examResultGridItemResponse,
         }
         
         return examResultGridItem;

@@ -1,6 +1,6 @@
 <div *ngIf="examsResults | async as examsResults" class="flex flex-col mx-20 py-12 gap-8">
   <span class="text-4xl font-semibold text-gray-900">Student exams</span>
-  <div class="frame flex gap-6 mb-4 w-full rounded-xl">
+  <div *ngIf="examsResults.lastCompleted" class="frame flex gap-6 mb-4 w-full rounded-xl">
     <div class="flex flex-col bg-lightYellow pt-6 pl-8 pr-4 pb-2 rounded-l-xl">
       <span class="text-xl font-semibold mb-4">Completed</span>
       <div class="flex flex-col mb-1">
@@ -11,7 +11,7 @@
         <div class="flex flex-col w-1/2 gap-1">
           <div class="flex flex-col">
             <span class="text-sm text-gray-400">completion date</span>
-            <span class="text-gray-700 font-medium">{{examsResults.lastCompleted.completionDate}}</span>
+            <span class="text-gray-700 font-medium">{{examsResults.lastCompleted.completionDate | date: 'dd.MM.yyyy'}}</span>
           </div>
           <div class="flex flex-col">
             <span class="text-sm text-gray-400">comparison to others</span>
@@ -55,8 +55,8 @@
       <span class="text-xl font-semibold pt-4 pl-4 mb-2 text-navy#07617D">Others</span>
       <div class="flex px-4 py-1.5 bg-navy#07617D gap-20">
         <div class="flex flex-col gap-1">
-          <span class="text-sm font-medium text-white">the best</span>
-          <div class="flex ml-2">
+          <span class="text-sm font-medium text-white" [ngClass]="{'pb-6': examsResults.studentAverage - examsResults.best == 0}">the best</span>
+          <div *ngIf="examsResults.studentAverage - examsResults.best != 0" class="flex ml-2">
             <svg-icon
               class="my-auto mr-1"
               [src]="examsResults.studentAverage - examsResults.best > 0
@@ -70,8 +70,8 @@
       </div>
       <div class="flex px-4 py-1.5 gap-20">
         <div class="flex flex-col gap-1">
-          <span class="text-sm font-medium text-gray-700">average</span>
-          <div class="flex ml-2">
+          <span class="text-sm font-medium text-gray-700" [ngClass]="{'pb-6': examsResults.studentAverage - examsResults.best == 0}">average</span>
+          <div *ngIf="examsResults.studentAverage - examsResults.best != 0" class="flex ml-2">
             <svg-icon
               class="my-auto mr-1"
               [src]="examsResults.studentAverage - examsResults.average > 0
@@ -85,8 +85,8 @@
       </div>
       <div class="flex px-4 py-1.5 bg-navy#07617D gap-20">
         <div class="flex flex-col gap-1">
-          <span class="text-sm font-medium text-white">the worste</span>
-          <div class="flex ml-2">
+          <span class="text-sm font-medium text-white" [ngClass]="{'pb-6': examsResults.studentAverage - examsResults.best == 0}">the worste</span>
+          <div *ngIf="examsResults.studentAverage - examsResults.best != 0" class="flex ml-2">
             <svg-icon
               class="my-auto mr-1"
               [src]="examsResults.studentAverage - examsResults.worst > 0

@@ -37,7 +37,7 @@ export class ExamComponent implements OnInit {
     { displayName: "Full name", key: "fullName", styles: "w-1/5" },
     { displayName: "E-mail", key: "email", styles: "w-1/2" },
     { displayName: "Status", key: "status", type: ConfigurationItemType.enum, enum: ExamResultStatus, styles: "w-1/5" },
-    { displayName: "Score", key: "score", styles: "w-1/10" }
+    { displayName: "Score", key: "score", type: ConfigurationItemType.score, styles: "w-1/10" }
   ];
 
   searchConfiguration: ActionConfiguration = { propertyName: 'fullName' };

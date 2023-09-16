@@ -29,9 +29,9 @@ public class GetExamsResultsHandler : IRequestHandler<GetExamsResultsRequest, Ex
                     {
                         Title = lastCompleted.Exam.Title,
                         CompletionDate = lastCompleted.FinishExamTime.Value,
-                        Score = lastCompleted.Score ?? null,
+                        Score = lastCompleted.Score / lastCompleted.Exam.MaxPoints * 100 ?? null,
                         ComparisonToOthers = lastCompleted?.Score is not null
-                            ? lastCompleted.Score - ((await this.examResultRepository.GetExamAverageScore(lastCompleted.ExamId) ?? 0) / lastCompleted.Exam.MaxPoints * 100)
+                            ? lastCompleted.Score / lastCompleted.Exam.MaxPoints * 100 - ((await this.examResultRepository.GetExamAverageScore(lastCompleted.ExamId) ?? 0) / lastCompleted.Exam.MaxPoints * 100)
                             : null,
                     },
             StudentAverage = await this.examResultRepository.GetStudentAverageScore(request.StudentId),
@@ -42,7 +42,7 @@ public class GetExamsResultsHandler : IRequestHandler<GetExamsResultsRequest, Ex
             {
                 Id = x.Id,
                 ExamName = x.Exam.Title,
-                Status = GetExamResultExam(x),
+                Status = this.GetExamResultExam(x),
                 Score = x.Score / x.Exam.MaxPoints * 100,
                 EndingDate = x.Exam.AvailableTo,
             })

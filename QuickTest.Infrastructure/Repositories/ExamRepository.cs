@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuickTest.Core.Entities;
+using QuickTest.Core.Entities.Enums;
 using QuickTest.Infrastructure.Data;
 using QuickTest.Infrastructure.Interfaces;
 
@@ -92,6 +93,8 @@ public class ExamRepository : BaseRepository<Exam>, IExamRepository
     {
         var exam = await this.context.Exams
             .Include(e => e.Questions)
+                .ThenInclude(q => q.StudentAnswers)
+            .Include(e => e.Questions)
                 .ThenInclude(q => q.PredefinedAnswers)
                     .ThenInclude(pa => pa.SelectedStudentAnswers)
                         .ThenInclude(ssa => ssa.StudentAnswer)
@@ -103,8 +106,16 @@ public class ExamRepository : BaseRepository<Exam>, IExamRepository
         var i = 0;
         foreach (var question in exam.Questions)
         {
-            var summaryScoreForAllAnswerForQuestion = question.PredefinedAnswers.FirstOrDefault().SelectedStudentAnswers.Sum(ssa => ssa.StudentAnswer.Points);
-            var averageScoreForQuestion = summaryScoreForAllAnswerForQuestion / (question.Points * exam.ExamResults.Count()) * 100;
+            var summaryScoreForAllAnswerForQuestion = question.Type != QuestionType.Open
+                ? question.PredefinedAnswers?.FirstOrDefault()?.SelectedStudentAnswers?.Sum(ssa => ssa.StudentAnswer.Points)
+                : question.StudentAnswers?.Where(x => x.Points != null)?.Sum(x => x.Points);
+
+            if (summaryScoreForAllAnswerForQuestion is null)
+            {
+                continue;
+            }
+
+            var averageScoreForQuestion = (double)summaryScoreForAllAnswerForQuestion / (question.Points * exam.ExamResults.Where(x => x.FinishExamTime != null).Count()) * 100;
             i++;
 
             if (minAverage > averageScoreForQuestion)

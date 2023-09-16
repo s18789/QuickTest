@@ -46,7 +46,7 @@ export class MembersComponent implements OnInit {
 
   groupGridConfigurations = [
     { displayName: "Name", key: "name", styles: "w-3/5" },
-    { displayName: "Students", key: "allStudents", styles: "w-35/100" },
+    { displayName: "Students", key: "studentsCount", styles: "w-35/100" },
   ];
 
   groupsSearchConfiguration: ActionConfiguration = { propertyName: 'name' };
@@ -102,9 +102,6 @@ export class MembersComponent implements OnInit {
   getGroups(): Observable<any[]> {
     this.loaderService.show();
     return this.groupService.getGroups().pipe(
-      map((groups) =>
-        groups.map((group) =>
-          this.groupMapperService.mapGroupResponseToGroup(group))),
       tap(() => this.loaderService.hide()),
     );
   }

@@ -3,11 +3,11 @@ import { ExamResultStatus } from "../enums/examResultStatus.enum";
 
 export interface ExamResultResponse {
   status?: ExamResultStatus,
-  maxPoints?: number,
   score?: number,
-  questionCount?: number,
-  correctAnswers?: number;
-  wrongAnswers?: number,
+  maxPoints?: number,
+  closedQuestionMaxPoints?: number,
+  correctOpenQuestions?: number;
+  correctClosedQuestions?: number,
   startTime?: Date,
   endTime?: Date
 }

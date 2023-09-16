@@ -8,15 +8,15 @@
         <div class="flex mb-2">
           <div class="flex flex-col mr-4">
             <span class="mb-2">Points:</span>
-            <span class="mb-2">Correct answer:</span>
-            <span class="mb-2">Wrong answer:</span>
+            <span class="mb-2">Closed questions:</span>
+            <span *ngIf="examResult.maxPoints - examResult.closedQuestionMaxPoints > 0" class="mb-2">Open questions:</span>
             <span class="mb-2">Start time:</span>
             <span class="mb-2">End time:</span>
           </div>
           <div class="flex flex-col">
             <span class="mb-2">{{examResult.score || 0}}/{{examResult.maxPoints}}</span>
-            <span class="mb-2">{{examResult.correctAnswers || 0}}/{{examResult.questionCount}}</span>
-            <span class="mb-2">{{examResult.wrongAnswers || 0}}/{{examResult.questionCount}}</span>
+            <span class="mb-2">{{examResult.correctClosedQuestions || 0}}/{{examResult.closedQuestionMaxPoints}}</span>
+            <span *ngIf="examResult.maxPoints - examResult.closedQuestionMaxPoints > 0" class="mb-2">{{examResult.correctOpenQuestions}}/{{examResult.maxPoints - examResult.closedQuestionMaxPoints}}</span>
             <span class="mb-2">{{examResult.startTime | date: 'd MMM yyyy hh:mm' }}</span>
             <span class="mb-2">{{examResult.endTime | date: 'd MMM yyyy hh:mm' }}</span>
           </div>
@@ -27,12 +27,12 @@
           <span class="mr-3">See answers</span>
           <fa-icon icon="arrow-right"></fa-icon>
         </button>
-        <div x-data="scrollProgress" class="my-8 ml-auto inline-flex items-center justify-center rounded-full">
-          <svg class="w-36 h-36">
-            <circle class="text-gray-100" [innerText]="'elo'" stroke-width="10" stroke="currentColor" fill="transparent" r="60" cx="70" cy="70" />
-            <text x="50%" y="50%" text-anchor="middle" stroke="#07617D" stroke-width="1px" dy=".3em" font-size="x-large">{{examResult.percentageResult || 0 | number: '1.0-0'}} %</text>
-            <circle class="text-navy#07617D" stroke-width="10" :stroke-dasharray="282" :stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="60" cx="70" cy="70" />
+        <div x-data="scrollProgress" class="relative my-8 ml-auto inline-flex items-center justify-center rounded-full">
+          <svg width="160" height="160" viewBox="0 0 160 160" style="transform: rotate(-90deg)">
+            <circle class="text-gray-100" r="70" cx="80" cy="80" fill="transparent" stroke="currentColor" stroke-width="12px"></circle>
+            <circle r="70" cx="80" cy="80" fill="transparent" stroke="#07617D" stroke-width="11px" stroke-linecap="round" [attr.stroke-dasharray]="2*3.14*70" [attr.stroke-dashoffset]="2*3.14*70*((100-examResult.percentageResult)/100)"></circle>
           </svg>
+          <span class="absolute text-navy#07617D font-semibold text-3xl top-16 left-12">{{examResult.percentageResult || 0 | number: '1.0-0'}} %</span>
         </div>
         <img style="width: 22vw; height:35vh;" src="../../../../../assets/images/examResultFlag.png" alt="">
       </div>
