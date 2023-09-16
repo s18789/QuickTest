@@ -4,7 +4,7 @@ namespace QuickTest.Application.ExamsResults.GetExamsResults;
 
 public sealed record ExamResultDto
 {
-    public LastCompletedDto LastCompleted { get; init; }
+    public LastCompletedDto? LastCompleted { get; init; }
 
     public double? StudentAverage { get; init; }
 

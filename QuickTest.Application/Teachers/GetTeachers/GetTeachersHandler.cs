@@ -20,19 +20,13 @@ namespace QuickTest.Application.Teachers.GetTeachers
 
         public async Task<IEnumerable<TeacherDto>> Handle(GetTeachersRequest request, CancellationToken cancellationToken)
         {
-            var teachers = await this.teacherRepository.GetTeachersWithGroups();
+            var teachers = await this.teacherRepository.GetTeachers();
 
             return teachers.Select(x => new TeacherDto
             {
-                Id = x.Id,
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Email = x.Email,
-                Group = x.GroupTeachers.Select(gt => new GroupDto
-                {
-                    Id = gt.Group.Id,
-                    Name = gt.Group.Name
-                }).ToList()
             });
         }
     }
