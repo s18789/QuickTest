@@ -33,6 +33,15 @@ public class StudentRepository : BaseRepository<Student>, IStudentRepository
             .Include(x => x.Group)
             .FirstOrDefaultAsync();
     }
+    public async Task<Student> GetStudentByEmail(string email)
+    {
+        return await this.context.Students
+            .Where(x => x.Email == email)
+            .Include(x => x.Group)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+
+    }
     public async Task<IEnumerable<Student>> GetStudentsByGroupId(int groupId)
     {
         return await this.context.Students

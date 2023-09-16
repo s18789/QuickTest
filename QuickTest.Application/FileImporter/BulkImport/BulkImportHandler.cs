@@ -53,80 +53,101 @@ namespace QuickTest.Application.FileImporter.BulkImport
             createdAccountsSummary = new CreatedAccountsSummary();
             createdAccountsSummary.IsSuccess = false;
             createdAccountsSummary.ErrorList = new List<string>();
+            HashSet<string> existingGroups = new HashSet<string>();
+            HashSet<string> distinctStudents = new HashSet<string>();
             foreach (var groupData in bulkRequest.ImportSummary.ImportedGroupsFromFile.ImportedGroups)
             {
                 var teacher = _mapper.Map<TeacherDto>(groupData.Item2);
                 var students = groupData.Item3;
                 if (bulkRequest.ImportSummary.RecordsSummary.ExistingGroups.Contains(groupData.Item1))
                 {
-                    createdAccountsSummary.GroupsFailed++;
-                    createdAccountsSummary.ErrorList.Add("Group already exists, no new students or teachers will be added");
-                    continue;
+                    if (existingGroups.Contains(groupData.Item1))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        createdAccountsSummary.GroupsFailed++;
+                        createdAccountsSummary.ErrorList.Add("Group " + groupData.Item1 + " already exists, no new students or teachers will be added");
+                        existingGroups.Add(groupData.Item1);
+                        continue;
+                    }
+                    
                 }
                 else
                 {
                     var createGroupRequest = new CreateGroupRequest();
                     var school = await _schoolRepository.GetSchoolWithoutGroups(bulkRequest.SchoolId);
-                    var studentsToCreateGroup = new List<StudentDto>();
+                    var studentsToCreateGroup = new HashSet<StudentDto>();
                     var teacherToAdd = new TeacherDto();
                     var createdGroup = new GroupDto();
                     var teacherRole = await _userRoleRepository.GetRoleByType(Core.Entities.Enums.RoleType.TEACHER);
                     if (school != null)
                     {
                         createGroupRequest.Group = new Groups.GroupDto { School = _mapper.Map<SchoolDto>(school)};
-                        var groupFromDb = await _groupRepository.CreateGropuByName(groupData.Item1, school);
+                        var groupFromDb = await _groupRepository.CreateGroupByName(groupData.Item1, school);
+                        //groupFromDb = await _groupRepository.GetByIdAsync(8);
                         createdGroup = _mapper.Map<GroupDto>(groupFromDb);
-                        if (!bulkRequest.ImportSummary.RecordsSummary.ExistingTeacherEmails.Contains(teacher.Email))
+                        if(createdGroup.Id == 0)
                         {
-                            var teacherRequest = new CreateUserRequest
-                            {
-                                UserDto = new CreateUserDto
-                                {
-                                    Email = teacher.Email,
-                                    FirstName = teacher.FirstName,
-                                    LastName = teacher.LastName,
-                                    UserName = teacher.UserName,
-                                    UserRole = _mapper.Map<UserRoleDto>(teacherRole)
-                                    
-                                }
-                            };
-                            ResponseDto teacherResponse = new ResponseDto();
-                            try
-                            {
-                                teacherResponse = await _createUserHandler.Handle(teacherRequest, new CancellationToken());
-                            }
-                            catch (Exception ex)
-                            {
-
-                                createdAccountsSummary.ErrorList.Add("There was an issue with creating teacher "+teacherRequest.UserDto.LastName+ "+  account: "+ex.Message);
-                            }
-                            if (teacherResponse.IsSuccess)
-                            {
-                                createdAccountsSummary.TeachersCreated++;
-                                teacherToAdd = teacherResponse.AddedTeacher;
-                            }
-                            else
-                            {
-                                createdAccountsSummary.TeacherCreationFailed++;
-                                continue;
-                            }
-                            
-
+                            createdAccountsSummary.ErrorList.Add("There was an issue with adding the group:  " + groupFromDb.Name + " .Group wont be created");
+                            continue;
                         }
                         else
                         {
-                            var existingTeacher = await _userRepository.GetTeacherByEmailAsync(teacher.Email);
-                            if (existingTeacher != null)
+                            if (!bulkRequest.ImportSummary.RecordsSummary.ExistingTeacherEmails.Contains(teacher.Email))
                             {
-                                var teacherDto = _mapper.Map<TeacherDto>(existingTeacher);
-                                teacherToAdd =teacherDto;
+                                var teacherRequest = new CreateUserRequest
+                                {
+                                    UserDto = new CreateUserDto
+                                    {
+                                        Email = teacher.Email,
+                                        FirstName = teacher.FirstName,
+                                        LastName = teacher.LastName,
+                                        UserName = teacher.UserName,
+                                        UserRole = _mapper.Map<UserRoleDto>(teacherRole)
+
+                                    }
+                                };
+                                ResponseDto teacherResponse = new ResponseDto();
+                                try
+                                {
+                                    teacherResponse = await _createUserHandler.Handle(teacherRequest, new CancellationToken());
+                                }
+                                catch (Exception ex)
+                                {
+
+                                    createdAccountsSummary.ErrorList.Add("There was an issue with creating teacher " + teacherRequest.UserDto.LastName + "+  account: " + ex.Message);
+                                }
+                                if (teacherResponse.IsSuccess)
+                                {
+                                    createdAccountsSummary.TeachersCreated++;
+                                    teacherToAdd = teacherResponse.AddedTeacher;
+                                }
+                                else
+                                {
+                                    createdAccountsSummary.TeacherCreationFailed++;
+                                    continue;
+                                }
+
+
                             }
                             else
                             {
-                                createdAccountsSummary.ErrorList.Add("Could not find existing teacher with email: " + teacher.Email);
-                                continue;
+                                var existingTeacher = await _userRepository.GetTeacherByEmailAsync(teacher.Email);
+                                if (existingTeacher != null)
+                                {
+                                    var teacherDto = _mapper.Map<TeacherDto>(existingTeacher);
+                                    teacherToAdd = teacherDto;
+                                }
+                                else
+                                {
+                                    createdAccountsSummary.ErrorList.Add("Could not find existing teacher with email: " + teacher.Email);
+                                    continue;
+                                }
                             }
                         }
+                        
                     }
                     else
                     {
@@ -135,14 +156,17 @@ namespace QuickTest.Application.FileImporter.BulkImport
                         return createdAccountsSummary;
                     }
                     studentsToCreateGroup = await CreateOrUpdateStudents(groupData.Item3, createdAccountsSummary, bulkRequest, createdGroup);
-                    createGroupRequest.Group.Students = new List<StudentDto>();
+                    createdGroup.Students = new List<StudentDto>();
                     foreach (var student in studentsToCreateGroup)
                     {
-                        createGroupRequest.Group.Students.Add(student);
+                        if (student == null || string.IsNullOrEmpty(student.Email))
+                            continue;
+                        createdGroup.Students.Add(student);
+                        distinctStudents.Add(student.Email);
+
                     }
-                    
-                    createGroupRequest.Group.Students = studentsToCreateGroup;
-                    createGroupRequest.Group.GroupTeachers = new List<GroupTeacherDto>
+
+                    createdGroup.GroupTeachers = new List<GroupTeacherDto>
                     {
                         new Groups.GroupTeacherDto
                         {
@@ -150,13 +174,18 @@ namespace QuickTest.Application.FileImporter.BulkImport
                             Teacher =teacherToAdd
                         }
                     };
-                    createGroupRequest.Group.Name = createdGroup.Name;
+                    createGroupRequest.Group=createdGroup;
                     //_schoolRepository.DetachThatMfcker(createGroupRequest.Group.School);
                     var groupResponse = await _createGroupHandler.HandleGroupTeacher(createGroupRequest, new CancellationToken());
+                    var alreadyAddedGroups = new HashSet<string>();
 
                     if (groupResponse != null)
                     {
-                        createdAccountsSummary.GroupsCreated++;
+                        if (!alreadyAddedGroups.Contains(groupResponse.Name))
+                        {
+                            createdAccountsSummary.GroupsCreated++;
+                            alreadyAddedGroups.Add(groupResponse.Name);
+                        }
                     }
                     else
                     {
@@ -168,6 +197,7 @@ namespace QuickTest.Application.FileImporter.BulkImport
 
 
             }
+            createdAccountsSummary.StudentsCreated = distinctStudents.Count();
             createdAccountsSummary.IsSuccess = true;
             return createdAccountsSummary;
         }
@@ -175,9 +205,9 @@ namespace QuickTest.Application.FileImporter.BulkImport
 
 
 
-        private async Task<List<StudentDto>> CreateOrUpdateStudents(HashSet<QuickTest.Core.Entities.Student> students, CreatedAccountsSummary createdAccountsSummary, BulkImportHandlerRequest bulkRequest, GroupDto createdGroup)
+        private async Task<HashSet<StudentDto>> CreateOrUpdateStudents(HashSet<QuickTest.Core.Entities.Student> students, CreatedAccountsSummary createdAccountsSummary, BulkImportHandlerRequest bulkRequest, GroupDto createdGroup)
         {
-            var studentsToCreateGroup = new List<StudentDto>();
+            var studentsToCreateGroup = new HashSet<StudentDto>();
             var studentRole = await _userRoleRepository.GetRoleByType(Core.Entities.Enums.RoleType.STUDENT);
             foreach (var student in students)
             {
@@ -208,7 +238,6 @@ namespace QuickTest.Application.FileImporter.BulkImport
                     }
                     if (studentResponse.IsSuccess)
                     {
-                        createdAccountsSummary.StudentsCreated++;
                         studentsToCreateGroup.Add(studentResponse.AddedStudent);
                     }
                     else

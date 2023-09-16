@@ -95,10 +95,7 @@ namespace QuickTest.Controllers
         [HttpPost("bulk-import")]
         public async Task<IActionResult> BulkImport([FromBody] BulkImportRequest request)
         {
-            if (request == null || request.ImportSummary == null ||
-                (request.ImportSummary.ExistingStudents== request.ImportSummary.ImportedGroupsFromFile.SuccessfulStudentLoads &&
-                request.ImportSummary.ExistingTeachers == request.ImportSummary.ImportedGroupsFromFile.SuccessfulTeacherLoads &&
-                request.ImportSummary.RecordsSummary.ExistingGroups.Count == request.ImportSummary.ImportedGroupsFromFile.SuccessfulGroupLoads))
+            if (request == null || request.ImportSummary == null)
             {
                 return BadRequest("Invalid request or all groups are already created.");
             }
@@ -123,7 +120,14 @@ namespace QuickTest.Controllers
             return Ok(new CreatedAccountsSummary
             {
                 IsSuccess = true,
-                ErrorList = result.ErrorList
+                ErrorList = result.ErrorList,
+                TeacherCreationFailed = result.TeacherCreationFailed,
+                TeachersCreated = result.TeachersCreated,
+                GroupsCreated = result.GroupsCreated,
+                GroupsFailed = result.GroupsFailed,
+                StudentCreationFailed = result.StudentCreationFailed,
+                StudentsCreated = result.StudentsCreated
+                
             });
         }
         [HttpPost("create-user")]

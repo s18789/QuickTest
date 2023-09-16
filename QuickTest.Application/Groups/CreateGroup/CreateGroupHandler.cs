@@ -51,7 +51,7 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupRequest, GroupDto>
             return null;
         }
 
-        groupRepository.DetachThatMfcker(groupToAdd);
+        
 
         List<GroupTeacher> groupTeachersToAdd = new List<GroupTeacher>();
 
@@ -65,7 +65,7 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupRequest, GroupDto>
 
             GroupTeacher newGroupTeacher = new GroupTeacher
             {
-                TeacherId = groupTeacher.Teacher.Id,
+                TeacherId = teacher.Id,
                 GroupId = groupTeacher.Group.Id
             };
 
@@ -79,16 +79,21 @@ public class CreateGroupHandler : IRequestHandler<CreateGroupRequest, GroupDto>
         try
         {
             foreach (var groupTeacher in groupTeachersToAdd)
-            {
+            { 
                 await this.groupRepository.AddGroupTeacher(groupTeacher);
             }
             
         }
         catch (Exception ex)
         {
-            throw ex;
+            Console.WriteLine(ex.ToString());
         }
+        finally
+        {
+            groupRepository.DetachThatMfcker(groupToAdd);
+            groupRepository.DetachGroupTeacherMfcker(groupToAdd);
 
+        }
         return mapper.Map<GroupDto>(groupToAdd);
     }
 }

@@ -14,10 +14,12 @@ namespace QuickTest.Infrastructure.Repositories
     public class SchoolRepository : BaseRepository<School>, ISchoolRepository
     {
         private readonly DataContext context;
+        private readonly DbContextOptions<DataContext> _options;
 
-        public SchoolRepository(DataContext dbContext) : base(dbContext)
+        public SchoolRepository(DataContext dbContext, DbContextOptions<DataContext> options) : base(dbContext)
         {
             this.context = dbContext;
+            _options = options;
         }
 
         public async Task<School> GetSchoolIncludeGroups(int id)
@@ -30,10 +32,13 @@ namespace QuickTest.Infrastructure.Repositories
         }
         public async Task<School> GetSchoolWithoutGroups(int id)
         {
-            return await this.context.Schools
-                .AsNoTracking()
-                .Where(s => s.Id == id)
-                .FirstOrDefaultAsync();
+            using (var localContext = new DataContext(_options))
+            {
+                return await localContext.Schools
+                    .AsNoTracking()
+                    .Where(s => s.Id == id)
+                    .FirstOrDefaultAsync();
+            }
         }
         public async Task DetachThatMfcker(School school)
         {

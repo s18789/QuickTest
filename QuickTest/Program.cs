@@ -41,6 +41,7 @@ builder.Services.AddScoped<IPredefinedAnswerRepository, PredefinedAnswerReposito
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<CreateUserHandler>();
 builder.Services.AddScoped<CreateGroupHandler>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<ISchoolRepository, SchoolRepository>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IUserContextService, UserContextService>();
@@ -90,6 +91,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer("Server=inzynierka2023.database.windows.net;Database=QuickTest;User Id=adminqt;Password=AdminQuickTest69;"
         , b => b.MigrationsAssembly("QuickTest.Infrastructure"));
     options.EnableSensitiveDataLogging(true);
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var app = builder.Build();
