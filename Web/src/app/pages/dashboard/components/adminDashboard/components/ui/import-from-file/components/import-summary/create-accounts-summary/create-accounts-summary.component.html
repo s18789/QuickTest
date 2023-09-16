@@ -1,0 +1,60 @@
+<div *ngIf="summary" class="p-16" style="background-color: #F0F4F7;">
+  <div class="container mx-auto">
+    <div class="p-8 rounded-xl bg-white shadow-lg">
+      <div *ngIf="summary.isSuccess; else errorTemplate">
+        <div class="flex">
+          <div class="flex flex-col w-full">
+            <span class="text-3xl mb-4 font-semibold">Accounts Created Successfully!</span>
+            <span class="mb-24 font-medium">Here's a summary of your account creation</span>
+            <span class="text-lg font-medium mb-4">Account Creation Information:</span>
+            <div class="flex mb-2">
+              <div class="flex flex-col mr-4">
+               <span class="mb-2">Teachers Created:</span>
+              <span class="mb-2">Students Created:</span>
+              <span class="mb-2">Teacher Creation Failed:</span>
+              <span class="mb-2">Student Creation Failed:</span>
+              <span class="mb-2">Groups Created:</span>
+              <span class="mb-2">Groups Failed:</span>
+              </div>
+              <div class="flex flex-col">
+              <span class="mb-2">{{summary.teachersCreated}}</span>
+              <span class="mb-2">{{summary.studentsCreated}}</span>
+              <span class="mb-2">{{summary.teacherCreationFailed}}</span>
+              <span class="mb-2">{{summary.studentCreationFailed}}</span>
+              <span class="mb-2">{{summary.groupsCreated}}</span>
+              <span class="mb-2">{{summary.groupsFailed}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col ml-auto">
+            <img style="width: 22vw; height:35vh;" src="../../../../../../../../assets/images/importFile.png" alt="">
+          </div>
+        </div>
+        <div *ngIf="summary.errorList?.length > 0" class="mt-4">
+          <h3 class="text-red-600">Errors:</h3>
+          <ul class="list-disc list-inside text-red-600">
+            <li *ngFor="let error of summary.errorList">{{error}}</li>
+          </ul>
+        </div>
+        <div class="flex mt-8 justify-between w-full">
+          <button class="flex bg-yellow#FDC57B py-1.5 px-4 rounded-xl w-max" (click)="goToDashboard()">
+            <span class="font-medium">Go to Dashboard</span>
+          </button>
+        </div>
+      </div>
+      <ng-template #errorTemplate>
+      <img src="../../../../../../../../assets/images/pageNotFound.png" alt="">
+      <h2>We were unable to create accounts!</h2>
+      <div *ngIf="summary.groupsFailed && summary.groupsFailed === summary.teachersCreated + summary.studentsCreated + summary.teacherCreationFailed + summary.studentCreationFailed">
+        <ul>
+          <li *ngFor="let error of summary.errorList">{{error}}</li>
+        </ul>
+      </div>
+      <div *ngIf="summary.groupsFailed !== summary.teachersCreated + summary.studentsCreated + summary.teacherCreationFailed + summary.studentCreationFailed">
+        <!-- Your stats and error list here -->
+      </div>
+      <button (click)="goToDashboard()">Go to Dashboard</button>
+    </ng-template>
+    </div>
+  </div>
+</div>

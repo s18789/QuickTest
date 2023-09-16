@@ -1,4 +1,4 @@
-import { ImportSummaryDto } from './import-summary.model'; // Import your ImportSummaryDto model here
+import { ImportSummaryDto } from './import-summary.model'; 
 
 export interface BulkImportRequest {
   ImportSummary: ImportSummaryDto;
